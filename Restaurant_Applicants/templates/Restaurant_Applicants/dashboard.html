@@ -1,0 +1,499 @@
+{% extends 'Restaurant_Applicants/base.html' %}
+
+{% block title %}Overview | Savora{% endblock %}
+{% block breadcrumb %}Overview{% endblock %}
+{% block overview_active %}active{% endblock %}
+
+{% block content %}
+
+<!-- PAGE TITLE -->
+<div class="welcome-row">
+    <div>
+        <h1>
+            Welcome back,
+            {{ request.user.first_name|default:request.user.username }} 👋
+        </h1>
+        <p>Here's an overview of your restaurant application and account.</p>
+    </div>
+
+    <button
+        type="button"
+        class="btn btn-outline"
+        onclick="alert('Profile editing page')"
+    >
+        <i class="fa-regular fa-user"></i>
+        Edit Profile
+    </button>
+</div>
+
+
+{% if restaurant %}
+
+<!-- APPLICATION STATUS -->
+<div class="status-card" id="application">
+
+    <div class="status-left">
+        <div class="status-icon">
+            {% if restaurant.status == 'pending' %}
+                <i class="fa-solid fa-hourglass-half"></i>
+            {% elif restaurant.status == 'approved' %}
+                <i class="fa-solid fa-circle-check"></i>
+            {% elif restaurant.status == 'rejected' %}
+                <i class="fa-solid fa-circle-xmark"></i>
+            {% elif restaurant.status == 'suspended' %}
+                <i class="fa-solid fa-ban"></i>
+            {% endif %}
+        </div>
+
+        <div class="status-text">
+            {% if restaurant.status == 'pending' %}
+                <h3>Your application is being reviewed</h3>
+                <p>
+                    Thank you for registering with Savora.
+                    Our team is reviewing your restaurant details.
+                </p>
+
+            {% elif restaurant.status == 'approved' %}
+                <h3>Your restaurant has been approved!</h3>
+                <p>
+                    Your restaurant registration has been approved.
+                    You can now proceed with managing your restaurant.
+                </p>
+
+            {% elif restaurant.status == 'rejected' %}
+                <h3>Your application was not approved</h3>
+                <p>
+                    Your application was not approved.
+                    Please contact support if you need more information.
+                </p>
+
+            {% elif restaurant.status == 'suspended' %}
+                <h3>Your restaurant is currently suspended</h3>
+                <p>
+                    Your restaurant account is suspended.
+                    Please contact support for assistance.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <span class="status-badge">
+        <i class="fa-regular fa-clock"></i>
+        {{ restaurant.get_status_display|upper }}
+    </span>
+
+</div>
+
+
+<div class="dashboard-grid">
+
+    <!-- LEFT COLUMN -->
+    <div>
+
+        <!-- APPLICATION PROGRESS -->
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Application Progress</h3>
+
+                <span style="font-size:10px;color:#999;">
+                    Application #{{ restaurant.pk }}
+                </span>
+            </div>
+
+            <div class="card-body">
+
+                <!-- ACCOUNT CREATED -->
+                <div class="progress-item">
+                    <div class="progress-circle">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+
+                    <div class="progress-info">
+                        <strong>Account created</strong>
+                        <p>
+                            Your Savora account has been successfully registered.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- RESTAURANT DETAILS SUBMITTED -->
+                <div class="progress-item">
+                    <div class="progress-circle">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+
+                    <div class="progress-info">
+                        <strong>Restaurant details submitted</strong>
+                        <p>
+                            Your restaurant information and operating details
+                            have been received.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- APPLICATION REVIEW -->
+                <div class="progress-item">
+                    <div class="progress-circle
+                        {% if restaurant.status == 'pending' %}
+                            current
+                        {% elif restaurant.status == 'approved' %}
+                            {% else %}
+                            future
+                        {% endif %}
+                    ">
+                        {% if restaurant.status == 'approved' %}
+                            <i class="fa-solid fa-check"></i>
+                        {% elif restaurant.status == 'rejected' %}
+                            <i class="fa-solid fa-xmark"></i>
+                        {% elif restaurant.status == 'suspended' %}
+                            <i class="fa-solid fa-ban"></i>
+                        {% else %}
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        {% endif %}
+                    </div>
+
+                    <div class="progress-info">
+                        <strong>Application review</strong>
+
+                        <p>
+                            {% if restaurant.status == 'pending' %}
+                                Our administration team is currently reviewing
+                                your application.
+                            {% elif restaurant.status == 'approved' %}
+                                Your application has successfully passed review.
+                            {% elif restaurant.status == 'rejected' %}
+                                Your application was reviewed but not approved.
+                            {% elif restaurant.status == 'suspended' %}
+                                Your restaurant account has been suspended.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- FINAL APPROVAL -->
+                <div class="progress-item">
+                    <div class="progress-circle
+                        {% if restaurant.status == 'approved' %}
+                            current
+                        {% else %}
+                            future
+                        {% endif %}
+                    ">
+                        {% if restaurant.status == 'approved' %}
+                            <i class="fa-solid fa-check"></i>
+                        {% else %}
+                            <i class="fa-solid fa-store"></i>
+                        {% endif %}
+                    </div>
+
+                    <div class="progress-info">
+                        <strong>Restaurant approval</strong>
+
+                        <p>
+                            {% if restaurant.status == 'approved' %}
+                                Your restaurant has been approved.
+                                You can start managing your restaurant on Savora.
+                            {% elif restaurant.status == 'rejected' %}
+                                Your application was not approved.
+                                Contact support for further assistance.
+                            {% elif restaurant.status == 'suspended' %}
+                                Your restaurant must be reinstated before
+                                you can continue using its services.
+                            {% else %}
+                                Once approved, you can start managing
+                                your restaurant on Savora.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- RESTAURANT DETAILS -->
+        <div class="card" id="restaurant">
+
+            <div class="card-header">
+                <h3>My Restaurant Information</h3>
+
+                <a href="#">
+                    Edit details
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="card-body">
+
+                <div class="details-grid">
+
+                    <div class="detail">
+                        <label>Restaurant Name</label>
+                        <strong>{{ restaurant.name|default:"Not provided" }}</strong>
+                    </div>
+
+                    <div class="detail">
+                        <label>Cuisine</label>
+                        <strong>
+                            {% if restaurant.cuisine %}
+                                {{ restaurant.cuisine.name }}
+                            {% else %}
+                                Not provided
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                    <div class="detail">
+                        <label>Restaurant Phone</label>
+                        <strong>{{ restaurant.phone|default:"Not provided" }}</strong>
+                    </div>
+
+                    <div class="detail">
+                        <label>Restaurant Email</label>
+                        <strong>{{ restaurant.email|default:"Not provided" }}</strong>
+                    </div>
+
+                    <div class="detail">
+                        <label>County</label>
+                        <strong>{{ restaurant.county|default:"Not provided" }}</strong>
+                    </div>
+
+                    <div class="detail">
+                        <label>Town / Area</label>
+                        <strong>
+                            {{ restaurant.town|default:"Not provided" }}
+                            {% if restaurant.area %}
+                                / {{ restaurant.area }}
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                    <div class="detail full">
+                        <label>Restaurant Address</label>
+                        <strong>
+                            {{ restaurant.full_address|default:"Not provided" }}
+                        </strong>
+                    </div>
+
+                    <div class="detail full">
+                        <label>Application Submitted</label>
+                        <strong>
+                            {{ restaurant.created_at|date:"d F Y" }}
+                            ·
+                            {{ restaurant.created_at|time:"g:i A" }}
+                        </strong>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- RECENT ACTIVITY -->
+        <div class="card" id="activity">
+
+            <div class="card-header">
+                <h3>Recent Activity</h3>
+            </div>
+
+            <div class="card-body">
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+
+                    <div class="activity-info">
+                        <strong>Restaurant application submitted</strong>
+
+                        <p>
+                            Your restaurant registration was successfully received.
+                        </p>
+
+                        <small>
+                            {{ restaurant.created_at|date:"d F Y" }}
+                            ·
+                            {{ restaurant.created_at|time:"g:i A" }}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+
+                    <div class="activity-info">
+                        <strong>Account created successfully</strong>
+
+                        <p>Your Savora account is ready.</p>
+
+                        <small>
+                            {{ request.user.date_joined|date:"d F Y" }}
+                            ·
+                            {{ request.user.date_joined|time:"g:i A" }}
+                        </small>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT COLUMN -->
+    <div>
+
+        <!-- IMPORTANT NOTICE -->
+        <div class="notice">
+
+            <h4>
+                <i class="fa-solid fa-circle-info"></i>
+                What happens next?
+            </h4>
+
+            <p>
+                {% if restaurant.status == 'pending' %}
+                    Our team will review the information you provided.
+                    You will receive an update when your application
+                    has been approved or if further information is needed.
+
+                {% elif restaurant.status == 'approved' %}
+                    Your restaurant has been approved.
+                    You can proceed with managing your restaurant on Savora.
+
+                {% elif restaurant.status == 'rejected' %}
+                    Your application was not approved.
+                    Please contact our support team for further information.
+
+                {% elif restaurant.status == 'suspended' %}
+                    Your restaurant account is currently suspended.
+                    Please contact our support team for assistance.
+                {% endif %}
+            </p>
+
+        </div>
+
+
+        <!-- QUICK ACTIONS -->
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Quick Actions</h3>
+            </div>
+
+            <div class="card-body">
+
+                <div class="quick-links">
+
+                    <a href="#restaurant" class="quick-link">
+                        <i class="fa-solid fa-store"></i>
+                        <span>View Restaurant Details</span>
+                        <i class="fa-solid fa-chevron-right arrow"></i>
+                    </a>
+
+                    <a href="#restaurant" class="quick-link">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>Update Restaurant Information</span>
+                        <i class="fa-solid fa-chevron-right arrow"></i>
+                    </a>
+
+                    <a href="#" class="quick-link">
+                        <i class="fa-regular fa-user"></i>
+                        <span>Manage My Profile</span>
+                        <i class="fa-solid fa-chevron-right arrow"></i>
+                    </a>
+
+                    <a href="mailto:support@savora.com" class="quick-link">
+                        <i class="fa-regular fa-envelope"></i>
+                        <span>Contact Support</span>
+                        <i class="fa-solid fa-chevron-right arrow"></i>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ACCOUNT INFORMATION -->
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Account Information</h3>
+            </div>
+
+            <div class="card-body">
+
+                <div class="detail" style="margin-bottom:17px;">
+                    <label>Account Name</label>
+
+                    <strong>
+                        {{ request.user.get_full_name|default:request.user.username }}
+                    </strong>
+                </div>
+
+                <div class="detail" style="margin-bottom:17px;">
+                    <label>Email Address</label>
+
+                    <strong>
+                        {{ request.user.email|default:"No email provided" }}
+                    </strong>
+                </div>
+
+                <div class="detail" style="margin-bottom:17px;">
+                    <label>Username</label>
+
+                    <strong>{{ request.user.username }}</strong>
+                </div>
+
+                <div class="detail">
+                    <label>Account Type</label>
+                    <strong>Restaurant Applicant</strong>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+{% else %}
+
+<!-- NO RESTAURANT APPLICATION YET -->
+<div class="card">
+
+    <div class="card-body" style="text-align:center;padding:40px 25px;">
+
+        <div class="status-icon" style="margin:0 auto 18px;">
+            <i class="fa-solid fa-store"></i>
+        </div>
+
+        <h3 style="font-family:'Plus Jakarta Sans',sans-serif;color:var(--dark);">
+            You haven't registered a restaurant yet
+        </h3>
+
+        <p style="font-size:12px;color:var(--muted);margin:10px 0 20px;">
+            Register your restaurant with Savora to submit an application
+            and track its approval progress here.
+        </p>
+
+        <a href="{% url 'restaurant_applicants:add_application' %}"
+           class="btn btn-orange">
+            <i class="fa-solid fa-plus"></i>
+            Register Your Restaurant
+        </a>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

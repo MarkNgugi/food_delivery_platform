@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}Chakula Express{% endblock %}</title>
+    <title>Register Restaurant | Chakula Express</title>
 
     <style>
         * {
@@ -23,9 +23,6 @@
         .navbar {
             background: #fff;
             padding: 18px 6%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             border-bottom: 1px solid #e8eaf0;
         }
 
@@ -33,12 +30,6 @@
             font-size: 21px;
             font-weight: 800;
             color: #4f46e5;
-        }
-
-        .navbar a {
-            color: #4f46e5;
-            text-decoration: none;
-            font-weight: 600;
         }
 
         .container {
@@ -115,6 +106,10 @@
             width: auto;
         }
 
+        input[type="file"] {
+            padding: 9px;
+        }
+
         .helptext {
             font-size: 12px;
             color: #718096;
@@ -124,6 +119,7 @@
             color: #dc2626;
             font-size: 12px;
             list-style: none;
+            margin-top: 4px;
         }
 
         .btn {
@@ -147,6 +143,10 @@
             color: #4f46e5;
         }
 
+        .btn-secondary:hover {
+            background: #e0e4ff;
+        }
+
         .actions {
             display: flex;
             gap: 12px;
@@ -162,38 +162,6 @@
             margin-bottom: 20px;
         }
 
-        .status {
-            display: inline-block;
-            padding: 6px 11px;
-            background: #fef3c7;
-            color: #92400e;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .hour-row {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr 1fr 0.7fr;
-            gap: 15px;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #edf0f5;
-        }
-
-        .hour-header {
-            font-size: 12px;
-            color: #718096;
-            font-weight: 700;
-        }
-
-        .closed-control {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 13px;
-        }
-
         @media(max-width: 650px) {
             .form-grid {
                 grid-template-columns: 1fr;
@@ -201,10 +169,6 @@
 
             .form-group.full {
                 grid-column: auto;
-            }
-
-            .hour-row {
-                grid-template-columns: 1fr 1fr;
             }
 
             .container {
@@ -216,20 +180,12 @@
             }
         }
     </style>
-
-    {% block extra_css %}{% endblock %}
 </head>
 
 <body>
 
     <nav class="navbar">
         <div class="brand">Chakula Express</div>
-
-        <div>
-            {% if user.is_authenticated %}
-                <span>{{ user.username }}</span>
-            {% endif %}
-        </div>
     </nav>
 
     <main class="container">
@@ -240,8 +196,94 @@
             {% endfor %}
         {% endif %}
 
-        {% block content %}
-        {% endblock %}
+        <div class="page-heading">
+            <h1>Register Your Restaurant</h1>
+            <p>Join Chakula Express and start reaching more customers across Kenya.</p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="card">
+                <h3>01. Restaurant Information</h3>
+
+                <div class="form-grid">
+                    {% for field in form %}
+                        {% if field.name == 'name' or field.name == 'description' or field.name == 'cuisine' or field.name == 'logo' or field.name == 'cover_image' %}
+
+                            <div class="form-group {% if field.name == 'description' or field.name == 'cover_image' %}full{% endif %}">
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+
+                                {{ field }}
+                                {{ field.errors }}
+
+                                {% if field.help_text %}
+                                    <small class="helptext">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>02. Contact Information</h3>
+
+                <div class="form-grid">
+                    {% for field in form %}
+                        {% if field.name == 'phone' or field.name == 'email' %}
+
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+
+                                {{ field }}
+                                {{ field.errors }}
+                            </div>
+
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>03. Restaurant Location</h3>
+
+                <div class="form-grid">
+                    {% for field in form %}
+                        {% if field.name == 'country' or field.name == 'county' or field.name == 'town' or field.name == 'area' or field.name == 'street' or field.name == 'building' or field.name == 'landmark' or field.name == 'additional_directions' %}
+
+                            <div class="form-group {% if field.name == 'additional_directions' %}full{% endif %}">
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+
+                                {{ field }}
+                                {{ field.errors }}
+                            </div>
+
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn">
+                    Register Restaurant
+                </button>
+
+                <a href="javascript:history.back()" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
 
     </main>
 

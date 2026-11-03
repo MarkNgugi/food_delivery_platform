@@ -1,0 +1,175 @@
+
+{% extends 'Restaurant_Applicants/base.html' %}
+
+{% block title %}My Applications | Savora{% endblock %}
+{% block breadcrumb %}My Applications{% endblock %}
+{% block applications_active %}active{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>My Applications</h1>
+        <p>Manage and track all your restaurant registration applications.</p>
+    </div>
+
+    <a href="{% url 'restaurant_applicants:add_application' %}" class="btn btn-orange">
+        <i class="fa-solid fa-plus"></i> Add New Application
+    </a>
+</div>
+
+<!-- SUMMARY CARDS -->
+<div class="stat-grid">
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-icon"><i class="fa-solid fa-store"></i></div>
+        </div>
+        <h2>{{ total_applications }}</h2>
+        <p>Total Applications</p>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-icon" style="background:#fff5df;color:#d99520;">
+                <i class="fa-regular fa-clock"></i>
+            </div>
+        </div>
+        <h2>{{ pending_count }}</h2>
+        <p>Pending Review</p>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-icon" style="background:#e9f7f0;color:#159b68;">
+                <i class="fa-solid fa-check-circle"></i>
+            </div>
+        </div>
+        <h2>{{ approved_count }}</h2>
+        <p>Approved Applications</p>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-icon" style="background:#fff0f0;color:#dc4c4c;">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+        </div>
+        <h2>{{ rejected_count }}</h2>
+        <p>Rejected Applications</p>
+    </div>
+
+</div>
+
+<!-- APPLICATIONS TABLE -->
+<div class="card">
+
+    <div class="card-header">
+        <div>
+            <h3>All Restaurant Applications</h3>
+            <p style="font-size:11px;color:#9299a2;margin-top:5px;">
+                A record of restaurants you have submitted to Savora.
+            </p>
+        </div>
+
+        <span style="font-size:11px;color:#858b94;">
+            {{ total_applications }} application{{ total_applications|pluralize }}
+        </span>
+    </div>
+
+    <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;min-width:700px;">
+
+            <thead>
+                <tr style="background:#fafbfc;">
+                    <th style="text-align:left;padding:15px 20px;font-size:10px;color:#858b94;text-transform:uppercase;letter-spacing:.5px;">Restaurant</th>
+                    <th style="text-align:left;padding:15px 15px;font-size:10px;color:#858b94;text-transform:uppercase;letter-spacing:.5px;">Location</th>
+                    <th style="text-align:left;padding:15px 15px;font-size:10px;color:#858b94;text-transform:uppercase;letter-spacing:.5px;">Date Submitted</th>
+                    <th style="text-align:left;padding:15px 15px;font-size:10px;color:#858b94;text-transform:uppercase;letter-spacing:.5px;">Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for restaurant in applications %}
+                    <tr style="border-top:1px solid #eceef1;">
+
+                        <td style="padding:16px 20px;">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                {% if restaurant.logo %}
+                                    <img src="{{ restaurant.logo.url }}" alt="{{ restaurant.name }}"
+                                         style="width:42px;height:42px;object-fit:cover;border-radius:9px;">
+                                {% else %}
+                                    <div style="width:42px;height:42px;background:#fff0e9;color:#f15a29;border-radius:9px;display:grid;place-items:center;">
+                                        <i class="fa-solid fa-store"></i>
+                                    </div>
+                                {% endif %}
+
+                                <div>
+                                    <strong style="display:block;font-size:12px;color:#20252d;">
+                                        {{ restaurant.name }}
+                                    </strong>
+                                    <span style="font-size:10px;color:#9299a2;">
+                                        {% if restaurant.cuisine %}
+                                            {{ restaurant.cuisine.name }}
+                                        {% else %}
+                                            Cuisine not specified
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td style="padding:16px 15px;font-size:11px;color:#555d66;">
+                            {{ restaurant.town }}, {{ restaurant.county }}
+                        </td>
+
+                        <td style="padding:16px 15px;font-size:11px;color:#555d66;">
+                            {{ restaurant.created_at|date:"d M Y" }}
+                        </td>
+
+                        <td style="padding:16px 15px;">
+                            <span class="status status-{{ restaurant.status }}">
+                                {% if restaurant.status == 'pending' %}
+                                    <i class="fa-regular fa-clock"></i>
+                                {% elif restaurant.status == 'approved' %}
+                                    <i class="fa-solid fa-check"></i>
+                                {% elif restaurant.status == 'rejected' %}
+                                    <i class="fa-solid fa-xmark"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-pause"></i>
+                                {% endif %}
+                                {{ restaurant.get_status_display }}
+                            </span>
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+                    <tr>
+                        <td colspan="4" style="padding:55px 20px;text-align:center;">
+                            <div style="width:55px;height:55px;margin:0 auto 15px;background:#fff0e9;color:#f15a29;border-radius:15px;display:grid;place-items:center;font-size:21px;">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+
+                            <h3 style="font:700 15px 'Plus Jakarta Sans',sans-serif;color:#20252d;">
+                                No applications yet
+                            </h3>
+
+                            <p style="font-size:11px;color:#858b94;margin:8px 0 17px;">
+                                You haven't submitted a restaurant application yet.
+                                Start by registering your first restaurant.
+                            </p>
+
+                            <a href="{% url 'restaurant_applicants:add_application' %}" class="btn btn-orange">
+                                <i class="fa-solid fa-plus"></i> Add Your First Application
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+{% endblock %}

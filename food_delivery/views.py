@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
+from datetime import time
 
 from .models import Restaurant, RestaurantOperatingHour
 from .forms import (
@@ -12,10 +13,9 @@ from .forms import (
 )
 
 
-def base_view(request):
-    return render(request, 'food_delivery/restaurant/base.html')
+def home(request):
+    return render(request, 'food_delivery/base.html')
 
-from datetime import time
 
 @login_required
 def restaurant_register(request):
@@ -194,4 +194,34 @@ def restaurant_operating_hours(request, pk):
             'restaurant': restaurant,
             'formset': formset,
         }
+    )
+
+
+def restaurant_list(request):
+
+    search_query = request.GET.get("q", "").strip()
+
+    restaurants = Restaurant.objects.filter(
+        status="approved"
+    ).select_related("cuisine").order_by("name")
+
+    if search_query:
+        restaurants = restaurants.filter(
+            Q(name__icontains=search_query)
+            | Q(description__icontains=search_query)
+            | Q(cuisine__name__icontains=search_query)
+            | Q(town__icontains=search_query)
+            | Q(county__icontains=search_query)
+        )
+
+    context = {
+        "restaurants": restaurants,
+        "search_query": search_query,
+        "restaurant_count": restaurants.count(),
+    }
+
+    return render(
+        request,
+        "food_delivery/restaurants/restaurant_list.html",
+        context
     )

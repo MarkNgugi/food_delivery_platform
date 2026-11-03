@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore restaurants and discover delicious meals.">
+    <title>Restaurants | Savora</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #f15a29;
+            --primary-dark: #d94719;
+            --primary-soft: #fff0e9;
+            --dark: #20252d;
+            --text: #333945;
+            --muted: #858b96;
+            --background: #faf9f7;
+            --surface: #ffffff;
+            --border: #eeece9;
+            --shadow: 0 12px 35px rgba(35, 30, 24, .07);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--background);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button, input {
+            font: inherit;
+        }
+
+        .container {
+            width: min(1240px, 92%);
+            margin: auto;
+        }
+
+        /* NAVIGATION */
+
+        .navbar {
+            background: rgba(255,255,255,.97);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(15px);
+        }
+
+        .nav-content {
+            min-height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .logo {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 27px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #666d78;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .home-button {
+            background: var(--primary);
+            color: white;
+            padding: 11px 17px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        /* PAGE HEADER */
+
+        .page-header {
+            padding: 55px 0 30px;
+        }
+
+        .eyebrow {
+            color: var(--primary);
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-bottom: 9px;
+        }
+
+        .page-header h1 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(30px, 4vw, 43px);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .page-header p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* SEARCH */
+
+        .search-area {
+            margin-bottom: 30px;
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 650px;
+            padding: 9px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            box-shadow: var(--shadow);
+        }
+
+        .search-form input {
+            flex: 1;
+            min-width: 0;
+            border: 0;
+            outline: 0;
+            padding: 10px 12px;
+            color: var(--dark);
+            font-size: 13px;
+            background: transparent;
+        }
+
+        .search-form button {
+            border: 0;
+            background: var(--primary);
+            color: white;
+            padding: 11px 19px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background: var(--primary-dark);
+        }
+
+        /* RESULTS */
+
+        .results-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .results-heading h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .results-count {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* RESTAURANT GRID */
+
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+            padding-bottom: 65px;
+        }
+
+        .restaurant-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            overflow: hidden;
+            transition: .25s ease;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .restaurant-image-wrap {
+            height: 205px;
+            position: relative;
+            background: #f1efeb;
+            overflow: hidden;
+        }
+
+        .restaurant-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .restaurant-logo {
+            position: absolute;
+            left: 17px;
+            bottom: 14px;
+            width: 61px;
+            height: 61px;
+            border-radius: 13px;
+            object-fit: cover;
+            background: white;
+            border: 3px solid white;
+            box-shadow: 0 3px 12px rgba(0,0,0,.12);
+        }
+
+        .restaurant-info {
+            padding: 17px;
+        }
+
+        .restaurant-info h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 17px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .cuisine {
+            display: inline-block;
+            color: var(--primary);
+            background: var(--primary-soft);
+            padding: 5px 9px;
+            border-radius: 7px;
+            font-size: 10px;
+            font-weight: 800;
+            margin: 5px 0 10px;
+        }
+
+        .description {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+            min-height: 40px;
+        }
+
+        .restaurant-location {
+            color: #737985;
+            font-size: 11px;
+            margin-top: 12px;
+        }
+
+        .restaurant-location span {
+            color: var(--primary);
+            margin-right: 5px;
+        }
+
+        .restaurant-footer {
+            border-top: 1px solid var(--border);
+            margin-top: 15px;
+            padding-top: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .approved-label {
+            color: #169b62;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .view-link {
+            display: inline-block;
+            color: white;
+            background: var(--primary);
+            padding: 9px 13px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .view-link:hover {
+            background: var(--primary-dark);
+        }
+
+        /* EMPTY STATE */
+
+        .empty-state {
+            grid-column: 1 / -1;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            text-align: center;
+            padding: 65px 20px;
+        }
+
+        .empty-icon {
+            font-size: 43px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 19px;
+            margin-bottom: 7px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .clear-search {
+            display: inline-block;
+            margin-top: 17px;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #20252d;
+            color: white;
+            padding: 28px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-content p {
+            color: #aeb3bd;
+            font-size: 11px;
+        }
+
+        .footer-content a {
+            color: #ff865d;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+            .restaurant-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 650px) {
+            .nav-content {
+                min-height: 68px;
+            }
+
+            .nav-links {
+                gap: 14px;
+            }
+
+            .nav-links a {
+                font-size: 11px;
+            }
+
+            .home-button {
+                display: none;
+            }
+
+            .page-header {
+                padding-top: 38px;
+            }
+
+            .restaurant-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .restaurant-image-wrap {
+                height: 220px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <header class="navbar">
+        <div class="container nav-content">
+
+            <a href="{% url 'home' %}" class="logo">
+                Savora<span>.</span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'restaurant_list' %}" class="active">Restaurants</a>
+            </nav>
+
+            <a href="{% url 'home' %}" class="home-button">
+                Back to Home
+            </a>
+
+        </div>
+    </header>
+
+
+    <!-- PAGE HEADER -->
+    <main>
+        <section class="page-header">
+            <div class="container">
+
+                <div class="eyebrow">Discover great food</div>
+
+                <h1>Explore Restaurants</h1>
+
+                <p>
+                    Discover restaurants, explore different cuisines
+                    and find your next favourite meal.
+                </p>
+
+            </div>
+        </section>
+
+
+        <!-- SEARCH -->
+        <section class="search-area">
+            <div class="container">
+
+                <form method="GET" action="{% url 'restaurant_list' %}" class="search-form">
+
+                    <input
+                        type="search"
+                        name="q"
+                        value="{{ search_query }}"
+                        placeholder="Search restaurant, cuisine or location..."
+                        aria-label="Search restaurants"
+                    >
+
+                    <button type="submit">Search</button>
+
+                </form>
+
+            </div>
+        </section>
+
+
+        <!-- RESTAURANTS -->
+        <section>
+            <div class="container">
+
+                <div class="results-heading">
+                    <h2>
+                        {% if search_query %}
+                            Search Results
+                        {% else %}
+                            Available Restaurants
+                        {% endif %}
+                    </h2>
+
+                    <span class="results-count">
+                        {{ restaurant_count }}
+                        restaurant{{ restaurant_count|pluralize }}
+                    </span>
+                </div>
+
+
+                <div class="restaurant-grid">
+
+                    {% for restaurant in restaurants %}
+
+                        <article class="restaurant-card">
+
+                            <div class="restaurant-image-wrap">
+
+                                {% if restaurant.cover_image %}
+                                    <img
+                                        src="{{ restaurant.cover_image.url }}"
+                                        alt="{{ restaurant.name }}"
+                                        class="restaurant-cover"
+                                    >
+                                {% elif restaurant.logo %}
+                                    <img
+                                        src="{{ restaurant.logo.url }}"
+                                        alt="{{ restaurant.name }}"
+                                        class="restaurant-cover"
+                                    >
+                                {% else %}
+                                    <img
+                                        src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900"
+                                        alt="Restaurant"
+                                        class="restaurant-cover"
+                                    >
+                                {% endif %}
+
+
+                                {% if restaurant.logo %}
+                                    <img
+                                        src="{{ restaurant.logo.url }}"
+                                        alt="{{ restaurant.name }} logo"
+                                        class="restaurant-logo"
+                                    >
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="restaurant-info">
+
+                                <h3>{{ restaurant.name }}</h3>
+
+
+                                {% if restaurant.cuisine %}
+                                    <span class="cuisine">
+                                        {{ restaurant.cuisine.name }}
+                                    </span>
+                                {% endif %}
+
+
+                                <p class="description">
+                                    {% if restaurant.description %}
+                                        {{ restaurant.description|truncatewords:18 }}
+                                    {% else %}
+                                        Discover delicious meals from
+                                        {{ restaurant.name }}.
+                                    {% endif %}
+                                </p>
+
+
+                                <div class="restaurant-location">
+                                    <span>📍</span>
+
+                                    {% if restaurant.town %}
+                                        {{ restaurant.town }}
+                                    {% endif %}
+
+                                    {% if restaurant.county %}
+                                        {% if restaurant.town %}, {% endif %}
+                                        {{ restaurant.county }}
+                                    {% endif %}
+                                </div>
+
+
+                                <div class="restaurant-footer">
+
+                                    <span class="approved-label">
+                                        ● Approved Restaurant
+                                    </span>
+
+                                    <span class="view-link">
+                                        Restaurant
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    {% empty %}
+
+                        <div class="empty-state">
+
+                            <div class="empty-icon">🍽️</div>
+
+                            {% if search_query %}
+                                <h3>No restaurants found</h3>
+                                <p>
+                                    We couldn't find a restaurant matching
+                                    "{{ search_query }}".
+                                </p>
+
+                                <a
+                                    href="{% url 'restaurant_list' %}"
+                                    class="clear-search"
+                                >
+                                    View all restaurants
+                                </a>
+
+                            {% else %}
+                                <h3>No restaurants available yet</h3>
+                                <p>
+                                    There are currently no approved restaurants.
+                                    Please check again later.
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container footer-content">
+
+            <p>
+                © {% now "Y" %} Savora. All rights reserved.
+            </p>
+
+            <a href="{% url 'home' %}">
+                Back to Home ↑
+            </a>
+
+        </div>
+    </footer>
+
+</body>
+</html>
+

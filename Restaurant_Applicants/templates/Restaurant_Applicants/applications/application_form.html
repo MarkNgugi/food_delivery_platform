@@ -1,0 +1,221 @@
+
+{% extends 'Restaurant_Applicants/base.html' %}
+
+{% block title %}Add Restaurant Application | Savora{% endblock %}
+{% block breadcrumb %}Add Application{% endblock %}
+{% block applications_active %}active{% endblock %}
+
+{% block extra_css %}
+.form-card {
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.form-intro {
+    background: #fff8ed;
+    border: 1px solid #f4e7ce;
+    border-radius: 10px;
+    padding: 15px 17px;
+    margin-bottom: 22px;
+}
+
+.form-intro h4 {
+    font-size: 12px;
+    color: #805b1e;
+    margin-bottom: 5px;
+}
+
+.form-intro p {
+    font-size: 11px;
+    color: #8e744c;
+    line-height: 1.6;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 19px 17px;
+}
+
+.form-field { min-width: 0; }
+.form-field.full { grid-column: 1 / -1; }
+
+.form-field label {
+    display: block;
+    color: #414851;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    border: 1px solid #e5e8ec;
+    border-radius: 8px;
+    padding: 11px 12px;
+    background: #fff;
+    color: #343a40;
+    font-size: 12px;
+    outline: none;
+    transition: .2s;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    border-color: #f15a29;
+    box-shadow: 0 0 0 3px rgba(241,90,41,.09);
+}
+
+.form-field textarea {
+    min-height: 105px;
+    resize: vertical;
+}
+
+.form-field input[type="file"] {
+    padding: 9px;
+    background: #fafafa;
+}
+
+.form-field input[type="checkbox"] {
+    width: auto;
+}
+
+.form-field .helptext,
+.form-field .help-text {
+    display: block;
+    font-size: 10px;
+    color: #9299a2;
+    margin-top: 6px;
+}
+
+.field-errors {
+    list-style: none;
+    color: #dc4c4c;
+    font-size: 10px;
+    margin-top: 6px;
+}
+
+.form-section-title {
+    font: 700 13px 'Plus Jakarta Sans', sans-serif;
+    color: #20252d;
+    padding-bottom: 12px;
+    margin-bottom: 19px;
+    border-bottom: 1px solid #eceef1;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #eceef1;
+    padding-top: 20px;
+    margin-top: 25px;
+}
+
+.required-note {
+    font-size: 10px;
+    color: #9299a2;
+    margin-bottom: 20px;
+}
+
+@media(max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-field.full { grid-column: auto; }
+    .form-actions { flex-direction: column-reverse; }
+    .form-actions .btn { width: 100%; }
+}
+{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>New Restaurant Application</h1>
+        <p>Provide your restaurant details to register it on Savora.</p>
+    </div>
+</div>
+
+<div class="form-intro">
+    <h4><i class="fa-solid fa-circle-info"></i> Before you continue</h4>
+    <p>
+        Make sure the information you provide is accurate and up to date.
+        Your application will be sent to the Savora administration team for review.
+    </p>
+</div>
+
+<div class="card form-card">
+
+    <div class="card-header">
+        <div>
+            <h3>Restaurant Registration Details</h3>
+            <p style="font-size:11px;color:#9299a2;margin-top:5px;">
+                Fields marked as required must be completed.
+            </p>
+        </div>
+        <i class="fa-solid fa-store" style="font-size:19px;color:#f15a29;"></i>
+    </div>
+
+    <div class="card-body">
+
+        <p class="required-note">Please complete the form below.</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="message error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <h3 class="form-section-title">Restaurant Information</h3>
+
+            <div class="form-grid">
+
+                {% for field in form %}
+                    <div class="form-field {% if field.name == 'description' or field.name == 'additional_directions' %}full{% endif %}">
+
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                            {% if field.field.required %}<span style="color:#f15a29;">*</span>{% endif %}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small class="helptext">{{ field.help_text }}</small>
+                        {% endif %}
+
+                        {% if field.errors %}
+                            <ul class="field-errors">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                    </div>
+                {% endfor %}
+
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'restaurant_applicants:applications' %}" class="btn btn-outline">
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn btn-orange">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    Submit Application
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
