@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Chakula Express{% endblock %}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #172033;
+        }
+
+        .navbar {
+            background: #fff;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e8eaf0;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: 800;
+            color: #4f46e5;
+        }
+
+        .navbar a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .page-heading p {
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e8eaf0;
+            border-radius: 13px;
+            padding: 25px;
+            margin-bottom: 22px;
+        }
+
+        .card h3 {
+            margin-bottom: 20px;
+            font-size: 17px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dce1eb;
+            border-radius: 8px;
+            outline: none;
+            background: #fff;
+            font-size: 14px;
+            color: #172033;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px #6366f120;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+        }
+
+        .helptext {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .errorlist {
+            color: #dc2626;
+            font-size: 12px;
+            list-style: none;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: white;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #4338ca;
+        }
+
+        .btn-secondary {
+            background: #eef0ff;
+            color: #4f46e5;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .message {
+            padding: 14px;
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 11px;
+            background: #fef3c7;
+            color: #92400e;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .hour-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 0.7fr;
+            gap: 15px;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .hour-header {
+            font-size: 12px;
+            color: #718096;
+            font-weight: 700;
+        }
+
+        .closed-control {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 13px;
+        }
+
+        @media(max-width: 650px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .hour-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .card {
+                padding: 17px;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="brand">Chakula Express</div>
+
+        <div>
+            {% if user.is_authenticated %}
+                <span>{{ user.username }}</span>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+</body>
+</html>

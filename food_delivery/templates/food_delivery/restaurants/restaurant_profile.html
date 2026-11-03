@@ -1,0 +1,115 @@
+
+{% extends 'food_delivery/restaurants/base.html' %}
+
+{% block title %}Restaurant Profile | Chakula Express{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <h1>Restaurant Profile</h1>
+    <p>Manage your restaurant's information, contact details and location.</p>
+</div>
+
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
+
+        <div>
+            <h2 style="font-size:21px; margin-bottom:8px;">
+                {{ restaurant.name }}
+            </h2>
+
+            <span class="status">
+                {{ restaurant.get_status_display }}
+            </span>
+        </div>
+
+        <a href="{% url 'restaurant_operating_hours' restaurant.pk %}" class="btn">
+            Manage Operating Hours
+        </a>
+
+    </div>
+
+    {% if restaurant.logo %}
+        <img src="{{ restaurant.logo.url }}"
+             alt="Restaurant logo"
+             style="width:90px;height:90px;object-fit:cover;border-radius:12px;margin-bottom:15px;">
+    {% endif %}
+
+    <p style="color:#718096; font-size:13px;">
+        Registered on {{ restaurant.created_at|date:"d M Y" }}
+    </p>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    <div class="card">
+        <h3>Restaurant Information</h3>
+
+        <div class="form-grid">
+            {% for field in form %}
+                {% if field.name == 'name' or field.name == 'description' or field.name == 'cuisine' or field.name == 'logo' or field.name == 'cover_image' %}
+
+                    <div class="form-group {% if field.name == 'description' or field.name == 'cover_image' %}full{% endif %}">
+                        <label>{{ field.label }}</label>
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Contact Information</h3>
+
+        <div class="form-grid">
+            {% for field in form %}
+                {% if field.name == 'phone' or field.name == 'email' %}
+
+                    <div class="form-group">
+                        <label>{{ field.label }}</label>
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Location Information</h3>
+
+        <div class="form-grid">
+            {% for field in form %}
+                {% if field.name == 'country' or field.name == 'county' or field.name == 'town' or field.name == 'area' or field.name == 'street' or field.name == 'building' or field.name == 'landmark' or field.name == 'additional_directions' %}
+
+                    <div class="form-group {% if field.name == 'additional_directions' %}full{% endif %}">
+                        <label>{{ field.label }}</label>
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="actions">
+        <button type="submit" class="btn">
+            Save Changes
+        </button>
+
+        <a href="{% url 'restaurant_operating_hours' restaurant.pk %}"
+           class="btn btn-secondary">
+            Operating Hours
+        </a>
+    </div>
+
+</form>
+
+{% endblock %}

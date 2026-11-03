@@ -1,0 +1,86 @@
+
+{% extends 'food_delivery/restaurants/base.html' %}
+
+{% block title %}Operating Hours | Chakula Express{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <h1>Operating Hours</h1>
+    <p>Set the days and times when customers can order from your restaurant.</p>
+</div>
+
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
+
+        <div>
+            <h3 style="margin-bottom:5px;">{{ restaurant.name }}</h3>
+            <p style="font-size:13px;color:#718096;">
+                {{ restaurant.town }}, {{ restaurant.county }}
+            </p>
+        </div>
+
+        <a href="{% url 'restaurant_profile' restaurant.pk %}"
+           class="btn btn-secondary">
+            Restaurant Profile
+        </a>
+
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ formset.management_form }}
+
+        {% if formset.non_form_errors %}
+            {{ formset.non_form_errors }}
+        {% endif %}
+
+        <div class="hour-row hour-header">
+            <div>DAY</div>
+            <div>OPENING TIME</div>
+            <div>CLOSING TIME</div>
+            <div>CLOSED</div>
+        </div>
+
+        {% for form in formset %}
+            {{ form.id }}
+
+            <div class="hour-row">
+
+                <div>
+                    <strong>{{ form.instance.get_day_display }}</strong>
+                    {{ form.day.as_hidden }}
+                </div>
+
+                <div>
+                    {{ form.opening_time }}
+                    {{ form.opening_time.errors }}
+                </div>
+
+                <div>
+                    {{ form.closing_time }}
+                    {{ form.closing_time.errors }}
+                </div>
+
+                <div class="closed-control">
+                    {{ form.is_closed }}
+                    <label for="{{ form.is_closed.id_for_label }}">
+                        Closed
+                    </label>
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+        <div class="actions">
+            <button type="submit" class="btn">
+                Save Operating Hours
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

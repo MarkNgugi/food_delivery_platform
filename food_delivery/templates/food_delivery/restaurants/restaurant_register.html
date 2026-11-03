@@ -1,0 +1,104 @@
+
+{% extends 'food_delivery/restaurants/base.html' %}
+
+{% block title %}Register Restaurant | Chakula Express{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <h1>Register Your Restaurant</h1>
+    <p>Join Chakula Express and start reaching more customers across Kenya.</p>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    <div class="card">
+        <h3>01. Restaurant Information</h3>
+
+        <div class="form-grid">
+
+            {% for field in form %}
+                {% if field.name == 'name' or field.name == 'description' or field.name == 'cuisine' or field.name == 'logo' or field.name == 'cover_image' %}
+
+                    <div class="form-group {% if field.name == 'description' or field.name == 'cover_image' %}full{% endif %}">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {{ field.errors }}
+
+                        {% if field.help_text %}
+                            <small class="helptext">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>02. Contact Information</h3>
+
+        <div class="form-grid">
+
+            {% for field in form %}
+                {% if field.name == 'phone' or field.name == 'email' %}
+
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>03. Restaurant Location</h3>
+
+        <div class="form-grid">
+
+            {% for field in form %}
+                {% if field.name == 'country' or field.name == 'county' or field.name == 'town' or field.name == 'area' or field.name == 'street' or field.name == 'building' or field.name == 'landmark' or field.name == 'additional_directions' %}
+
+                    <div class="form-group {% if field.name == 'additional_directions' %}full{% endif %}">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="actions">
+        <button type="submit" class="btn">
+            Register Restaurant
+        </button>
+
+        <a href="javascript:history.back()" class="btn btn-secondary">
+            Cancel
+        </a>
+    </div>
+
+</form>
+
+{% endblock %}
