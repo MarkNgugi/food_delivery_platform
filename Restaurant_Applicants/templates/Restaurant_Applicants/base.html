@@ -515,12 +515,14 @@ a { text-decoration: none; color: inherit; }
     .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 </style>
+
+{% block extra_css %}{% endblock %}
+
 </head>
 
 <body>
 <div class="layout">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
 
         <div class="logo">
@@ -536,7 +538,7 @@ a { text-decoration: none; color: inherit; }
         </a>
 
         <a href="{% url 'restaurant_applicants:my_restaurants' %}"
-        class="nav-link {% block restaurants_active %}{% endblock %}">
+           class="nav-link {% block restaurants_active %}{% endblock %}">
             <i class="fa-solid fa-store"></i> My Restaurants
         </a>
 
@@ -582,7 +584,6 @@ a { text-decoration: none; color: inherit; }
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="main">
 
         <header class="topbar">
@@ -610,13 +611,11 @@ a { text-decoration: none; color: inherit; }
 
         </header>
 
-        <!-- DYNAMIC PAGE CONTENT -->
         <section class="content">
 
             {% block content %}
             {% endblock %}
 
-            <!-- SHARED FOOTER -->
             <div class="footer">
                 © 2026 Savora. All rights reserved. &nbsp; · &nbsp;
                 <a href="#">Privacy Policy</a> &nbsp; · &nbsp;

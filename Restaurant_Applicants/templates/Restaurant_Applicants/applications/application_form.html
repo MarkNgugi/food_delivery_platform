@@ -1,221 +1,615 @@
 
 {% extends 'Restaurant_Applicants/base.html' %}
 
-{% block title %}Add Restaurant Application | Savora{% endblock %}
-{% block breadcrumb %}Add Application{% endblock %}
+{% block title %}New Restaurant Application | Savora{% endblock %}
+{% block breadcrumb %}New Application{% endblock %}
 {% block applications_active %}active{% endblock %}
 
 {% block extra_css %}
-.form-card {
-    max-width: 950px;
+<style>
+/* =========================================
+   SAVORA RESTAURANT APPLICATION FORM
+========================================= */
+
+.application-page {
+    max-width: 1050px;
     margin: 0 auto;
+    color: var(--text, #343a40);
 }
 
-.form-intro {
+/* Page heading */
+.application-page .page-heading {
+    margin-bottom: 24px;
+}
+
+.application-page .heading-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.application-page .heading-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: var(--orange-light, #fff0e9);
+    color: var(--orange, #f15a29);
+    border-radius: 13px;
+    font-size: 19px;
+}
+
+.application-page .page-heading h1 {
+    font: 800 24px 'Plus Jakarta Sans', sans-serif;
+    color: var(--dark, #20252d);
+    letter-spacing: -.7px;
+}
+
+.application-page .page-heading p {
+    color: var(--muted, #858b94);
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 7px;
+}
+
+/* Intro notice */
+.application-page .form-intro {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
     background: #fff8ed;
     border: 1px solid #f4e7ce;
-    border-radius: 10px;
-    padding: 15px 17px;
+    border-radius: 12px;
+    padding: 17px 19px;
     margin-bottom: 22px;
 }
 
-.form-intro h4 {
-    font-size: 12px;
+.application-page .intro-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: #fff0d3;
+    color: #b77b13;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+.application-page .form-intro h4 {
+    font: 700 12px 'Plus Jakarta Sans', sans-serif;
     color: #805b1e;
     margin-bottom: 5px;
 }
 
-.form-intro p {
+.application-page .form-intro p {
     font-size: 11px;
     color: #8e744c;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
-.form-grid {
+/* Form card */
+.application-page .form-card {
+    background: white;
+    border: 1px solid var(--border, #eceef1);
+    border-radius: 15px;
+    box-shadow: var(--shadow, 0 5px 25px rgba(32,37,45,.045));
+    overflow: hidden;
+}
+
+/* Card heading */
+.application-page .form-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 22px 25px;
+    border-bottom: 1px solid var(--border, #eceef1);
+}
+
+.application-page .form-card-header h2 {
+    font: 700 15px 'Plus Jakarta Sans', sans-serif;
+    color: var(--dark, #20252d);
+}
+
+.application-page .form-card-header p {
+    color: var(--muted, #858b94);
+    font-size: 11px;
+    line-height: 1.6;
+    margin-top: 6px;
+}
+
+.application-page .header-icon {
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: var(--orange-light, #fff0e9);
+    color: var(--orange, #f15a29);
+    border-radius: 12px;
+    font-size: 17px;
+}
+
+/* Form body */
+.application-page .form-card-body {
+    padding: 25px;
+}
+
+.application-page .required-note {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted, #858b94);
+    font-size: 11px;
+    margin-bottom: 25px;
+}
+
+.application-page .required-note span {
+    color: var(--orange, #f15a29);
+    font-weight: 800;
+}
+
+/* Sections */
+.application-page .form-section {
+    margin-bottom: 29px;
+}
+
+.application-page .form-section:last-of-type {
+    margin-bottom: 0;
+}
+
+.application-page .form-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border, #eceef1);
+}
+
+.application-page .section-number {
+    width: 29px;
+    height: 29px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: var(--orange-light, #fff0e9);
+    color: var(--orange, #f15a29);
+    border-radius: 9px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.application-page .form-section-heading h3 {
+    font: 700 13px 'Plus Jakarta Sans', sans-serif;
+    color: var(--dark, #20252d);
+}
+
+.application-page .form-section-heading p {
+    color: var(--muted, #858b94);
+    font-size: 10px;
+    margin-top: 4px;
+}
+
+/* Fields */
+.application-page .form-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 19px 17px;
+    gap: 21px 19px;
 }
 
-.form-field { min-width: 0; }
-.form-field.full { grid-column: 1 / -1; }
+.application-page .form-field {
+    min-width: 0;
+}
 
-.form-field label {
-    display: block;
+.application-page .form-field.full {
+    grid-column: 1 / -1;
+}
+
+.application-page .form-field label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     color: #414851;
     font-size: 11px;
     font-weight: 700;
     margin-bottom: 8px;
 }
 
-.form-field input,
-.form-field select,
-.form-field textarea {
-    width: 100%;
-    border: 1px solid #e5e8ec;
-    border-radius: 8px;
-    padding: 11px 12px;
-    background: #fff;
-    color: #343a40;
-    font-size: 12px;
-    outline: none;
-    transition: .2s;
+.application-page .required-mark {
+    color: var(--orange, #f15a29);
+    font-size: 13px;
+    line-height: 1;
 }
 
-.form-field input:focus,
-.form-field select:focus,
-.form-field textarea:focus {
-    border-color: #f15a29;
+.application-page .form-field input:not([type="checkbox"]):not([type="file"]),
+.application-page .form-field select,
+.application-page .form-field textarea {
+    width: 100%;
+    min-height: 43px;
+    border: 1px solid #e5e8ec;
+    border-radius: 9px;
+    padding: 11px 13px;
+    background: #fff;
+    color: #343a40;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+}
+
+.application-page .form-field input::placeholder,
+.application-page .form-field textarea::placeholder {
+    color: #a8aeb6;
+}
+
+.application-page .form-field input:focus,
+.application-page .form-field select:focus,
+.application-page .form-field textarea:focus {
+    border-color: var(--orange, #f15a29);
     box-shadow: 0 0 0 3px rgba(241,90,41,.09);
 }
 
-.form-field textarea {
-    min-height: 105px;
+.application-page .form-field textarea {
+    min-height: 115px;
     resize: vertical;
+    line-height: 1.7;
 }
 
-.form-field input[type="file"] {
-    padding: 9px;
-    background: #fafafa;
+.application-page .form-field select {
+    cursor: pointer;
 }
 
-.form-field input[type="checkbox"] {
-    width: auto;
+.application-page .form-field input[type="file"] {
+    width: 100%;
+    border: 1px dashed #dfe3e8;
+    border-radius: 9px;
+    padding: 10px;
+    background: #fafbfc;
+    color: #626a74;
+    font-size: 11px;
+    cursor: pointer;
 }
 
-.form-field .helptext,
-.form-field .help-text {
+.application-page .form-field input[type="file"]::file-selector-button {
+    border: 0;
+    background: var(--orange-light, #fff0e9);
+    color: var(--orange, #f15a29);
+    border-radius: 6px;
+    padding: 8px 11px;
+    margin-right: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.application-page .form-field input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--orange, #f15a29);
+    cursor: pointer;
+}
+
+.application-page .form-field .helptext,
+.application-page .form-field .help-text {
     display: block;
-    font-size: 10px;
     color: #9299a2;
-    margin-top: 6px;
+    font-size: 10px;
+    line-height: 1.6;
+    margin-top: 7px;
 }
 
-.field-errors {
+/* Django validation */
+.application-page .form-field.has-errors input,
+.application-page .form-field.has-errors select,
+.application-page .form-field.has-errors textarea {
+    border-color: #dc4c4c;
+    background: #fffafa;
+}
+
+.application-page .field-errors {
     list-style: none;
     color: #dc4c4c;
     font-size: 10px;
-    margin-top: 6px;
+    line-height: 1.6;
+    margin-top: 7px;
 }
 
-.form-section-title {
-    font: 700 13px 'Plus Jakarta Sans', sans-serif;
-    color: #20252d;
-    padding-bottom: 12px;
-    margin-bottom: 19px;
-    border-bottom: 1px solid #eceef1;
-}
-
-.form-actions {
+.application-page .field-errors li {
     display: flex;
-    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.application-page .field-errors li::before {
+    content: "\f06a";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-top: 1px;
+}
+
+.application-page .form-error-message {
+    display: flex;
+    align-items: flex-start;
     gap: 10px;
-    border-top: 1px solid #eceef1;
-    padding-top: 20px;
-    margin-top: 25px;
+    background: #fff0f0;
+    border: 1px solid #f5d1d1;
+    border-radius: 9px;
+    padding: 13px 15px;
+    margin-bottom: 22px;
+    color: #b83c3c;
+    font-size: 11px;
+    line-height: 1.6;
 }
 
-.required-note {
+.application-page .form-error-message i {
+    margin-top: 2px;
+}
+
+/* Footer actions */
+.application-page .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    border-top: 1px solid var(--border, #eceef1);
+    padding-top: 23px;
+    margin-top: 29px;
+}
+
+.application-page .action-note {
+    color: var(--muted, #858b94);
     font-size: 10px;
-    color: #9299a2;
-    margin-bottom: 20px;
+    line-height: 1.6;
 }
 
-@media(max-width: 600px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .form-field.full { grid-column: auto; }
-    .form-actions { flex-direction: column-reverse; }
-    .form-actions .btn { width: 100%; }
+.application-page .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
+
+.application-page .form-actions .btn {
+    min-height: 42px;
+    justify-content: center;
+    padding: 11px 17px;
+    border-radius: 9px;
+    font-size: 11px;
+}
+
+.application-page .form-actions .btn-orange {
+    box-shadow: 0 4px 10px rgba(241,90,41,.15);
+}
+
+.application-page .form-actions .btn-orange:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(241,90,41,.2);
+}
+
+.application-page .form-actions .btn-outline:hover {
+    border-color: #f4b39e;
+    background: #fffaf8;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .application-page .page-heading h1 {
+        font-size: 21px;
+    }
+
+    .application-page .form-card-header {
+        padding: 19px;
+    }
+
+    .application-page .form-card-body {
+        padding: 19px;
+    }
+
+    .application-page .form-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .application-page .form-field.full {
+        grid-column: auto;
+    }
+
+    .application-page .form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .application-page .action-buttons {
+        width: 100%;
+        flex-direction: column-reverse;
+    }
+
+    .application-page .action-buttons .btn {
+        width: 100%;
+    }
+
+    .application-page .action-note {
+        text-align: center;
+    }
+}
+
+@media (max-width: 420px) {
+    .application-page .form-intro {
+        padding: 14px;
+    }
+
+    .application-page .form-card-header {
+        align-items: flex-start;
+    }
+
+    .application-page .header-icon {
+        width: 37px;
+        height: 37px;
+    }
+}
+</style>
 {% endblock %}
 
 {% block content %}
 
-<div class="page-heading">
-    <div>
-        <h1>New Restaurant Application</h1>
-        <p>Provide your restaurant details to register it on Savora.</p>
+<div class="application-page">
+
+    <!-- PAGE HEADING -->
+    <div class="page-heading">
+        <div class="heading-content">
+            <div class="heading-icon">
+                <i class="fa-solid fa-store"></i>
+            </div>
+
+            <div>
+                <h1>New Restaurant Application</h1>
+                <p>
+                    Register your restaurant on Savora and start reaching
+                    more customers in your area.
+                </p>
+            </div>
+        </div>
     </div>
-</div>
 
-<div class="form-intro">
-    <h4><i class="fa-solid fa-circle-info"></i> Before you continue</h4>
-    <p>
-        Make sure the information you provide is accurate and up to date.
-        Your application will be sent to the Savora administration team for review.
-    </p>
-</div>
+    <!-- INTRO NOTICE -->
+    <div class="form-intro">
+        <div class="intro-icon">
+            <i class="fa-solid fa-circle-info"></i>
+        </div>
 
-<div class="card form-card">
-
-    <div class="card-header">
         <div>
-            <h3>Restaurant Registration Details</h3>
-            <p style="font-size:11px;color:#9299a2;margin-top:5px;">
-                Fields marked as required must be completed.
+            <h4>Before you continue</h4>
+            <p>
+                Make sure the information you provide is accurate and up to date.
+                Your application will be sent to the Savora administration team
+                for review. You will be notified when its status changes.
             </p>
         </div>
-        <i class="fa-solid fa-store" style="font-size:19px;color:#f15a29;"></i>
     </div>
 
-    <div class="card-body">
+    <!-- APPLICATION FORM CARD -->
+    <div class="form-card">
 
-        <p class="required-note">Please complete the form below.</p>
+        <div class="form-card-header">
+            <div>
+                <h2>Restaurant Registration Details</h2>
+                <p>
+                    Complete the details below to submit your restaurant
+                    for approval.
+                </p>
+            </div>
 
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
+            <div class="header-icon">
+                <i class="fa-solid fa-clipboard-list"></i>
+            </div>
+        </div>
 
-            {% if form.non_field_errors %}
-                <div class="message error">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
+        <div class="form-card-body">
 
-            <h3 class="form-section-title">Restaurant Information</h3>
+            <p class="required-note">
+                <span>*</span>
+                Fields marked with an asterisk are required.
+            </p>
 
-            <div class="form-grid">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
 
-                {% for field in form %}
-                    <div class="form-field {% if field.name == 'description' or field.name == 'additional_directions' %}full{% endif %}">
+                {% if form.non_field_errors %}
+                    <div class="form-error-message">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <div>
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
 
-                        <label for="{{ field.id_for_label }}">
-                            {{ field.label }}
-                            {% if field.field.required %}<span style="color:#f15a29;">*</span>{% endif %}
-                        </label>
+                <!-- RESTAURANT DETAILS -->
+                <section class="form-section">
 
-                        {{ field }}
+                    <div class="form-section-heading">
+                        <div class="section-number">01</div>
+                        <div>
+                            <h3>Restaurant Information</h3>
+                            <p>Tell us about your restaurant and what you serve.</p>
+                        </div>
+                    </div>
 
-                        {% if field.help_text %}
-                            <small class="helptext">{{ field.help_text }}</small>
-                        {% endif %}
+                    <div class="form-grid">
 
-                        {% if field.errors %}
-                            <ul class="field-errors">
-                                {% for error in field.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
+                        {% for field in form %}
+
+                            <div class="form-field
+                                {% if field.name == 'description' or field.name == 'additional_directions' %}
+                                    full
+                                {% endif %}
+                                {% if field.errors %}has-errors{% endif %}">
+
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+
+                                    {% if field.field.required %}
+                                        <span class="required-mark">*</span>
+                                    {% endif %}
+                                </label>
+
+                                {{ field }}
+
+                                {% if field.help_text %}
+                                    <small class="helptext">
+                                        {{ field.help_text }}
+                                    </small>
+                                {% endif %}
+
+                                {% if field.errors %}
+                                    <ul class="field-errors">
+                                        {% for error in field.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+
+                            </div>
+
+                        {% endfor %}
 
                     </div>
-                {% endfor %}
 
-            </div>
+                </section>
 
-            <div class="form-actions">
-                <a href="{% url 'restaurant_applicants:applications' %}" class="btn btn-outline">
-                    Cancel
-                </a>
+                <!-- FORM ACTIONS -->
+                <div class="form-actions">
 
-                <button type="submit" class="btn btn-orange">
-                    <i class="fa-solid fa-paper-plane"></i>
-                    Submit Application
-                </button>
-            </div>
+                    <p class="action-note">
+                        Please review your details before submitting.
+                    </p>
 
-        </form>
+                    <div class="action-buttons">
 
+                        <a href="{% url 'restaurant_applicants:applications' %}"
+                           class="btn btn-outline">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Cancel
+                        </a>
+
+                        <button type="submit" class="btn btn-orange">
+                            Submit Application
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
     </div>
+
 </div>
 
 {% endblock %}

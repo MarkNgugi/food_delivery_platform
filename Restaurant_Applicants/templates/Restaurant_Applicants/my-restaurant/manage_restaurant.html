@@ -907,7 +907,8 @@
                 My Restaurants
             </a>
 
-            <a href="#" class="btn btn-primary">
+            <a href="{% url 'restaurant_applicants:add_menu_item' restaurant.id %}"
+            class="btn btn-primary">
                 <i class="fa-solid fa-plus"></i>
                 Add Menu Item
             </a>
@@ -975,10 +976,12 @@
                 </div>
             </div>
 
-            <a href="#" class="edit-profile">
-                <i class="fa-solid fa-pen"></i>
-                Edit Profile
-            </a>
+
+            <a href="{% url 'restaurant_applicants:edit_restaurant' restaurant.id %}"
+   class="edit-profile">
+    <i class="fa-solid fa-pen"></i>
+    Edit Profile
+</a>
 
         </div>
     </section>
@@ -1030,8 +1033,10 @@
                 <span class="stat-label">Menu</span>
             </div>
             <span class="stat-label">Active Menu Items</span>
-            <h3>32</h3>
-            <span class="stat-foot">Across 5 categories</span>
+            <h3>{{ active_menu_items_count }}</h3>
+            <span class="stat-foot">
+                Across {{ menu_category_count }} categories
+            </span>
         </div>
 
         <div class="stat-card">
@@ -1187,79 +1192,109 @@
 
             </section>
 
-            <!-- MENU MANAGEMENT -->
+ <!-- MENU MANAGEMENT -->
 
-            <section class="card">
+<section class="card">
 
-                <div class="card-heading">
-                    <div>
-                        <h2>Menu Management</h2>
-                        <p>Manage meals and products available to customers.</p>
+    <div class="card-heading">
+        <div>
+            <h2>Menu Management</h2>
+            <p>Manage meals and products available to customers.</p>
+        </div>
+
+        <a href="{% url 'restaurant_applicants:add_menu_item' restaurant.id %}"
+           class="view-link">
+            Add item <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
+
+    <div class="menu-list">
+
+        {% for item in menu_items %}
+
+            <div class="menu-item">
+
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                {% else %}
+                    <div class="menu-image-placeholder"
+                         style="width:55px;height:51px;display:grid;place-items:center;background:var(--mr-bg);border-radius:8px;color:var(--mr-muted);flex-shrink:0;">
+                        <i class="fa-solid fa-utensils"></i>
                     </div>
+                {% endif %}
 
-                    <a href="#" class="view-link">
-                        Manage menu <i class="fa-solid fa-arrow-right"></i>
-                    </a>
+                <div class="menu-info">
+                    <h4>{{ item.name }}</h4>
+
+                    <p>
+                        {{ item.category.name }}
+                        {% if item.preparation_time %}
+                            · {{ item.preparation_time }} min
+                        {% endif %}
+                    </p>
+
+                    {% if item.discount_price %}
+                        <strong>
+                            KSh {{ item.discount_price|floatformat:2 }}
+                        </strong>
+                        <small style="color:var(--mr-muted);text-decoration:line-through;margin-left:5px;">
+                            KSh {{ item.price|floatformat:2 }}
+                        </small>
+                    {% else %}
+                        <strong>
+                            KSh {{ item.price|floatformat:2 }}
+                        </strong>
+                    {% endif %}
                 </div>
 
-                <div class="menu-list">
+                {% if item.is_available %}
+                    <span class="menu-status available">Available</span>
+                {% else %}
+                    <span class="menu-status unavailable">Unavailable</span>
+                {% endif %}
 
-                    <div class="menu-item">
-                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300"
-                             alt="Beef burger">
+                <span class="menu-more" title="Menu item">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </span>
 
-                        <div class="menu-info">
-                            <h4>Classic Beef Burger</h4>
-                            <p>Burgers · Main Course</p>
-                            <strong>KSh 650</strong>
-                        </div>
+            </div>
 
-                        <span class="menu-status available">Available</span>
-                        <a href="#" class="menu-more">
-                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                        </a>
-                    </div>
+        {% empty %}
 
-                    <div class="menu-item">
-                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300"
-                             alt="Chicken meal">
-
-                        <div class="menu-info">
-                            <h4>Grilled Chicken</h4>
-                            <p>Chicken · Main Course</p>
-                            <strong>KSh 950</strong>
-                        </div>
-
-                        <span class="menu-status available">Available</span>
-                        <a href="#" class="menu-more">
-                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                        </a>
-                    </div>
-
-                    <div class="menu-item">
-                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300"
-                             alt="Pizza">
-
-                        <div class="menu-info">
-                            <h4>Chicken Tikka Pizza</h4>
-                            <p>Pizza · Fast Food</p>
-                            <strong>KSh 1,200</strong>
-                        </div>
-
-                        <span class="menu-status unavailable">Unavailable</span>
-                        <a href="#" class="menu-more">
-                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                        </a>
-                    </div>
-
+            <div style="text-align:center;padding:30px 15px;">
+                <div style="font-size:30px;color:var(--mr-muted);margin-bottom:10px;">
+                    <i class="fa-solid fa-bowl-food"></i>
                 </div>
 
-                <button type="button" class="add-menu">
+                <h4 style="font-size:12px;margin-bottom:6px;">
+                    No menu items yet
+                </h4>
+
+                <p style="font-size:10px;color:var(--mr-muted);margin-bottom:14px;">
+                    Start building your restaurant menu by adding your first meal.
+                </p>
+
+                <a href="{% url 'restaurant_applicants:add_menu_item' restaurant.id %}"
+                   class="view-link">
                     <i class="fa-solid fa-plus"></i>
-                    Add another menu item
-                </button>
+                    Add your first menu item
+                </a>
+            </div>
 
-            </section>
+        {% endfor %}
+
+    </div>
+
+    {% if menu_items %}
+        <a href="{% url 'restaurant_applicants:add_menu_item' restaurant.id %}"
+           class="add-menu"
+           style="display:block;text-align:center;text-decoration:none;">
+            <i class="fa-solid fa-plus"></i>
+            Add another menu item
+        </a>
+    {% endif %}
+
+</section>
 
         </div>
 

@@ -144,3 +144,88 @@ class RestaurantOperatingHour(models.Model):
 
     def __str__(self):
         return f'{self.restaurant.name} - {self.get_day_display()}'
+
+
+
+
+class MenuCategory(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'Menu Categories'
+
+    def __str__(self):
+        return self.name
+
+
+class MenuItem(models.Model):
+
+    restaurant = models.ForeignKey(
+        Restaurant,
+        on_delete=models.CASCADE,
+        related_name='menu_items'
+    )
+
+    category = models.ForeignKey(
+        MenuCategory,
+        on_delete=models.PROTECT,
+        related_name='menu_items'
+    )
+
+    name = models.CharField(max_length=200)
+    description = models.TextField()
+
+    image = models.ImageField(
+        upload_to='menu_items/',
+        blank=True,
+        null=True
+    )
+
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    discount_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True
+    )
+
+    preparation_time = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        help_text='Estimated preparation time in minutes'
+    )
+
+    serving_size = models.CharField(
+        max_length=100,
+        blank=True
+    )
+
+    ingredients = models.TextField(blank=True)
+    allergens = models.CharField(max_length=255, blank=True)
+
+    is_available = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+    is_featured = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.name} - {self.restaurant.name}'
+
+    @property
+    def current_price(self):
+        if self.discount_price is not None:
+            return self.discount_price
+        return self.price

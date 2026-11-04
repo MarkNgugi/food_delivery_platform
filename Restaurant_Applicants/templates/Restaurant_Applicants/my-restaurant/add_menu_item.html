@@ -1,0 +1,431 @@
+ {% extends 'Restaurant_Applicants/base.html' %}
+
+{% block title %}Add Menu Item | Savora{% endblock %}
+{% block breadcrumb %}Add Menu Item{% endblock %}
+{% block restaurants_active %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+.menu-form-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    color: var(--dark, #20252d);
+}
+
+.menu-form-page * {
+    box-sizing: border-box;
+}
+
+.menu-form-page .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.menu-form-page .eyebrow {
+    color: var(--orange, #f15a29);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.menu-form-page h1 {
+    font: 800 25px 'Plus Jakarta Sans', sans-serif;
+    margin: 6px 0;
+}
+
+.menu-form-page .subtitle {
+    color: var(--muted, #9298a2);
+    font-size: 12px;
+}
+
+.menu-form-page .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 13px;
+    border: 1px solid var(--border, #eceef1);
+    border-radius: 8px;
+    color: var(--dark, #20252d);
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.menu-form-page .form-card {
+    background: var(--white, #fff);
+    border: 1px solid var(--border, #eceef1);
+    border-radius: 13px;
+    padding: 24px;
+}
+
+.menu-form-page .restaurant-notice {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 15px;
+    background: #fff8f4;
+    border: 1px solid #f7dfd3;
+    border-radius: 9px;
+    margin-bottom: 23px;
+}
+
+.menu-form-page .notice-icon {
+    width: 37px;
+    height: 37px;
+    display: grid;
+    place-items: center;
+    background: #ffede5;
+    color: var(--orange, #f15a29);
+    border-radius: 9px;
+    flex-shrink: 0;
+}
+
+.menu-form-page .restaurant-notice strong {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.menu-form-page .restaurant-notice small {
+    color: var(--muted, #9298a2);
+    font-size: 10px;
+}
+
+.menu-form-page .form-section {
+    margin-bottom: 24px;
+}
+
+.menu-form-page .section-title {
+    font: 800 14px 'Plus Jakarta Sans', sans-serif;
+    margin-bottom: 5px;
+}
+
+.menu-form-page .section-description {
+    font-size: 10px;
+    color: var(--muted, #9298a2);
+    margin-bottom: 16px;
+}
+
+.menu-form-page .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.menu-form-page .field {
+    min-width: 0;
+}
+
+.menu-form-page .field.full {
+    grid-column: 1 / -1;
+}
+
+.menu-form-page label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+.menu-form-page input:not([type="checkbox"]),
+.menu-form-page select,
+.menu-form-page textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid var(--border, #eceef1);
+    border-radius: 8px;
+    background: var(--bg, #f6f7f9);
+    color: var(--dark, #20252d);
+    font: inherit;
+    font-size: 11px;
+    outline: none;
+}
+
+.menu-form-page input:focus,
+.menu-form-page select:focus,
+.menu-form-page textarea:focus {
+    border-color: var(--orange, #f15a29);
+    box-shadow: 0 0 0 3px rgba(241, 90, 41, .09);
+}
+
+.menu-form-page textarea {
+    resize: vertical;
+    min-height: 85px;
+}
+
+.menu-form-page .help-text {
+    display: block;
+    color: var(--muted, #9298a2);
+    font-size: 9px;
+    margin-top: 6px;
+}
+
+.menu-form-page .error {
+    display: block;
+    color: #dc3545;
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.menu-form-page .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.menu-form-page .check-option {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px;
+    background: var(--bg, #f6f7f9);
+    border: 1px solid var(--border, #eceef1);
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.menu-form-page .check-option input {
+    accent-color: var(--orange, #f15a29);
+}
+
+.menu-form-page .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border, #eceef1);
+}
+
+.menu-form-page .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 17px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.menu-form-page .btn-cancel {
+    color: var(--dark, #20252d);
+    border: 1px solid var(--border, #eceef1);
+    background: transparent;
+}
+
+.menu-form-page .btn-submit {
+    background: var(--orange, #f15a29);
+    color: #fff;
+    border: 0;
+}
+
+.menu-form-page .non-field-errors {
+    background: #fff0f0;
+    color: #c53030;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 11px;
+    margin-bottom: 15px;
+}
+
+@media(max-width: 650px) {
+    .menu-form-page .form-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .menu-form-page .form-card {
+        padding: 16px;
+    }
+
+    .menu-form-page .form-grid,
+    .menu-form-page .checkbox-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-form-page .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .menu-form-page .form-actions .btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="menu-form-page">
+
+    <header class="form-header">
+        <div>
+            <span class="eyebrow">MENU MANAGEMENT</span>
+            <h1>Add Menu Item</h1>
+            <p class="subtitle">
+                Add a new meal or product to your restaurant menu.
+            </p>
+        </div>
+
+        <a href="{% url 'restaurant_applicants:manage_restaurant' restaurant.id %}"
+           class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Restaurant
+        </a>
+    </header>
+
+    <div class="form-card">
+
+        <div class="restaurant-notice">
+            <div class="notice-icon">
+                <i class="fa-solid fa-store"></i>
+            </div>
+            <div>
+                <strong>{{ restaurant.name }}</strong>
+                <small>This menu item will be added to this restaurant.</small>
+            </div>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="non-field-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <section class="form-section">
+                <h2 class="section-title">Basic Information</h2>
+                <p class="section-description">
+                    Provide the name, category and description of your item.
+                </p>
+
+                <div class="form-grid">
+                    {% for field in form %}
+                        {% if field.name == 'name' or field.name == 'category' or field.name == 'description' %}
+                            <div class="field {% if field.name == 'description' %}full{% endif %}">
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                    {% if field.field.required %}*{% endif %}
+                                </label>
+
+                                {{ field }}
+
+                                {% if field.help_text %}
+                                    <small class="help-text">{{ field.help_text }}</small>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <small class="error">{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2 class="section-title">Food Image</h2>
+                <p class="section-description">
+                    Upload a clear photograph of the meal.
+                </p>
+
+                <div class="field">
+                    <label for="{{ form.image.id_for_label }}">Menu Item Image</label>
+                    {{ form.image }}
+                    <small class="help-text">Use JPG, PNG or WebP images.</small>
+                    {% for error in form.image.errors %}
+                        <small class="error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2 class="section-title">Pricing</h2>
+                <p class="section-description">
+                    Set the normal price and an optional promotional price.
+                </p>
+
+                <div class="form-grid">
+                    {% for field in form %}
+                        {% if field.name == 'price' or field.name == 'discount_price' %}
+                            <div class="field">
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                    {% if field.field.required %}*{% endif %}
+                                </label>
+                                {{ field }}
+                                {% for error in field.errors %}
+                                    <small class="error">{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2 class="section-title">Meal Details</h2>
+                <p class="section-description">
+                    Add preparation and ingredient information.
+                </p>
+
+                <div class="form-grid">
+                    {% for field in form %}
+                        {% if field.name == 'preparation_time' or field.name == 'serving_size' or field.name == 'ingredients' or field.name == 'allergens' %}
+                            <div class="field {% if field.name == 'ingredients' %}full{% endif %}">
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {% for error in field.errors %}
+                                    <small class="error">{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2 class="section-title">Menu Visibility</h2>
+                <p class="section-description">
+                    Control how this item appears on your restaurant menu.
+                </p>
+
+                <div class="checkbox-grid">
+                    {% for field in form %}
+                        {% if field.name == 'is_available' or field.name == 'is_active' or field.name == 'is_featured' %}
+                            <label class="check-option" for="{{ field.id_for_label }}">
+                                {{ field }}
+                                {{ field.label }}
+                            </label>
+                            {% for error in field.errors %}
+                                <small class="error">{{ error }}</small>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <a href="{% url 'restaurant_applicants:manage_restaurant' restaurant.id %}"
+                   class="btn btn-cancel">
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn btn-submit">
+                    <i class="fa-solid fa-plus"></i>
+                    Save Menu Item
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

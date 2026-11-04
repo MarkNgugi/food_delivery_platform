@@ -39,3 +39,37 @@ class RestaurantOperatingHourAdmin(admin.ModelAdmin):
         'is_closed',
     )
     list_filter = ('day', 'is_closed')
+
+
+from django.contrib import admin
+from .models import MenuCategory, MenuItem
+
+
+@admin.register(MenuCategory)
+class MenuCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_active', 'created_at')
+    list_filter = ('is_active',)
+    search_fields = ('name',)
+
+
+@admin.register(MenuItem)
+class MenuItemAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        'restaurant',
+        'category',
+        'price',
+        'is_available',
+        'is_active',
+    )
+
+    list_filter = (
+        'category',
+        'is_available',
+        'is_active',
+    )
+
+    search_fields = (
+        'name',
+        'restaurant__name',
+    )

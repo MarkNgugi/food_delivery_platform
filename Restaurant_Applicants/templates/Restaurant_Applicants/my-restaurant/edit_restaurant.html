@@ -1,0 +1,936 @@
+{% extends 'Restaurant_Applicants/base.html' %}
+
+{% block title %}Edit {{ restaurant.name }} | Savora{% endblock %}
+{% block breadcrumb %}Edit Restaurant{% endblock %}
+{% block restaurants_active %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =========================================
+   SAVORA - EDIT RESTAURANT
+========================================= */
+
+.edit-restaurant-page {
+    max-width: 1050px;
+    margin: 0 auto;
+    color: var(--text, #343a40);
+}
+
+.edit-restaurant-page * {
+    box-sizing: border-box;
+}
+
+.edit-restaurant-page .page-heading {
+    margin-bottom: 23px;
+}
+
+.edit-restaurant-page .heading-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.edit-restaurant-page .heading-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: var(--orange-light, #fff0e9);
+    color: var(--orange, #f15a29);
+    border-radius: 13px;
+    font-size: 19px;
+}
+
+.edit-restaurant-page .page-heading h1 {
+    font: 800 24px 'Plus Jakarta Sans', sans-serif;
+    color: var(--dark, #20252d);
+    letter-spacing: -.7px;
+}
+
+.edit-restaurant-page .page-heading p {
+    color: var(--muted, #858b94);
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 7px;
+}
+
+/* Information notice */
+
+.edit-restaurant-page .form-intro {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    background: #fff8ed;
+    border: 1px solid #f4e7ce;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 21px;
+}
+
+.edit-restaurant-page .intro-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: #fff0d3;
+    color: #b77b13;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+.edit-restaurant-page .form-intro h4 {
+    font: 700 12px 'Plus Jakarta Sans', sans-serif;
+    color: #805b1e;
+    margin-bottom: 5px;
+}
+
+.edit-restaurant-page .form-intro p {
+    font-size: 11px;
+    color: #8e744c;
+    line-height: 1.7;
+}
+
+/* Form card */
+
+.edit-restaurant-page .form-card {
+    background: #fff;
+    border: 1px solid var(--border, #eceef1);
+    border-radius: 15px;
+    box-shadow: var(--shadow, 0 5px 25px rgba(32,37,45,.045));
+    overflow: hidden;
+}
+
+.edit-restaurant-page .form-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 22px 25px;
+    border-bottom: 1px solid var(--border, #eceef1);
+}
+
+.edit-restaurant-page .form-card-header h2 {
+    font: 700 15px 'Plus Jakarta Sans', sans-serif;
+    color: var(--dark, #20252d);
+}
+
+.edit-restaurant-page .form-card-header p {
+    color: var(--muted, #858b94);
+    font-size: 11px;
+    line-height: 1.6;
+    margin-top: 6px;
+}
+
+.edit-restaurant-page .header-icon {
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: var(--orange-light, #fff0e9);
+    color: var(--orange, #f15a29);
+    border-radius: 12px;
+    font-size: 17px;
+}
+
+.edit-restaurant-page .form-card-body {
+    padding: 25px;
+}
+
+.edit-restaurant-page .required-note {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted, #858b94);
+    font-size: 11px;
+    margin-bottom: 25px;
+}
+
+.edit-restaurant-page .required-note span,
+.edit-restaurant-page .required-mark {
+    color: var(--orange, #f15a29);
+    font-weight: 800;
+}
+
+/* Sections */
+
+.edit-restaurant-page .form-section {
+    margin-bottom: 29px;
+}
+
+.edit-restaurant-page .form-section:last-of-type {
+    margin-bottom: 0;
+}
+
+.edit-restaurant-page .form-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border, #eceef1);
+}
+
+.edit-restaurant-page .section-number {
+    width: 29px;
+    height: 29px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: var(--orange-light, #fff0e9);
+    color: var(--orange, #f15a29);
+    border-radius: 9px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.edit-restaurant-page .form-section-heading h3 {
+    font: 700 13px 'Plus Jakarta Sans', sans-serif;
+    color: var(--dark, #20252d);
+}
+
+.edit-restaurant-page .form-section-heading p {
+    color: var(--muted, #858b94);
+    font-size: 10px;
+    margin-top: 4px;
+}
+
+/* Fields */
+
+.edit-restaurant-page .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 21px 19px;
+}
+
+.edit-restaurant-page .form-field {
+    min-width: 0;
+}
+
+.edit-restaurant-page .form-field.full {
+    grid-column: 1 / -1;
+}
+
+.edit-restaurant-page .form-field label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #414851;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.edit-restaurant-page .form-field input:not([type="checkbox"]):not([type="file"]),
+.edit-restaurant-page .form-field select,
+.edit-restaurant-page .form-field textarea {
+    width: 100%;
+    min-height: 43px;
+    border: 1px solid #e5e8ec;
+    border-radius: 9px;
+    padding: 11px 13px;
+    background: #fff;
+    color: #343a40;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.edit-restaurant-page .form-field input:focus,
+.edit-restaurant-page .form-field select:focus,
+.edit-restaurant-page .form-field textarea:focus {
+    border-color: var(--orange, #f15a29);
+    box-shadow: 0 0 0 3px rgba(241,90,41,.09);
+}
+
+.edit-restaurant-page .form-field input::placeholder,
+.edit-restaurant-page .form-field textarea::placeholder {
+    color: #a8aeb6;
+}
+
+.edit-restaurant-page .form-field textarea {
+    min-height: 115px;
+    resize: vertical;
+    line-height: 1.7;
+}
+
+.edit-restaurant-page .form-field select {
+    cursor: pointer;
+}
+
+.edit-restaurant-page .form-field input[type="file"] {
+    width: 100%;
+    border: 1px dashed #dfe3e8;
+    border-radius: 9px;
+    padding: 10px;
+    background: #fafbfc;
+    color: #626a74;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.edit-restaurant-page .form-field input[type="file"]::file-selector-button {
+    border: 0;
+    background: var(--orange-light, #fff0e9);
+    color: var(--orange, #f15a29);
+    border-radius: 6px;
+    padding: 8px 11px;
+    margin-right: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Existing images */
+
+.edit-restaurant-page .current-image {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 11px;
+    padding: 10px;
+    background: #fafbfc;
+    border: 1px solid #edf0f3;
+    border-radius: 9px;
+}
+
+.edit-restaurant-page .current-image img {
+    width: 65px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 7px;
+}
+
+.edit-restaurant-page .current-image.cover-preview img {
+    width: 100px;
+    height: 55px;
+}
+
+.edit-restaurant-page .current-image-info strong {
+    display: block;
+    color: #414851;
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
+.edit-restaurant-page .current-image-info small {
+    color: #9299a2;
+    font-size: 9px;
+}
+
+/* Help text */
+
+.edit-restaurant-page .helptext,
+.edit-restaurant-page .help-text {
+    display: block;
+    color: #9299a2;
+    font-size: 10px;
+    line-height: 1.6;
+    margin-top: 7px;
+}
+
+/* Errors */
+
+.edit-restaurant-page .form-field.has-errors input,
+.edit-restaurant-page .form-field.has-errors select,
+.edit-restaurant-page .form-field.has-errors textarea {
+    border-color: #dc4c4c;
+    background: #fffafa;
+}
+
+.edit-restaurant-page .field-errors {
+    list-style: none;
+    color: #dc4c4c;
+    font-size: 10px;
+    line-height: 1.6;
+    margin-top: 7px;
+}
+
+.edit-restaurant-page .field-errors li {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.edit-restaurant-page .field-errors li::before {
+    content: "\\f06a";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
+
+.edit-restaurant-page .form-error-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fff0f0;
+    border: 1px solid #f5d1d1;
+    border-radius: 9px;
+    padding: 13px 15px;
+    margin-bottom: 22px;
+    color: #b83c3c;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+/* Status information */
+
+.edit-restaurant-page .status-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 13px 15px;
+    background: #f7f8fa;
+    border: 1px solid #eceef1;
+    border-radius: 9px;
+    margin-top: 25px;
+}
+
+.edit-restaurant-page .status-note i {
+    color: var(--orange, #f15a29);
+    margin-top: 2px;
+}
+
+.edit-restaurant-page .status-note strong {
+    display: block;
+    color: #414851;
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
+.edit-restaurant-page .status-note p {
+    color: #858b94;
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+/* Form actions */
+
+.edit-restaurant-page .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    border-top: 1px solid var(--border, #eceef1);
+    padding-top: 23px;
+    margin-top: 29px;
+}
+
+.edit-restaurant-page .action-note {
+    color: var(--muted, #858b94);
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.edit-restaurant-page .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.edit-restaurant-page .btn {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 17px;
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.edit-restaurant-page .btn-outline {
+    color: #414851;
+    background: #fff;
+    border: 1px solid #e5e8ec;
+}
+
+.edit-restaurant-page .btn-outline:hover {
+    border-color: #f4b39e;
+    background: #fffaf8;
+}
+
+.edit-restaurant-page .btn-orange {
+    color: #fff;
+    background: var(--orange, #f15a29);
+    border: 1px solid var(--orange, #f15a29);
+    box-shadow: 0 4px 10px rgba(241,90,41,.15);
+}
+
+.edit-restaurant-page .btn-orange:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(241,90,41,.2);
+}
+
+/* Responsive */
+
+@media (max-width: 700px) {
+    .edit-restaurant-page .page-heading h1 {
+        font-size: 21px;
+    }
+
+    .edit-restaurant-page .form-card-header,
+    .edit-restaurant-page .form-card-body {
+        padding: 19px;
+    }
+
+    .edit-restaurant-page .form-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .edit-restaurant-page .form-field.full {
+        grid-column: auto;
+    }
+
+    .edit-restaurant-page .form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .edit-restaurant-page .action-buttons {
+        width: 100%;
+        flex-direction: column-reverse;
+    }
+
+    .edit-restaurant-page .action-buttons .btn {
+        width: 100%;
+    }
+
+    .edit-restaurant-page .action-note {
+        text-align: center;
+    }
+}
+
+@media (max-width: 420px) {
+    .edit-restaurant-page .form-intro {
+        padding: 14px;
+    }
+
+    .edit-restaurant-page .form-card-header {
+        align-items: flex-start;
+    }
+
+    .edit-restaurant-page .header-icon {
+        width: 37px;
+        height: 37px;
+    }
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="edit-restaurant-page">
+
+    <!-- PAGE HEADING -->
+
+    <div class="page-heading">
+        <div class="heading-content">
+
+            <div class="heading-icon">
+                <i class="fa-solid fa-store"></i>
+            </div>
+
+            <div>
+                <h1>Edit Restaurant</h1>
+                <p>
+                    Update your restaurant's details, contact information
+                    and location on Savora.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- INFORMATION NOTICE -->
+
+    <div class="form-intro">
+
+        <div class="intro-icon">
+            <i class="fa-solid fa-circle-info"></i>
+        </div>
+
+        <div>
+            <h4>Keep your restaurant information up to date</h4>
+            <p>
+                Make sure your restaurant details, contact information
+                and location are accurate so customers can easily find
+                and contact your business.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+
+    <div class="form-card">
+
+        <div class="form-card-header">
+
+            <div>
+                <h2>Restaurant Information</h2>
+                <p>
+                    Make the necessary changes and save your updated details.
+                </p>
+            </div>
+
+            <div class="header-icon">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </div>
+
+        </div>
+
+
+        <div class="form-card-body">
+
+            <p class="required-note">
+                <span>*</span>
+                Fields marked with an asterisk are required.
+            </p>
+
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+
+                {% if form.non_field_errors %}
+                    <div class="form-error-message">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+
+                        <div>
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+
+                <!-- SECTION 01: RESTAURANT INFORMATION -->
+
+                <section class="form-section">
+
+                    <div class="form-section-heading">
+
+                        <div class="section-number">01</div>
+
+                        <div>
+                            <h3>Restaurant Information</h3>
+                            <p>
+                                Update your restaurant name, description
+                                and cuisine.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        {% for field in form %}
+                            {% if field.name == 'name' or field.name == 'description' or field.name == 'cuisine' %}
+
+                                <div class="form-field
+                                    {% if field.name == 'description' %}full{% endif %}
+                                    {% if field.errors %}has-errors{% endif %}">
+
+                                    <label for="{{ field.id_for_label }}">
+                                        {{ field.label }}
+
+                                        {% if field.field.required %}
+                                            <span class="required-mark">*</span>
+                                        {% endif %}
+                                    </label>
+
+                                    {{ field }}
+
+                                    {% if field.help_text %}
+                                        <small class="helptext">
+                                            {{ field.help_text }}
+                                        </small>
+                                    {% endif %}
+
+                                    {% if field.errors %}
+                                        <ul class="field-errors">
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+
+                                </div>
+
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+
+                <!-- SECTION 02: RESTAURANT IMAGES -->
+
+                <section class="form-section">
+
+                    <div class="form-section-heading">
+
+                        <div class="section-number">02</div>
+
+                        <div>
+                            <h3>Restaurant Branding</h3>
+                            <p>
+                                Manage the logo and cover image displayed
+                                on your restaurant profile.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        {% for field in form %}
+                            {% if field.name == 'logo' or field.name == 'cover_image' %}
+
+                                <div class="form-field
+                                    {% if field.errors %}has-errors{% endif %}">
+
+                                    <label for="{{ field.id_for_label }}">
+                                        {{ field.label }}
+                                    </label>
+
+                                    {% if field.name == 'logo' and restaurant.logo %}
+                                        <div class="current-image">
+                                            <img src="{{ restaurant.logo.url }}"
+                                                 alt="Current restaurant logo">
+
+                                            <div class="current-image-info">
+                                                <strong>Current logo</strong>
+                                                <small>Upload a new file below to replace it.</small>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if field.name == 'cover_image' and restaurant.cover_image %}
+                                        <div class="current-image cover-preview">
+                                            <img src="{{ restaurant.cover_image.url }}"
+                                                 alt="Current restaurant cover image">
+
+                                            <div class="current-image-info">
+                                                <strong>Current cover image</strong>
+                                                <small>Upload a new file below to replace it.</small>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                    {{ field }}
+
+                                    {% if field.help_text %}
+                                        <small class="helptext">
+                                            {{ field.help_text }}
+                                        </small>
+                                    {% endif %}
+
+                                    {% if field.errors %}
+                                        <ul class="field-errors">
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+
+                                </div>
+
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+
+                <!-- SECTION 03: CONTACT INFORMATION -->
+
+                <section class="form-section">
+
+                    <div class="form-section-heading">
+
+                        <div class="section-number">03</div>
+
+                        <div>
+                            <h3>Contact Information</h3>
+                            <p>
+                                Update the contact details customers can
+                                use to reach your restaurant.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        {% for field in form %}
+                            {% if field.name == 'phone' or field.name == 'email' %}
+
+                                <div class="form-field
+                                    {% if field.errors %}has-errors{% endif %}">
+
+                                    <label for="{{ field.id_for_label }}">
+                                        {{ field.label }}
+
+                                        {% if field.field.required %}
+                                            <span class="required-mark">*</span>
+                                        {% endif %}
+                                    </label>
+
+                                    {{ field }}
+
+                                    {% if field.help_text %}
+                                        <small class="helptext">
+                                            {{ field.help_text }}
+                                        </small>
+                                    {% endif %}
+
+                                    {% if field.errors %}
+                                        <ul class="field-errors">
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+
+                                </div>
+
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+
+                <!-- SECTION 04: LOCATION -->
+
+                <section class="form-section">
+
+                    <div class="form-section-heading">
+
+                        <div class="section-number">04</div>
+
+                        <div>
+                            <h3>Restaurant Location</h3>
+                            <p>
+                                Help customers and delivery partners
+                                locate your restaurant.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        {% for field in form %}
+                            {% if field.name == 'country' or field.name == 'county' or field.name == 'town' or field.name == 'area' or field.name == 'street' or field.name == 'building' or field.name == 'landmark' or field.name == 'additional_directions' %}
+
+                                <div class="form-field
+                                    {% if field.name == 'additional_directions' or field.name == 'landmark' %}full{% endif %}
+                                    {% if field.errors %}has-errors{% endif %}">
+
+                                    <label for="{{ field.id_for_label }}">
+                                        {{ field.label }}
+
+                                        {% if field.field.required %}
+                                            <span class="required-mark">*</span>
+                                        {% endif %}
+                                    </label>
+
+                                    {{ field }}
+
+                                    {% if field.help_text %}
+                                        <small class="helptext">
+                                            {{ field.help_text }}
+                                        </small>
+                                    {% endif %}
+
+                                    {% if field.errors %}
+                                        <ul class="field-errors">
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+
+                                </div>
+
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+
+                <!-- STATUS NOTICE -->
+
+                <div class="status-note">
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <div>
+                        <strong>Restaurant approval status: {{ restaurant.get_status_display }}</strong>
+
+                        <p>
+                            Updating your restaurant information will not
+                            automatically change its approval status.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- FORM ACTIONS -->
+
+                <div class="form-actions">
+
+                    <p class="action-note">
+                        Review your changes before saving.
+                    </p>
+
+                    <div class="action-buttons">
+
+                        <a href="{% url 'restaurant_applicants:manage_restaurant' restaurant.id %}"
+                           class="btn btn-outline">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Cancel
+                        </a>
+
+                        <button type="submit" class="btn btn-orange">
+                            Save Changes
+                            <i class="fa-solid fa-check"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
