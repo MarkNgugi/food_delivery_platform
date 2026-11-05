@@ -40,4 +40,16 @@ urlpatterns = [
         views.add_menu_item,
         name='add_menu_item'
     ),
+
+    path(
+    'my-restaurant/<int:restaurant_id>/menu/<int:item_id>/edit/',
+    views.edit_menu_item,
+    name='edit_menu_item'
+    ),
+
+    path(
+        'my-restaurant/<int:restaurant_id>/menu/<int:item_id>/delete/',
+        views.delete_menu_item,
+        name='delete_menu_item'
+    ),
 ]

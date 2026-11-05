@@ -21,18 +21,9 @@
     --mr-yellow: #d99a19;
 }
 
-.manage-restaurant-page * {
-    box-sizing: border-box;
-}
-
-.manage-restaurant-page a {
-    text-decoration: none;
-}
-
-.manage-restaurant-page button {
-    font: inherit;
-    cursor: pointer;
-}
+.manage-restaurant-page * { box-sizing: border-box; }
+.manage-restaurant-page a { text-decoration: none; }
+.manage-restaurant-page button { font: inherit; cursor: pointer; }
 
 /* HEADER */
 
@@ -54,7 +45,6 @@
 .manage-restaurant-page .page-header h1 {
     font: 800 25px 'Plus Jakarta Sans', sans-serif;
     margin: 5px 0;
-    color: var(--dark, #20252d);
 }
 
 .manage-restaurant-page .page-header p {
@@ -80,9 +70,7 @@
     white-space: nowrap;
 }
 
-.manage-restaurant-page .btn:hover {
-    transform: translateY(-2px);
-}
+.manage-restaurant-page .btn:hover { transform: translateY(-2px); }
 
 .manage-restaurant-page .btn-outline {
     color: var(--dark, #20252d);
@@ -193,7 +181,8 @@
     font-size: 11px;
 }
 
-.manage-restaurant-page .cuisine i {
+.manage-restaurant-page .cuisine i,
+.manage-restaurant-page .profile-meta i {
     color: var(--mr-orange);
     margin-right: 5px;
 }
@@ -208,11 +197,6 @@
 .manage-restaurant-page .profile-meta span {
     color: var(--mr-muted);
     font-size: 10px;
-}
-
-.manage-restaurant-page .profile-meta i {
-    color: var(--mr-orange);
-    margin-right: 5px;
 }
 
 .manage-restaurant-page .edit-profile {
@@ -238,7 +222,6 @@
 .manage-restaurant-page .card-heading h2 {
     font: 800 15px 'Plus Jakarta Sans', sans-serif;
     margin-bottom: 4px;
-    color: var(--dark, #20252d);
 }
 
 .manage-restaurant-page .section-heading p,
@@ -283,30 +266,11 @@
     flex-shrink: 0;
 }
 
-.manage-restaurant-page .orange {
-    background: #fff0e9;
-    color: var(--mr-orange);
-}
-
-.manage-restaurant-page .green {
-    background: #e8f8f0;
-    color: var(--mr-green);
-}
-
-.manage-restaurant-page .purple {
-    background: #f1edff;
-    color: var(--mr-purple);
-}
-
-.manage-restaurant-page .blue {
-    background: #eaf2ff;
-    color: var(--mr-blue);
-}
-
-.manage-restaurant-page .yellow {
-    background: #fff7df;
-    color: var(--mr-yellow);
-}
+.manage-restaurant-page .orange { background: #fff0e9; color: var(--mr-orange); }
+.manage-restaurant-page .green { background: #e8f8f0; color: var(--mr-green); }
+.manage-restaurant-page .purple { background: #f1edff; color: var(--mr-purple); }
+.manage-restaurant-page .blue { background: #eaf2ff; color: var(--mr-blue); }
+.manage-restaurant-page .yellow { background: #fff7df; color: var(--mr-yellow); }
 
 .manage-restaurant-page .trend {
     color: var(--mr-green);
@@ -404,6 +368,7 @@
 .manage-restaurant-page .toggle {
     width: 39px;
     height: 22px;
+    border: 0;
     border-radius: 20px;
     padding: 3px;
     background: var(--mr-green);
@@ -420,13 +385,8 @@
     transition: .2s;
 }
 
-.manage-restaurant-page .toggle.closed {
-    background: #c5c9cf;
-}
-
-.manage-restaurant-page .toggle.closed span {
-    margin-left: 0;
-}
+.manage-restaurant-page .toggle.closed { background: #c5c9cf; }
+.manage-restaurant-page .toggle.closed span { margin-left: 0; }
 
 /* CONTENT GRID */
 
@@ -468,15 +428,11 @@
     white-space: nowrap;
 }
 
-.manage-restaurant-page .view-link i {
-    margin-left: 4px;
-}
+.manage-restaurant-page .view-link i { margin-left: 4px; }
 
 /* ORDERS */
 
-.manage-restaurant-page .table-wrap {
-    overflow-x: auto;
-}
+.manage-restaurant-page .table-wrap { overflow-x: auto; }
 
 .manage-restaurant-page .orders-table {
     width: 100%;
@@ -498,16 +454,10 @@
     padding: 12px 9px;
     border-bottom: 1px solid var(--mr-border);
     font-size: 10px;
-    color: var(--dark, #20252d);
 }
 
-.manage-restaurant-page .orders-table tr:last-child td {
-    border-bottom: 0;
-}
-
-.manage-restaurant-page .order-id {
-    font-weight: 800;
-}
+.manage-restaurant-page .orders-table tr:last-child td { border-bottom: 0; }
+.manage-restaurant-page .order-id { font-weight: 800; }
 
 .manage-restaurant-page .order-time {
     display: block;
@@ -534,9 +484,7 @@
     font-weight: 800;
 }
 
-.manage-restaurant-page .amount {
-    font-weight: 800;
-}
+.manage-restaurant-page .amount { font-weight: 800; }
 
 .manage-restaurant-page .badge {
     padding: 5px 7px;
@@ -545,22 +493,11 @@
     font-weight: 700;
 }
 
-.manage-restaurant-page .preparing {
-    background: #fff5df;
-    color: #c38b18;
-}
+.manage-restaurant-page .preparing { background: #fff5df; color: #c38b18; }
+.manage-restaurant-page .delivered { background: #e8f8f0; color: var(--mr-green); }
+.manage-restaurant-page .pending { background: #fff0e9; color: var(--mr-orange); }
 
-.manage-restaurant-page .delivered {
-    background: #e8f8f0;
-    color: var(--mr-green);
-}
-
-.manage-restaurant-page .pending {
-    background: #fff0e9;
-    color: var(--mr-orange);
-}
-
-/* MENU */
+/* MENU ITEMS */
 
 .manage-restaurant-page .menu-list {
     display: flex;
@@ -575,13 +512,8 @@
     border-bottom: 1px solid var(--mr-border);
 }
 
-.manage-restaurant-page .menu-item:first-child {
-    padding-top: 0;
-}
-
-.manage-restaurant-page .menu-item:last-child {
-    border-bottom: 0;
-}
+.manage-restaurant-page .menu-item:first-child { padding-top: 0; }
+.manage-restaurant-page .menu-item:last-child { border-bottom: 0; }
 
 .manage-restaurant-page .menu-item img {
     width: 55px;
@@ -608,9 +540,7 @@
     margin-bottom: 5px;
 }
 
-.manage-restaurant-page .menu-info strong {
-    font-size: 10px;
-}
+.manage-restaurant-page .menu-info strong { font-size: 10px; }
 
 .manage-restaurant-page .menu-status {
     font-size: 9px;
@@ -620,23 +550,85 @@
     white-space: nowrap;
 }
 
-.manage-restaurant-page .available {
-    background: #e8f8f0;
-    color: var(--mr-green);
-}
+.manage-restaurant-page .available { background: #e8f8f0; color: var(--mr-green); }
+.manage-restaurant-page .unavailable { background: #f1f2f4; color: #777e87; }
 
-.manage-restaurant-page .unavailable {
-    background: #f1f2f4;
-    color: #777e87;
+/* THREE-DOT ACTIONS */
+
+.manage-restaurant-page .menu-actions {
+    position: relative;
+    flex-shrink: 0;
 }
 
 .manage-restaurant-page .menu-more {
+    width: 31px;
+    height: 32px;
+    display: grid;
+    place-items: center;
     color: var(--mr-muted);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    transition: .2s;
+}
+
+.manage-restaurant-page .menu-more:hover,
+.manage-restaurant-page .menu-more[aria-expanded="true"] {
+    color: var(--mr-orange);
+    background: var(--mr-bg);
+    border-color: var(--mr-border);
+}
+
+.manage-restaurant-page .menu-dropdown {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 5px);
+    right: 0;
+    width: 155px;
     padding: 5px;
+    background: var(--mr-surface);
+    border: 1px solid var(--mr-border);
+    border-radius: 9px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.13);
+    display: none;
+}
+
+.manage-restaurant-page .menu-dropdown.show { display: block; }
+
+.manage-restaurant-page .menu-dropdown a,
+.manage-restaurant-page .menu-dropdown button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--dark, #20252d);
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.manage-restaurant-page .menu-dropdown a:hover,
+.manage-restaurant-page .menu-dropdown button:hover {
+    background: var(--mr-bg);
+    color: var(--mr-orange);
+}
+
+.manage-restaurant-page .menu-dropdown .delete-menu-trigger {
+    color: #dc3545;
+}
+
+.manage-restaurant-page .menu-dropdown .delete-menu-trigger:hover {
+    background: #fff0f0;
+    color: #c82333;
 }
 
 .manage-restaurant-page .add-menu {
     width: 100%;
+    display: block;
     margin-top: 12px;
     padding: 10px;
     background: #fff9f6;
@@ -645,6 +637,94 @@
     border-radius: 8px;
     font-size: 10px;
     font-weight: 800;
+    text-align: center;
+}
+
+/* DELETE CONFIRMATION MODAL */
+
+.manage-restaurant-page .menu-delete-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(15, 20, 30, .58);
+    backdrop-filter: blur(3px);
+}
+
+.manage-restaurant-page .menu-delete-modal.show { display: flex; }
+
+.manage-restaurant-page .menu-delete-dialog {
+    width: 100%;
+    max-width: 390px;
+    padding: 25px;
+    background: var(--mr-surface);
+    border: 1px solid var(--mr-border);
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    animation: menuModalIn .2s ease;
+}
+
+@keyframes menuModalIn {
+    from { opacity: 0; transform: translateY(10px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.manage-restaurant-page .menu-delete-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 14px;
+    border-radius: 13px;
+    background: #fff0f0;
+    color: #dc3545;
+    font-size: 18px;
+}
+
+.manage-restaurant-page .menu-delete-dialog h3 {
+    font: 800 17px 'Plus Jakarta Sans', sans-serif;
+    margin-bottom: 8px;
+}
+
+.manage-restaurant-page .menu-delete-dialog p {
+    color: var(--mr-muted);
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.manage-restaurant-page .menu-delete-dialog strong {
+    color: var(--dark, #20252d);
+}
+
+.manage-restaurant-page .menu-delete-actions {
+    display: flex;
+    justify-content: center;
+    gap: 9px;
+    margin-top: 22px;
+}
+
+.manage-restaurant-page .menu-delete-actions button {
+    min-width: 110px;
+    padding: 10px 14px;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.manage-restaurant-page .menu-delete-cancel {
+    background: var(--mr-bg);
+    color: var(--dark, #20252d);
+    border: 1px solid var(--mr-border);
+}
+
+.manage-restaurant-page .menu-delete-confirm {
+    background: #dc3545;
+    color: white;
+    border: 1px solid #dc3545;
 }
 
 /* QUICK ACTIONS */
@@ -657,14 +737,8 @@
     border-bottom: 1px solid var(--mr-border);
 }
 
-.manage-restaurant-page .shortcut:first-of-type {
-    padding-top: 0;
-}
-
-.manage-restaurant-page .shortcut:last-child {
-    border-bottom: 0;
-    padding-bottom: 0;
-}
+.manage-restaurant-page .shortcut:first-of-type { padding-top: 0; }
+.manage-restaurant-page .shortcut:last-child { border-bottom: 0; padding-bottom: 0; }
 
 .manage-restaurant-page .shortcut-info {
     flex: 1;
@@ -675,7 +749,6 @@
     display: block;
     font-size: 10px;
     margin-bottom: 4px;
-    color: var(--dark, #20252d);
 }
 
 .manage-restaurant-page .shortcut-info small {
@@ -704,17 +777,9 @@
     font-size: 10px;
 }
 
-.manage-restaurant-page .hours-list div:last-child {
-    border: 0;
-}
-
-.manage-restaurant-page .hours-list span {
-    color: var(--mr-muted);
-}
-
-.manage-restaurant-page .hours-list strong {
-    font-size: 9px;
-}
+.manage-restaurant-page .hours-list div:last-child { border: 0; }
+.manage-restaurant-page .hours-list span { color: var(--mr-muted); }
+.manage-restaurant-page .hours-list strong { font-size: 9px; }
 
 .manage-restaurant-page .hours-note {
     padding: 10px;
@@ -758,9 +823,7 @@
     padding: 12px;
 }
 
-.manage-restaurant-page .review > i {
-    color: var(--mr-orange);
-}
+.manage-restaurant-page .review > i { color: var(--mr-orange); }
 
 .manage-restaurant-page .review p {
     font-size: 10px;
@@ -792,9 +855,7 @@
 }
 
 @media(max-width: 850px) {
-    .manage-restaurant-page .content-grid {
-        grid-template-columns: 1fr;
-    }
+    .manage-restaurant-page .content-grid { grid-template-columns: 1fr; }
 
     .manage-restaurant-page .right-column {
         display: grid;
@@ -802,9 +863,7 @@
         align-items: start;
     }
 
-    .manage-restaurant-page .reviews-card {
-        grid-column: span 2;
-    }
+    .manage-restaurant-page .reviews-card { grid-column: span 2; }
 }
 
 @media(max-width: 600px) {
@@ -813,17 +872,9 @@
         flex-direction: column;
     }
 
-    .manage-restaurant-page .header-actions {
-        width: 100%;
-    }
-
-    .manage-restaurant-page .header-actions .btn {
-        flex: 1;
-    }
-
-    .manage-restaurant-page .cover {
-        height: 135px;
-    }
+    .manage-restaurant-page .header-actions { width: 100%; }
+    .manage-restaurant-page .header-actions .btn { flex: 1; }
+    .manage-restaurant-page .cover { height: 135px; }
 
     .manage-restaurant-page .profile-content {
         padding: 0 13px 15px;
@@ -842,18 +893,14 @@
         flex: none;
     }
 
-    .manage-restaurant-page .profile-info h2 {
-        font-size: 15px;
-    }
+    .manage-restaurant-page .profile-info h2 { font-size: 15px; }
 
     .manage-restaurant-page .profile-meta {
         flex-direction: column;
         gap: 7px;
     }
 
-    .manage-restaurant-page .edit-profile {
-        margin-left: auto;
-    }
+    .manage-restaurant-page .edit-profile { margin-left: auto; }
 
     .manage-restaurant-page .availability {
         align-items: flex-start;
@@ -865,27 +912,16 @@
         justify-content: flex-end;
     }
 
-    .manage-restaurant-page .right-column {
-        display: flex;
-    }
-
-    .manage-restaurant-page .card {
-        padding: 15px;
-    }
+    .manage-restaurant-page .right-column { display: flex; }
+    .manage-restaurant-page .card { padding: 15px; }
 }
 
 @media(max-width: 380px) {
-    .manage-restaurant-page .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .manage-restaurant-page .header-actions {
-        flex-direction: column;
-    }
-
-    .manage-restaurant-page .menu-status {
-        display: none;
-    }
+    .manage-restaurant-page .stats-grid { grid-template-columns: 1fr; }
+    .manage-restaurant-page .header-actions { flex-direction: column; }
+    .manage-restaurant-page .menu-status { display: none; }
+    .manage-restaurant-page .menu-delete-actions { flex-direction: column-reverse; }
+    .manage-restaurant-page .menu-delete-actions button { width: 100%; }
 }
 </style>
 
@@ -908,7 +944,7 @@
             </a>
 
             <a href="{% url 'restaurant_applicants:add_menu_item' restaurant.id %}"
-            class="btn btn-primary">
+               class="btn btn-primary">
                 <i class="fa-solid fa-plus"></i>
                 Add Menu Item
             </a>
@@ -918,7 +954,6 @@
     <!-- RESTAURANT PROFILE -->
 
     <section class="restaurant-profile">
-
         <div class="cover">
             {% if restaurant.cover_image %}
                 <img src="{{ restaurant.cover_image.url }}"
@@ -936,7 +971,6 @@
         </div>
 
         <div class="profile-content">
-
             <div class="restaurant-logo">
                 {% if restaurant.logo %}
                     <img src="{{ restaurant.logo.url }}"
@@ -976,13 +1010,11 @@
                 </div>
             </div>
 
-
             <a href="{% url 'restaurant_applicants:edit_restaurant' restaurant.id %}"
-   class="edit-profile">
-    <i class="fa-solid fa-pen"></i>
-    Edit Profile
-</a>
-
+               class="edit-profile">
+                <i class="fa-solid fa-pen"></i>
+                Edit Profile
+            </a>
         </div>
     </section>
 
@@ -1063,7 +1095,6 @@
     <!-- AVAILABILITY -->
 
     <section class="availability">
-
         <div class="availability-left">
             <div class="availability-icon">
                 <i class="fa-solid fa-store"></i>
@@ -1086,7 +1117,6 @@
                 <span></span>
             </button>
         </div>
-
     </section>
 
     <!-- MAIN CONTENT -->
@@ -1098,7 +1128,6 @@
             <!-- RECENT ORDERS -->
 
             <section class="card">
-
                 <div class="card-heading">
                     <div>
                         <h2>Recent Orders</h2>
@@ -1189,112 +1218,129 @@
                         </tbody>
                     </table>
                 </div>
-
             </section>
 
- <!-- MENU MANAGEMENT -->
+            <!-- MENU MANAGEMENT -->
 
-<section class="card">
-
-    <div class="card-heading">
-        <div>
-            <h2>Menu Management</h2>
-            <p>Manage meals and products available to customers.</p>
-        </div>
-
-        <a href="{% url 'restaurant_applicants:add_menu_item' restaurant.id %}"
-           class="view-link">
-            Add item <i class="fa-solid fa-arrow-right"></i>
-        </a>
-    </div>
-
-    <div class="menu-list">
-
-        {% for item in menu_items %}
-
-            <div class="menu-item">
-
-                {% if item.image %}
-                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
-                {% else %}
-                    <div class="menu-image-placeholder"
-                         style="width:55px;height:51px;display:grid;place-items:center;background:var(--mr-bg);border-radius:8px;color:var(--mr-muted);flex-shrink:0;">
-                        <i class="fa-solid fa-utensils"></i>
+            <section class="card" id="menuManagement">
+                <div class="card-heading">
+                    <div>
+                        <h2>Menu Management</h2>
+                        <p>Manage meals and products available to customers.</p>
                     </div>
-                {% endif %}
 
-                <div class="menu-info">
-                    <h4>{{ item.name }}</h4>
-
-                    <p>
-                        {{ item.category.name }}
-                        {% if item.preparation_time %}
-                            · {{ item.preparation_time }} min
-                        {% endif %}
-                    </p>
-
-                    {% if item.discount_price %}
-                        <strong>
-                            KSh {{ item.discount_price|floatformat:2 }}
-                        </strong>
-                        <small style="color:var(--mr-muted);text-decoration:line-through;margin-left:5px;">
-                            KSh {{ item.price|floatformat:2 }}
-                        </small>
-                    {% else %}
-                        <strong>
-                            KSh {{ item.price|floatformat:2 }}
-                        </strong>
-                    {% endif %}
+                    <a href="{% url 'restaurant_applicants:add_menu_item' restaurant.id %}"
+                       class="view-link">
+                        Add item <i class="fa-solid fa-arrow-right"></i>
+                    </a>
                 </div>
 
-                {% if item.is_available %}
-                    <span class="menu-status available">Available</span>
-                {% else %}
-                    <span class="menu-status unavailable">Unavailable</span>
-                {% endif %}
+                <div class="menu-list">
 
-                <span class="menu-more" title="Menu item">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                </span>
+                    {% for item in menu_items %}
+                        <div class="menu-item">
 
-            </div>
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                            {% else %}
+                                <div style="width:55px;height:51px;display:grid;place-items:center;background:var(--mr-bg);border-radius:8px;color:var(--mr-muted);flex-shrink:0;">
+                                    <i class="fa-solid fa-utensils"></i>
+                                </div>
+                            {% endif %}
 
-        {% empty %}
+                            <div class="menu-info">
+                                <h4>{{ item.name }}</h4>
 
-            <div style="text-align:center;padding:30px 15px;">
-                <div style="font-size:30px;color:var(--mr-muted);margin-bottom:10px;">
-                    <i class="fa-solid fa-bowl-food"></i>
+                                <p>
+                                    {{ item.category.name }}
+                                    {% if item.preparation_time %}
+                                        · {{ item.preparation_time }} min
+                                    {% endif %}
+                                </p>
+
+                                {% if item.discount_price %}
+                                    <strong>
+                                        KSh {{ item.discount_price|floatformat:2 }}
+                                    </strong>
+                                    <small style="color:var(--mr-muted);text-decoration:line-through;margin-left:5px;">
+                                        KSh {{ item.price|floatformat:2 }}
+                                    </small>
+                                {% else %}
+                                    <strong>KSh {{ item.price|floatformat:2 }}</strong>
+                                {% endif %}
+                            </div>
+
+                            {% if item.is_available %}
+                                <span class="menu-status available">Available</span>
+                            {% else %}
+                                <span class="menu-status unavailable">Unavailable</span>
+                            {% endif %}
+
+                            <!-- ITEM ACTIONS -->
+
+                            <div class="menu-actions">
+                                <button type="button"
+                                        class="menu-more"
+                                        aria-label="Menu item actions"
+                                        aria-expanded="false"
+                                        title="More actions">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </button>
+
+                                <div class="menu-dropdown">
+
+                                    <a href="{% url 'restaurant_applicants:edit_menu_item' restaurant.id item.id %}">
+                                        <i class="fa-solid fa-pen"></i>
+                                        Edit Item
+                                    </a>
+
+                                    <button type="button"
+                                            class="delete-menu-trigger"
+                                            data-item-name="{{ item.name }}"
+                                            data-delete-url="{% url 'restaurant_applicants:delete_menu_item' restaurant.id item.id %}">
+                                        <i class="fa-solid fa-trash"></i>
+                                        Delete Item
+                                    </button>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div style="text-align:center;padding:30px 15px;">
+                            <div style="font-size:30px;color:var(--mr-muted);margin-bottom:10px;">
+                                <i class="fa-solid fa-bowl-food"></i>
+                            </div>
+
+                            <h4 style="font-size:12px;margin-bottom:6px;">
+                                No menu items yet
+                            </h4>
+
+                            <p style="font-size:10px;color:var(--mr-muted);margin-bottom:14px;">
+                                Start building your restaurant menu by adding your first meal.
+                            </p>
+
+                            <a href="{% url 'restaurant_applicants:add_menu_item' restaurant.id %}"
+                               class="view-link">
+                                <i class="fa-solid fa-plus"></i>
+                                Add your first menu item
+                            </a>
+                        </div>
+
+                    {% endfor %}
+
                 </div>
 
-                <h4 style="font-size:12px;margin-bottom:6px;">
-                    No menu items yet
-                </h4>
-
-                <p style="font-size:10px;color:var(--mr-muted);margin-bottom:14px;">
-                    Start building your restaurant menu by adding your first meal.
-                </p>
-
-                <a href="{% url 'restaurant_applicants:add_menu_item' restaurant.id %}"
-                   class="view-link">
-                    <i class="fa-solid fa-plus"></i>
-                    Add your first menu item
-                </a>
-            </div>
-
-        {% endfor %}
-
-    </div>
-
-    {% if menu_items %}
-        <a href="{% url 'restaurant_applicants:add_menu_item' restaurant.id %}"
-           class="add-menu"
-           style="display:block;text-align:center;text-decoration:none;">
-            <i class="fa-solid fa-plus"></i>
-            Add another menu item
-        </a>
-    {% endif %}
-
-</section>
+                {% if menu_items %}
+                    <a href="{% url 'restaurant_applicants:add_menu_item' restaurant.id %}"
+                       class="add-menu">
+                        <i class="fa-solid fa-plus"></i>
+                        Add another menu item
+                    </a>
+                {% endif %}
+            </section>
 
         </div>
 
@@ -1305,7 +1351,6 @@
             <!-- QUICK ACTIONS -->
 
             <section class="card">
-
                 <div class="card-heading">
                     <div>
                         <h2>Quick Actions</h2>
@@ -1313,7 +1358,7 @@
                     </div>
                 </div>
 
-                <a href="#" class="shortcut">
+                <a href="#menuManagement" class="shortcut">
                     <span class="shortcut-icon orange">
                         <i class="fa-solid fa-utensils"></i>
                     </span>
@@ -1335,7 +1380,8 @@
                     <i class="fa-solid fa-chevron-right"></i>
                 </a>
 
-                <a href="#" class="shortcut">
+                <a href="{% url 'restaurant_applicants:edit_restaurant' restaurant.id %}"
+                   class="shortcut">
                     <span class="shortcut-icon blue">
                         <i class="fa-solid fa-store"></i>
                     </span>
@@ -1367,13 +1413,11 @@
                     </span>
                     <i class="fa-solid fa-chevron-right"></i>
                 </a>
-
             </section>
 
             <!-- OPERATING HOURS -->
 
             <section class="card">
-
                 <div class="card-heading">
                     <div>
                         <h2>Operating Hours</h2>
@@ -1406,13 +1450,11 @@
                     <i class="fa-solid fa-circle-info"></i>
                     Keep your operating hours updated so customers know when to order.
                 </div>
-
             </section>
 
             <!-- CUSTOMER REVIEWS -->
 
             <section class="card reviews-card">
-
                 <div class="card-heading">
                     <div>
                         <h2>Customer Feedback</h2>
@@ -1448,42 +1490,163 @@
                     View all reviews
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
-
             </section>
 
         </aside>
 
     </main>
 
+    <!-- DELETE CONFIRMATION MODAL -->
+
+    <div class="menu-delete-modal"
+         id="menuDeleteModal"
+         aria-hidden="true">
+
+        <div class="menu-delete-dialog"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="deleteModalTitle">
+
+            <div class="menu-delete-icon">
+                <i class="fa-solid fa-trash"></i>
+            </div>
+
+            <h3 id="deleteModalTitle">Delete Menu Item?</h3>
+
+            <p>
+                Are you sure you want to delete
+                <strong id="deleteItemName"></strong>?
+                This action cannot be undone.
+            </p>
+
+            <div class="menu-delete-actions">
+                <button type="button"
+                        class="menu-delete-cancel"
+                        id="cancelMenuDelete">
+                    Cancel
+                </button>
+
+                <form method="POST" id="menuDeleteForm">
+                    {% csrf_token %}
+                    <button type="submit" class="menu-delete-confirm">
+                        Yes, Delete
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
+    /* RESTAURANT AVAILABILITY TOGGLE */
+
     const availabilityToggle = document.getElementById('availabilityToggle');
     const statusText = document.getElementById('statusText');
     const statusDot = document.getElementById('statusDot');
 
-    if (!availabilityToggle || !statusText || !statusDot) {
-        return;
+    if (availabilityToggle && statusText && statusDot) {
+        availabilityToggle.addEventListener('click', function () {
+
+            const isClosed = this.classList.toggle('closed');
+
+            statusText.textContent = isClosed
+                ? 'Currently Closed'
+                : 'Currently Open';
+
+            statusText.style.color = isClosed ? '#9298a2' : '#159b62';
+            statusDot.style.background = isClosed ? '#c5c9cf' : '#159b62';
+        });
     }
 
-    availabilityToggle.addEventListener('click', function () {
+    /* MENU ITEM DROPDOWNS */
 
-        const isClosed = this.classList.toggle('closed');
+    const menuActionButtons = document.querySelectorAll('.menu-more');
 
-        statusText.textContent = isClosed
-            ? 'Currently Closed'
-            : 'Currently Open';
+    function closeAllMenuDropdowns() {
+        document.querySelectorAll('.menu-dropdown.show').forEach(function (dropdown) {
+            dropdown.classList.remove('show');
 
-        statusText.style.color = isClosed
-            ? '#9298a2'
-            : '#159b62';
+            const button = dropdown.parentElement.querySelector('.menu-more');
+            if (button) {
+                button.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
 
-        statusDot.style.background = isClosed
-            ? '#c5c9cf'
-            : '#159b62';
+    menuActionButtons.forEach(function (button) {
+        button.addEventListener('click', function (event) {
+            event.stopPropagation();
 
+            const dropdown = this.nextElementSibling;
+            const isAlreadyOpen = dropdown.classList.contains('show');
+
+            closeAllMenuDropdowns();
+
+            if (!isAlreadyOpen) {
+                dropdown.classList.add('show');
+                this.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.menu-actions')) {
+            closeAllMenuDropdowns();
+        }
+    });
+
+    /* DELETE CONFIRMATION */
+
+    const deleteModal = document.getElementById('menuDeleteModal');
+    const deleteForm = document.getElementById('menuDeleteForm');
+    const deleteItemName = document.getElementById('deleteItemName');
+    const cancelDeleteButton = document.getElementById('cancelMenuDelete');
+
+    function closeDeleteModal() {
+        deleteModal.classList.remove('show');
+        deleteModal.setAttribute('aria-hidden', 'true');
+        deleteForm.removeAttribute('action');
+    }
+
+    document.querySelectorAll('.delete-menu-trigger').forEach(function (button) {
+
+        button.addEventListener('click', function () {
+            const itemName = this.dataset.itemName;
+            const deleteUrl = this.dataset.deleteUrl;
+
+            deleteItemName.textContent = '"' + itemName + '"';
+            deleteForm.action = deleteUrl;
+
+            closeAllMenuDropdowns();
+
+            deleteModal.classList.add('show');
+            deleteModal.setAttribute('aria-hidden', 'false');
+
+            cancelDeleteButton.focus();
+        });
+
+    });
+
+    cancelDeleteButton.addEventListener('click', closeDeleteModal);
+
+    deleteModal.addEventListener('click', function (event) {
+        if (event.target === deleteModal) {
+            closeDeleteModal();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeAllMenuDropdowns();
+
+            if (deleteModal.classList.contains('show')) {
+                closeDeleteModal();
+            }
+        }
     });
 
 });

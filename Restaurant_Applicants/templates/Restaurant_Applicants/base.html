@@ -475,6 +475,86 @@ a { text-decoration: none; color: inherit; }
 .status-approved { background: #e9f7f0; color: #159b68; }
 .status-rejected { background: #fff0f0; color: #dc4c4c; }
 
+/* Django messages */
+
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 16px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    border: 1px solid transparent;
+    animation: messageFadeIn .3s ease;
+}
+
+@keyframes messageFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-7px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-content i { font-size: 15px; }
+
+.alert-close {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    opacity: .65;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 3px;
+}
+
+.alert-close:hover { opacity: 1; }
+
+.alert-success {
+    background: #eaf8f0;
+    border-color: #c9ecd8;
+    color: #167747;
+}
+
+.alert-error,
+.alert-danger {
+    background: #fff0f0;
+    border-color: #f5cece;
+    color: #bd3333;
+}
+
+.alert-warning {
+    background: #fff8e8;
+    border-color: #f2e2b9;
+    color: #986a12;
+}
+
+.alert-info,
+.alert-debug {
+    background: #edf5ff;
+    border-color: #d2e5ff;
+    color: #2865a5;
+}
+
 /* Footer */
 .footer {
     text-align: center;
@@ -612,6 +692,37 @@ a { text-decoration: none; color: inherit; }
         </header>
 
         <section class="content">
+
+            <!-- DJANGO SUCCESS / ERROR / WARNING MESSAGES -->
+
+            {% if messages %}
+                <div class="messages-container">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            <div class="alert-content">
+                                {% if message.tags == 'success' %}
+                                    <i class="fa-solid fa-circle-check"></i>
+                                {% elif message.tags == 'error' or message.tags == 'danger' %}
+                                    <i class="fa-solid fa-circle-exclamation"></i>
+                                {% elif message.tags == 'warning' %}
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-circle-info"></i>
+                                {% endif %}
+
+                                <span>{{ message }}</span>
+                            </div>
+
+                            <button type="button"
+                                    class="alert-close"
+                                    onclick="this.parentElement.remove()"
+                                    aria-label="Dismiss message">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
 
             {% block content %}
             {% endblock %}

@@ -1,7 +1,13 @@
- {% extends 'Restaurant_Applicants/base.html' %}
+{% extends 'Restaurant_Applicants/base.html' %}
 
-{% block title %}Add Menu Item | Savora{% endblock %}
-{% block breadcrumb %}Add Menu Item{% endblock %}
+{% block title %}
+    {% if is_edit %}Edit Menu Item{% else %}Add Menu Item{% endif %} | Savora
+{% endblock %}
+
+{% block breadcrumb %}
+    {% if is_edit %}Edit Menu Item{% else %}Add Menu Item{% endif %}
+{% endblock %}
+
 {% block restaurants_active %}active{% endblock %}
 
 {% block extra_css %}
@@ -12,9 +18,7 @@
     color: var(--dark, #20252d);
 }
 
-.menu-form-page * {
-    box-sizing: border-box;
-}
+.menu-form-page * { box-sizing: border-box; }
 
 .menu-form-page .form-header {
     display: flex;
@@ -52,6 +56,12 @@
     font-size: 11px;
     font-weight: 700;
     text-decoration: none;
+    white-space: nowrap;
+}
+
+.menu-form-page .back-link:hover {
+    border-color: var(--orange, #f15a29);
+    color: var(--orange, #f15a29);
 }
 
 .menu-form-page .form-card {
@@ -115,13 +125,8 @@
     gap: 16px;
 }
 
-.menu-form-page .field {
-    min-width: 0;
-}
-
-.menu-form-page .field.full {
-    grid-column: 1 / -1;
-}
+.menu-form-page .field { min-width: 0; }
+.menu-form-page .field.full { grid-column: 1 / -1; }
 
 .menu-form-page label {
     display: block;
@@ -156,6 +161,10 @@
     min-height: 85px;
 }
 
+.menu-form-page input[type="file"] {
+    padding: 9px;
+}
+
 .menu-form-page .help-text {
     display: block;
     color: var(--muted, #9298a2);
@@ -186,10 +195,44 @@
     border-radius: 8px;
     font-size: 10px;
     font-weight: 600;
+    cursor: pointer;
 }
 
 .menu-form-page .check-option input {
     accent-color: var(--orange, #f15a29);
+}
+
+.menu-form-page .current-image {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 10px;
+    background: var(--bg, #f6f7f9);
+    border: 1px solid var(--border, #eceef1);
+    border-radius: 9px;
+}
+
+.menu-form-page .current-image img {
+    width: 65px;
+    height: 58px;
+    border-radius: 7px;
+    object-fit: cover;
+}
+
+.menu-form-page .current-image-info {
+    min-width: 0;
+}
+
+.menu-form-page .current-image-info strong {
+    display: block;
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
+.menu-form-page .current-image-info small {
+    color: var(--muted, #9298a2);
+    font-size: 9px;
 }
 
 .menu-form-page .form-actions {
@@ -225,6 +268,11 @@
     border: 0;
 }
 
+.menu-form-page .btn-submit:hover {
+    filter: brightness(.95);
+    transform: translateY(-1px);
+}
+
 .menu-form-page .non-field-errors {
     background: #fff0f0;
     color: #c53030;
@@ -240,9 +288,7 @@
         flex-direction: column;
     }
 
-    .menu-form-page .form-card {
-        padding: 16px;
-    }
+    .menu-form-page .form-card { padding: 16px; }
 
     .menu-form-page .form-grid,
     .menu-form-page .checkbox-grid {
@@ -253,22 +299,35 @@
         flex-direction: column-reverse;
     }
 
-    .menu-form-page .form-actions .btn {
-        width: 100%;
-    }
+    .menu-form-page .form-actions .btn { width: 100%; }
 }
 </style>
 {% endblock %}
 
 {% block content %}
+
 <div class="menu-form-page">
+
+    <!-- PAGE HEADER -->
 
     <header class="form-header">
         <div>
             <span class="eyebrow">MENU MANAGEMENT</span>
-            <h1>Add Menu Item</h1>
+
+            <h1>
+                {% if is_edit %}
+                    Edit Menu Item
+                {% else %}
+                    Add Menu Item
+                {% endif %}
+            </h1>
+
             <p class="subtitle">
-                Add a new meal or product to your restaurant menu.
+                {% if is_edit %}
+                    Update the details, pricing and availability of this menu item.
+                {% else %}
+                    Add a new meal or product to your restaurant menu.
+                {% endif %}
             </p>
         </div>
 
@@ -279,15 +338,27 @@
         </a>
     </header>
 
+    <!-- FORM CARD -->
+
     <div class="form-card">
+
+        <!-- RESTAURANT NOTICE -->
 
         <div class="restaurant-notice">
             <div class="notice-icon">
                 <i class="fa-solid fa-store"></i>
             </div>
+
             <div>
                 <strong>{{ restaurant.name }}</strong>
-                <small>This menu item will be added to this restaurant.</small>
+
+                <small>
+                    {% if is_edit %}
+                        You are updating a menu item belonging to this restaurant.
+                    {% else %}
+                        This menu item will be added to this restaurant.
+                    {% endif %}
+                </small>
             </div>
         </div>
 
@@ -300,16 +371,22 @@
                 </div>
             {% endif %}
 
+            <!-- BASIC INFORMATION -->
+
             <section class="form-section">
                 <h2 class="section-title">Basic Information</h2>
+
                 <p class="section-description">
                     Provide the name, category and description of your item.
                 </p>
 
                 <div class="form-grid">
+
                     {% for field in form %}
                         {% if field.name == 'name' or field.name == 'category' or field.name == 'description' %}
+
                             <div class="field {% if field.name == 'description' %}full{% endif %}">
+
                                 <label for="{{ field.id_for_label }}">
                                     {{ field.label }}
                                     {% if field.field.required %}*{% endif %}
@@ -318,114 +395,207 @@
                                 {{ field }}
 
                                 {% if field.help_text %}
-                                    <small class="help-text">{{ field.help_text }}</small>
+                                    <small class="help-text">
+                                        {{ field.help_text }}
+                                    </small>
                                 {% endif %}
 
                                 {% for error in field.errors %}
                                     <small class="error">{{ error }}</small>
                                 {% endfor %}
+
                             </div>
+
                         {% endif %}
                     {% endfor %}
+
                 </div>
             </section>
 
+            <!-- FOOD IMAGE -->
+
             <section class="form-section">
                 <h2 class="section-title">Food Image</h2>
+
                 <p class="section-description">
                     Upload a clear photograph of the meal.
                 </p>
 
                 <div class="field">
-                    <label for="{{ form.image.id_for_label }}">Menu Item Image</label>
+
+                    <label for="{{ form.image.id_for_label }}">
+                        Menu Item Image
+                    </label>
+
                     {{ form.image }}
-                    <small class="help-text">Use JPG, PNG or WebP images.</small>
+
+                    <small class="help-text">
+                        Use JPG, PNG or WebP images.
+                    </small>
+
                     {% for error in form.image.errors %}
                         <small class="error">{{ error }}</small>
                     {% endfor %}
+
+                    {% if is_edit and menu_item.image %}
+                        <div class="current-image">
+                            <img src="{{ menu_item.image.url }}"
+                                 alt="{{ menu_item.name }}">
+
+                            <div class="current-image-info">
+                                <strong>Current menu image</strong>
+                                <small>
+                                    Choose another image above if you want to replace it.
+                                </small>
+                            </div>
+                        </div>
+                    {% endif %}
+
                 </div>
             </section>
 
+            <!-- PRICING -->
+
             <section class="form-section">
                 <h2 class="section-title">Pricing</h2>
+
                 <p class="section-description">
                     Set the normal price and an optional promotional price.
                 </p>
 
                 <div class="form-grid">
+
                     {% for field in form %}
                         {% if field.name == 'price' or field.name == 'discount_price' %}
+
                             <div class="field">
+
                                 <label for="{{ field.id_for_label }}">
                                     {{ field.label }}
                                     {% if field.field.required %}*{% endif %}
                                 </label>
+
                                 {{ field }}
+
+                                {% if field.help_text %}
+                                    <small class="help-text">
+                                        {{ field.help_text }}
+                                    </small>
+                                {% endif %}
+
                                 {% for error in field.errors %}
                                     <small class="error">{{ error }}</small>
                                 {% endfor %}
+
                             </div>
+
                         {% endif %}
                     {% endfor %}
+
                 </div>
             </section>
 
+            <!-- MEAL DETAILS -->
+
             <section class="form-section">
                 <h2 class="section-title">Meal Details</h2>
+
                 <p class="section-description">
                     Add preparation and ingredient information.
                 </p>
 
                 <div class="form-grid">
+
                     {% for field in form %}
                         {% if field.name == 'preparation_time' or field.name == 'serving_size' or field.name == 'ingredients' or field.name == 'allergens' %}
+
                             <div class="field {% if field.name == 'ingredients' %}full{% endif %}">
+
                                 <label for="{{ field.id_for_label }}">
                                     {{ field.label }}
                                 </label>
+
                                 {{ field }}
+
+                                {% if field.help_text %}
+                                    <small class="help-text">
+                                        {{ field.help_text }}
+                                    </small>
+                                {% endif %}
+
                                 {% for error in field.errors %}
                                     <small class="error">{{ error }}</small>
                                 {% endfor %}
+
                             </div>
+
                         {% endif %}
                     {% endfor %}
+
                 </div>
             </section>
 
+            <!-- MENU VISIBILITY -->
+
             <section class="form-section">
                 <h2 class="section-title">Menu Visibility</h2>
+
                 <p class="section-description">
                     Control how this item appears on your restaurant menu.
                 </p>
 
                 <div class="checkbox-grid">
+
                     {% for field in form %}
                         {% if field.name == 'is_available' or field.name == 'is_active' or field.name == 'is_featured' %}
-                            <label class="check-option" for="{{ field.id_for_label }}">
-                                {{ field }}
-                                {{ field.label }}
-                            </label>
-                            {% for error in field.errors %}
-                                <small class="error">{{ error }}</small>
-                            {% endfor %}
+
+                            <div>
+                                <label class="check-option"
+                                       for="{{ field.id_for_label }}">
+
+                                    {{ field }}
+                                    {{ field.label }}
+
+                                </label>
+
+                                {% for error in field.errors %}
+                                    <small class="error">{{ error }}</small>
+                                {% endfor %}
+                            </div>
+
                         {% endif %}
                     {% endfor %}
+
                 </div>
             </section>
 
+            <!-- FORM ACTIONS -->
+
             <div class="form-actions">
+
                 <a href="{% url 'restaurant_applicants:manage_restaurant' restaurant.id %}"
                    class="btn btn-cancel">
                     Cancel
                 </a>
 
                 <button type="submit" class="btn btn-submit">
-                    <i class="fa-solid fa-plus"></i>
-                    Save Menu Item
+
+                    {% if is_edit %}
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Save Changes
+                    {% else %}
+                        <i class="fa-solid fa-plus"></i>
+                        Save Menu Item
+                    {% endif %}
+
                 </button>
+
             </div>
+
         </form>
+
     </div>
+
 </div>
+
 {% endblock %}

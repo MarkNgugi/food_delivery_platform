@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
+from django.views.decorators.http import require_POST
 
 from food_delivery.models import Restaurant, MenuItem
 from food_delivery.forms import RestaurantRegistrationForm, RestaurantUpdateForm, MenuItemForm
@@ -251,4 +252,88 @@ def add_menu_item(request, restaurant_id):
         request,
         'Restaurant_Applicants/my-restaurant/add_menu_item.html',
         context
+    )
+
+
+def edit_menu_item(request, restaurant_id, item_id):
+
+    restaurant = get_object_or_404(
+        Restaurant,
+        id=restaurant_id,
+        owner=request.user,
+        status='approved'
+    )
+
+    menu_item = get_object_or_404(
+        MenuItem,
+        id=item_id,
+        restaurant=restaurant
+    )
+
+    if request.method == 'POST':
+
+        form = MenuItemForm(
+            request.POST,
+            request.FILES,
+            instance=menu_item
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                f'"{menu_item.name}" was successfully updated.'
+            )
+
+            return redirect(
+                'restaurant_applicants:manage_restaurant',
+                restaurant_id=restaurant.id
+            )
+
+    else:
+
+        form = MenuItemForm(instance=menu_item)
+
+    return render(
+        request,
+        'Restaurant_Applicants/my-restaurant/add_menu_item.html',
+        {
+            'restaurant': restaurant,
+            'form': form,
+            'menu_item': menu_item,
+            'is_edit': True,
+        }
+    )
+
+
+@require_POST
+def delete_menu_item(request, restaurant_id, item_id):
+
+    restaurant = get_object_or_404(
+        Restaurant,
+        id=restaurant_id,
+        owner=request.user,
+        status='approved'
+    )
+
+    menu_item = get_object_or_404(
+        MenuItem,
+        id=item_id,
+        restaurant=restaurant
+    )
+
+    item_name = menu_item.name
+
+    menu_item.delete()
+
+    messages.success(
+        request,
+        f'"{item_name}" was successfully deleted.'
+    )
+
+    return redirect(
+        'restaurant_applicants:manage_restaurant',
+        restaurant_id=restaurant.id
     )
