@@ -52,4 +52,10 @@ urlpatterns = [
         views.delete_menu_item,
         name='delete_menu_item'
     ),
+
+     path(
+        'orders/',
+        views.orders,
+        name='orders'
+    ),
 ]

@@ -476,7 +476,6 @@ a { text-decoration: none; color: inherit; }
 .status-rejected { background: #fff0f0; color: #dc4c4c; }
 
 /* Django messages */
-
 .messages-container {
     display: flex;
     flex-direction: column;
@@ -620,6 +619,12 @@ a { text-decoration: none; color: inherit; }
         <a href="{% url 'restaurant_applicants:my_restaurants' %}"
            class="nav-link {% block restaurants_active %}{% endblock %}">
             <i class="fa-solid fa-store"></i> My Restaurants
+        </a>
+
+        <!-- ORDERS -->
+        <a href="{% url 'restaurant_applicants:orders' %}"
+           class="nav-link {% block orders_active %}{% endblock %}">
+            <i class="fa-solid fa-box"></i> Orders
         </a>
 
         <a href="{% url 'restaurant_applicants:applications' %}"

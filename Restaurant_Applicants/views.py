@@ -4,6 +4,7 @@ from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.views.decorators.http import require_POST
+from datetime import date
 
 from food_delivery.models import Restaurant, MenuItem
 from food_delivery.forms import RestaurantRegistrationForm, RestaurantUpdateForm, MenuItemForm
@@ -336,4 +337,143 @@ def delete_menu_item(request, restaurant_id, item_id):
     return redirect(
         'restaurant_applicants:manage_restaurant',
         restaurant_id=restaurant.id
+    )
+
+
+
+
+
+from datetime import date, datetime
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+
+@login_required
+def orders(request):
+
+    # DEMO DATA ONLY
+    # These are sample orders for displaying the Orders page.
+    # They are not yet connected to the database.
+
+    all_orders = [
+        {
+            'order_number': 'SAV-00125',
+            'customer_name': 'John Mwangi',
+            'customer_phone': '0712 345 678',
+            'created_at': datetime(2026, 11, 8, 14, 30),
+            'items_count': 3,
+            'total': 1850,
+            'status': 'pending',
+        },
+        {
+            'order_number': 'SAV-00124',
+            'customer_name': 'Mary Wanjiku',
+            'customer_phone': '0722 456 789',
+            'created_at': datetime(2026, 11, 8, 13, 15),
+            'items_count': 2,
+            'total': 1200,
+            'status': 'accepted',
+        },
+        {
+            'order_number': 'SAV-00123',
+            'customer_name': 'Peter Kamau',
+            'customer_phone': '0701 234 567',
+            'created_at': datetime(2026, 11, 7, 18, 45),
+            'items_count': 4,
+            'total': 2450,
+            'status': 'preparing',
+        },
+        {
+            'order_number': 'SAV-00122',
+            'customer_name': 'Jane Achieng',
+            'customer_phone': '0715 222 333',
+            'created_at': datetime(2026, 11, 7, 12, 20),
+            'items_count': 1,
+            'total': 750,
+            'status': 'completed',
+        },
+        {
+            'order_number': 'SAV-00121',
+            'customer_name': 'David Otieno',
+            'customer_phone': '0720 111 222',
+            'created_at': datetime(2026, 11, 6, 19, 10),
+            'items_count': 2,
+            'total': 1600,
+            'status': 'rejected',
+        },
+        {
+            'order_number': 'SAV-00120',
+            'customer_name': 'Grace Njeri',
+            'customer_phone': '0790 555 666',
+            'created_at': datetime(2026, 11, 6, 11, 45),
+            'items_count': 3,
+            'total': 2100,
+            'status': 'completed',
+        },
+    ]
+
+    status_choices = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('preparing', 'Preparing'),
+        ('completed', 'Completed'),
+        ('rejected', 'Rejected'),
+    ]
+
+    search_query = request.GET.get('q', '').strip()
+    selected_status = request.GET.get('status', '').strip()
+
+    filtered_orders = all_orders
+
+    # Search by order number, customer name or phone number.
+    if search_query:
+        filtered_orders = [
+            order for order in filtered_orders
+            if search_query.lower() in order['order_number'].lower()
+            or search_query.lower() in order['customer_name'].lower()
+            or search_query.lower() in order['customer_phone'].lower()
+        ]
+
+    # Filter orders by status.
+    valid_statuses = [value for value, label in status_choices]
+
+    if selected_status in valid_statuses:
+        filtered_orders = [
+            order for order in filtered_orders
+            if order['status'] == selected_status
+        ]
+    else:
+        selected_status = ''
+
+    context = {
+        'orders': filtered_orders,
+        'search_query': search_query,
+        'selected_status': selected_status,
+        'status_choices': status_choices,
+        'today': date.today(),
+
+        # Order statistics
+        'total_orders': len(all_orders),
+
+        'pending_orders': sum(
+            1 for order in all_orders
+            if order['status'] == 'pending'
+        ),
+
+        'preparing_orders': sum(
+            1 for order in all_orders
+            if order['status'] == 'preparing'
+        ),
+
+        'completed_orders': sum(
+            1 for order in all_orders
+            if order['status'] == 'completed'
+        ),
+    }
+
+    return render(
+        request,
+        'Restaurant_Applicants/orders/orders.html',
+        context
     )

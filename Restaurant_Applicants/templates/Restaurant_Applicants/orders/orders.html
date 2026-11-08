@@ -1,0 +1,549 @@
+
+{% extends 'Restaurant_Applicants/base.html' %}
+
+{% block title %}Orders | Savora{% endblock %}
+{% block orders_active %}active{% endblock %}
+{% block breadcrumb %}Orders{% endblock %}
+
+{% block content %}
+
+<style>
+    .orders-page {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .page-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .page-heading h1 {
+        font-size: 27px;
+        font-weight: 800;
+        color: #20252d;
+        margin: 0 0 7px;
+    }
+
+    .page-heading p {
+        color: #858b96;
+        font-size: 14px;
+        margin: 0;
+    }
+
+    .date-label {
+        background: #fff;
+        border: 1px solid #e8eaf0;
+        border-radius: 9px;
+        padding: 11px 15px;
+        color: #555d69;
+        font-size: 13px;
+    }
+
+    .order-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 17px;
+        margin-bottom: 25px;
+    }
+
+    .stat-card {
+        background: #fff;
+        border: 1px solid #eceef2;
+        border-radius: 13px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.orange {
+        background: #fff0e9;
+        color: #f15a29;
+    }
+
+    .stat-icon.blue {
+        background: #edf4ff;
+        color: #4285e8;
+    }
+
+    .stat-icon.green {
+        background: #eaf8ef;
+        color: #27a45c;
+    }
+
+    .stat-icon.purple {
+        background: #f2edff;
+        color: #805ad5;
+    }
+
+    .stat-info span {
+        display: block;
+        color: #858b96;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+    .stat-info h3 {
+        color: #20252d;
+        font-size: 23px;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .orders-panel {
+        background: #fff;
+        border: 1px solid #eceef2;
+        border-radius: 13px;
+        overflow: hidden;
+    }
+
+    .panel-heading {
+        padding: 21px 22px;
+        border-bottom: 1px solid #eef0f3;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .panel-heading h2 {
+        font-size: 17px;
+        font-weight: 800;
+        color: #20252d;
+        margin: 0 0 5px;
+    }
+
+    .panel-heading p {
+        color: #9298a2;
+        font-size: 12px;
+        margin: 0;
+    }
+
+    .filter-form {
+        display: flex;
+        gap: 9px;
+        flex-wrap: wrap;
+    }
+
+    .filter-form input,
+    .filter-form select {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-family: inherit;
+        font-size: 12px;
+        color: #555d69;
+        outline: none;
+        background: #fff;
+    }
+
+    .filter-form input {
+        min-width: 210px;
+    }
+
+    .filter-form input:focus,
+    .filter-form select:focus {
+        border-color: #f15a29;
+    }
+
+    .filter-btn {
+        border: none;
+        background: #f15a29;
+        color: #fff;
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .filter-btn:hover {
+        background: #dc4c20;
+    }
+
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .orders-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 850px;
+    }
+
+    .orders-table th {
+        text-align: left;
+        padding: 14px 20px;
+        background: #fafbfc;
+        color: #9298a2;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: .6px;
+        font-weight: 700;
+    }
+
+    .orders-table td {
+        padding: 17px 20px;
+        border-bottom: 1px solid #f0f1f4;
+        color: #555d69;
+        font-size: 12px;
+        vertical-align: middle;
+    }
+
+    .orders-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .orders-table tbody tr:hover {
+        background: #fdfdfd;
+    }
+
+    .order-number {
+        color: #20252d;
+        font-weight: 800;
+    }
+
+    .customer-name {
+        color: #20252d;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .customer-contact {
+        color: #9a9faa;
+        font-size: 11px;
+    }
+
+    .order-total {
+        color: #20252d;
+        font-weight: 800;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: capitalize;
+    }
+
+    .status.pending {
+        color: #a66b00;
+        background: #fff5d9;
+    }
+
+    .status.accepted {
+        color: #2867bd;
+        background: #eaf2ff;
+    }
+
+    .status.preparing {
+        color: #8052bd;
+        background: #f2eaff;
+    }
+
+    .status.completed {
+        color: #21834b;
+        background: #e8f7ee;
+    }
+
+    .status.rejected {
+        color: #c23c3c;
+        background: #ffeded;
+    }
+
+    .view-order {
+        color: #f15a29;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 12px;
+    }
+
+    .view-order:hover {
+        text-decoration: underline;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 55px 20px;
+        color: #9298a2;
+    }
+
+    .empty-state i {
+        font-size: 35px;
+        color: #d4d7dd;
+        margin-bottom: 13px;
+    }
+
+    .empty-state h3 {
+        color: #20252d;
+        font-size: 16px;
+        margin: 0 0 7px;
+    }
+
+    .empty-state p {
+        font-size: 12px;
+        margin: 0;
+    }
+
+    .results-footer {
+        padding: 16px 20px;
+        border-top: 1px solid #eef0f3;
+        color: #9298a2;
+        font-size: 11px;
+    }
+
+    @media (max-width: 1000px) {
+        .order-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .order-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .page-heading h1 {
+            font-size: 23px;
+        }
+
+        .filter-form {
+            width: 100%;
+        }
+
+        .filter-form input,
+        .filter-form select {
+            width: 100%;
+        }
+
+        .filter-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="orders-page">
+
+    <!-- Page heading -->
+    <div class="page-heading">
+        <div>
+            <h1>Orders</h1>
+            <p>Manage and keep track of your restaurant orders.</p>
+        </div>
+
+        <div class="date-label">
+            <i class="fa-regular fa-calendar"></i>
+            {{ today|date:"F d, Y" }}
+        </div>
+    </div>
+
+    <!-- Order statistics -->
+    <div class="order-stats">
+
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i class="fa-solid fa-receipt"></i>
+            </div>
+            <div class="stat-info">
+                <span>Total Orders</span>
+                <h3>{{ total_orders }}</h3>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fa-regular fa-clock"></i>
+            </div>
+            <div class="stat-info">
+                <span>Pending Orders</span>
+                <h3>{{ pending_orders }}</h3>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon purple">
+                <i class="fa-solid fa-fire-burner"></i>
+            </div>
+            <div class="stat-info">
+                <span>Preparing</span>
+                <h3>{{ preparing_orders }}</h3>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="stat-info">
+                <span>Completed</span>
+                <h3>{{ completed_orders }}</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Orders table -->
+    <div class="orders-panel">
+
+        <div class="panel-heading">
+            <div>
+                <h2>All Orders</h2>
+                <p>Review customer orders and their current status.</p>
+            </div>
+
+            <form method="GET" class="filter-form">
+
+                <input
+                    type="search"
+                    name="q"
+                    placeholder="Search order or customer..."
+                    value="{{ search_query }}"
+                >
+
+                <select name="status">
+                    <option value="">All statuses</option>
+
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}"
+                            {% if selected_status == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+                <button type="submit" class="filter-btn">
+                    <i class="fa-solid fa-filter"></i>
+                    Filter
+                </button>
+
+            </form>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="orders-table">
+
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Order Date</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for order in orders %}
+
+                    <tr>
+                        <td>
+                            <span class="order-number">
+                                {{ order.order_number }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="customer-name">
+                                {{ order.customer_name }}
+                            </span>
+
+                            <span class="customer-contact">
+                                {{ order.customer_phone }}
+                            </span>
+                        </td>
+
+                        <!-- FIXED: created_at is now a datetime object -->
+                        <td>
+                            {{ order.created_at|date:"M d, Y · H:i" }}
+                        </td>
+
+                        <td>
+                            {{ order.items_count }}
+                            item{{ order.items_count|pluralize }}
+                        </td>
+
+                        <td>
+                            <span class="order-total">
+                                KSh {{ order.total|floatformat:2 }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="status {{ order.status }}">
+                                {{ order.status }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <a href="#" class="view-order">
+                                View details
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+
+                                <i class="fa-solid fa-receipt"></i>
+
+                                <h3>No orders found</h3>
+
+                                <p>
+                                    {% if search_query or selected_status %}
+                                        Try changing your search or filter.
+                                    {% else %}
+                                        Customer orders will appear here when they are placed.
+                                    {% endif %}
+                                </p>
+
+                            </div>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+        <div class="results-footer">
+            Showing {{ orders|length }}
+            order{{ orders|length|pluralize }}
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
