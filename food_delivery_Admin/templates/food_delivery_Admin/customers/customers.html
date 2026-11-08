@@ -1,0 +1,389 @@
+
+{% extends 'food_delivery_Admin/base.html' %}
+
+{% block title %}Customer Management | Savora{% endblock %}
+{% block breadcrumb %}Customer Management{% endblock %}
+{% block customers_active %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+    .customer-table { min-width: 950px; }
+
+    .customer-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .customer-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #fff0e9;
+        color: var(--orange);
+        font-size: 12px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .customer-info strong {
+        display: block;
+        font-size: 11px;
+        color: var(--dark);
+    }
+
+    .customer-info small {
+        display: block;
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 4px;
+    }
+
+    .customer-contact {
+        font-size: 11px;
+        color: var(--dark);
+    }
+
+    .customer-contact small {
+        display: block;
+        color: var(--muted);
+        margin-top: 4px;
+        font-size: 10px;
+    }
+
+    .active-account {
+        background: #e8f7f0;
+        color: var(--green);
+    }
+
+    .blocked-account {
+        background: #ffeded;
+        color: var(--red);
+    }
+
+    .customer-orders {
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .customer-spend {
+        font-weight: 700;
+        color: var(--orange);
+    }
+
+    .customer-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .view-action {
+        color: #4f46e5;
+        background: #eeeeff;
+    }
+
+    .block-action {
+        color: var(--red);
+        background: #ffeded;
+    }
+
+    .customer-summary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .summary-box {
+        padding: 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+    }
+
+    .summary-box span {
+        display: block;
+        color: var(--muted);
+        font-size: 10px;
+        margin-bottom: 7px;
+    }
+
+    .summary-box strong {
+        font-size: 17px;
+        color: var(--dark);
+    }
+
+    @media(max-width: 650px) {
+        .page-heading { flex-wrap: wrap; }
+        .filters input { flex-basis: 100%; }
+        .filters select { flex: 1; }
+        .table-footer { flex-wrap: wrap; gap: 12px; }
+        .customer-summary { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>Customer Management</h1>
+        <p>View and manage customers registered on the Savora platform.</p>
+    </div>
+
+    <button class="export-btn" type="button">
+        <span>↓</span> Export Customers
+    </button>
+</div>
+
+<div class="stats">
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Total Customers</span>
+            <span class="stat-icon orange">♙</span>
+        </div>
+        <h2>8,642</h2>
+        <small>All registered customers</small>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Active Customers</span>
+            <span class="stat-icon green">✓</span>
+        </div>
+        <h2>8,214</h2>
+        <small>Customers with active accounts</small>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">New This Month</span>
+            <span class="stat-icon yellow">＋</span>
+        </div>
+        <h2>428</h2>
+        <small>Recently registered customers</small>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Blocked Accounts</span>
+            <span class="stat-icon red">⊘</span>
+        </div>
+        <h2>36</h2>
+        <small>Accounts currently restricted</small>
+    </div>
+</div>
+
+<div class="customer-summary">
+    <div class="summary-box">
+        <span>Customers who ordered</span>
+        <strong>6,920</strong>
+    </div>
+    <div class="summary-box">
+        <span>Total customer orders</span>
+        <strong>24,816</strong>
+    </div>
+    <div class="summary-box">
+        <span>Average customer spending</span>
+        <strong>KSh 2,450</strong>
+    </div>
+</div>
+
+<div class="content-card">
+    <div class="card-heading">
+        <div>
+            <h3>All Customers</h3>
+            <p>Manage customer accounts and view their activity.</p>
+        </div>
+        <span class="status approved">8,642 Customers</span>
+    </div>
+
+    <div class="filters">
+        <input type="text" class="search"
+               placeholder="Search by name, email or phone...">
+
+        <select>
+            <option value="">All Account Statuses</option>
+            <option>Active</option>
+            <option>Blocked</option>
+        </select>
+
+        <select>
+            <option value="">All Customers</option>
+            <option>Recently Registered</option>
+            <option>Most Orders</option>
+            <option>Highest Spending</option>
+        </select>
+
+        <button class="filter-btn" type="button">Filter</button>
+    </div>
+
+    <div class="table-wrap">
+        <table class="customer-table">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Contact Information</th>
+                    <th>Location</th>
+                    <th>Total Orders</th>
+                    <th>Total Spent</th>
+                    <th>Joined</th>
+                    <th>Account Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="customer-info">
+                            <div class="customer-avatar">JM</div>
+                            <div>
+                                <strong>John Mwangi</strong>
+                                <small>#CUS-00124</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="customer-contact">
+                        johnmwangi@email.com
+                        <small>0712 345 678</small>
+                    </td>
+                    <td>Nairobi</td>
+                    <td class="customer-orders">42</td>
+                    <td class="customer-spend">KSh 28,450</td>
+                    <td>12 Oct 2026</td>
+                    <td><span class="status active-account">Active</span></td>
+                    <td>
+                        <div class="customer-actions">
+                            <button class="action-btn view-action" title="View customer">View</button>
+                            <button class="action-btn block-action" title="Block customer">Block</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="customer-info">
+                            <div class="customer-avatar">MW</div>
+                            <div>
+                                <strong>Mary Wanjiku</strong>
+                                <small>#CUS-00123</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="customer-contact">
+                        mary.w@email.com
+                        <small>0722 456 789</small>
+                    </td>
+                    <td>Kiambu</td>
+                    <td class="customer-orders">28</td>
+                    <td class="customer-spend">KSh 19,800</td>
+                    <td>08 Oct 2026</td>
+                    <td><span class="status active-account">Active</span></td>
+                    <td>
+                        <div class="customer-actions">
+                            <button class="action-btn view-action">View</button>
+                            <button class="action-btn block-action">Block</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="customer-info">
+                            <div class="customer-avatar">PK</div>
+                            <div>
+                                <strong>Peter Kamau</strong>
+                                <small>#CUS-00122</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="customer-contact">
+                        peter.k@email.com
+                        <small>0701 234 567</small>
+                    </td>
+                    <td>Nakuru</td>
+                    <td class="customer-orders">16</td>
+                    <td class="customer-spend">KSh 12,600</td>
+                    <td>03 Oct 2026</td>
+                    <td><span class="status blocked-account">Blocked</span></td>
+                    <td>
+                        <div class="customer-actions">
+                            <button class="action-btn view-action">View</button>
+                            <button class="action-btn approved">Unblock</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="customer-info">
+                            <div class="customer-avatar">GN</div>
+                            <div>
+                                <strong>Grace Njeri</strong>
+                                <small>#CUS-00121</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="customer-contact">
+                        grace.njeri@email.com
+                        <small>0715 678 901</small>
+                    </td>
+                    <td>Nairobi</td>
+                    <td class="customer-orders">35</td>
+                    <td class="customer-spend">KSh 24,300</td>
+                    <td>27 Sep 2026</td>
+                    <td><span class="status active-account">Active</span></td>
+                    <td>
+                        <div class="customer-actions">
+                            <button class="action-btn view-action">View</button>
+                            <button class="action-btn block-action">Block</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="customer-info">
+                            <div class="customer-avatar">DO</div>
+                            <div>
+                                <strong>David Otieno</strong>
+                                <small>#CUS-00120</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="customer-contact">
+                        david.o@email.com
+                        <small>0798 123 456</small>
+                    </td>
+                    <td>Mombasa</td>
+                    <td class="customer-orders">9</td>
+                    <td class="customer-spend">KSh 6,750</td>
+                    <td>20 Sep 2026</td>
+                    <td><span class="status active-account">Active</span></td>
+                    <td>
+                        <div class="customer-actions">
+                            <button class="action-btn view-action">View</button>
+                            <button class="action-btn block-action">Block</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-footer">
+        <p>Showing 1–5 of 8,642 customers</p>
+        <div class="pagination">
+            <button type="button">Previous</button>
+            <button type="button" class="current">1</button>
+            <button type="button">2</button>
+            <button type="button">3</button>
+            <button type="button">Next</button>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

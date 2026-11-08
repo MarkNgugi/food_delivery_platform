@@ -1,0 +1,557 @@
+
+{% extends 'food_delivery_Admin/base.html' %}
+
+{% block title %}Delivery Management | Savora{% endblock %}
+{% block breadcrumb %}Delivery Management{% endblock %}
+{% block delivery_active %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+    .delivery-table { min-width: 1050px; }
+
+    .rider-info {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+    .rider-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #fff0e9;
+        color: var(--orange);
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .rider-info strong {
+        display: block;
+        font-size: 11px;
+        color: var(--dark);
+    }
+
+    .rider-info small {
+        display: block;
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 4px;
+    }
+
+    .delivery-id {
+        color: var(--orange);
+        font-weight: 700;
+    }
+
+    .delivery-location {
+        font-size: 11px;
+        color: var(--dark);
+    }
+
+    .delivery-location small {
+        display: block;
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 4px;
+    }
+
+    .on-the-way {
+        background: #eeeeff;
+        color: #4f46e5;
+    }
+
+    .picked-up {
+        background: #fff6e4;
+        color: #bd8111;
+    }
+
+    .delivered-status {
+        background: #e8f7f0;
+        color: var(--green);
+    }
+
+    .failed-status {
+        background: #ffeded;
+        color: var(--red);
+    }
+
+    .unassigned-status {
+        background: #f0f1f4;
+        color: #697386;
+    }
+
+    .rider-available {
+        background: #e8f7f0;
+        color: var(--green);
+    }
+
+    .rider-busy {
+        background: #fff6e4;
+        color: #bd8111;
+    }
+
+    .delivery-actions {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .track-action {
+        background: #eeeeff;
+        color: #4f46e5;
+    }
+
+    .assign-action {
+        background: #fff0e9;
+        color: var(--orange);
+    }
+
+    .delivery-panels {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .delivery-panel {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+    }
+
+    .delivery-panel h3 {
+        font-size: 13px;
+        color: var(--dark);
+        margin: 0 0 5px;
+    }
+
+    .delivery-panel > p {
+        font-size: 10px;
+        color: var(--muted);
+        margin: 0 0 16px;
+    }
+
+    .delivery-progress-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    .delivery-progress-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .progress-label {
+        font-size: 11px;
+        color: var(--dark);
+        min-width: 85px;
+    }
+
+    .progress-track {
+        height: 7px;
+        flex: 1;
+        background: #f0f1f4;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 20px;
+        background: var(--orange);
+    }
+
+    .progress-number {
+        font-size: 10px;
+        color: var(--muted);
+        min-width: 25px;
+        text-align: right;
+    }
+
+    .rider-list {
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+    }
+
+    .rider-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .rider-row-left {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+    .rider-row-left strong {
+        display: block;
+        font-size: 11px;
+        color: var(--dark);
+    }
+
+    .rider-row-left small {
+        display: block;
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 3px;
+    }
+
+    @media(max-width: 800px) {
+        .delivery-panels { grid-template-columns: 1fr; }
+    }
+
+    @media(max-width: 650px) {
+        .page-heading { flex-wrap: wrap; }
+        .filters input { flex-basis: 100%; }
+        .filters select { flex: 1; }
+        .table-footer { flex-wrap: wrap; gap: 12px; }
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>Delivery Management</h1>
+        <p>Monitor deliveries, manage riders and track order fulfilment.</p>
+    </div>
+
+    <button class="export-btn" type="button">
+        <span>↓</span> Export Deliveries
+    </button>
+</div>
+
+<div class="stats">
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Total Deliveries</span>
+            <span class="stat-icon orange">♧</span>
+        </div>
+        <h2>3,842</h2>
+        <small>All recorded deliveries</small>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Active Deliveries</span>
+            <span class="stat-icon yellow">↗</span>
+        </div>
+        <h2>126</h2>
+        <small>Currently in progress</small>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Delivered Today</span>
+            <span class="stat-icon green">✓</span>
+        </div>
+        <h2>284</h2>
+        <small>Successfully completed</small>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Failed Deliveries</span>
+            <span class="stat-icon red">!</span>
+        </div>
+        <h2>12</h2>
+        <small>Require attention</small>
+    </div>
+</div>
+
+<div class="delivery-panels">
+
+    <div class="delivery-panel">
+        <h3>Delivery Overview</h3>
+        <p>Current distribution of delivery activities.</p>
+
+        <div class="delivery-progress-item">
+            <span class="progress-label">Assigned</span>
+            <div class="progress-track">
+                <div class="progress-fill" style="width: 72%;"></div>
+            </div>
+            <span class="progress-number">72</span>
+        </div>
+
+        <div class="delivery-progress-item">
+            <span class="progress-label">Picked Up</span>
+            <div class="progress-track">
+                <div class="progress-fill" style="width: 48%;"></div>
+            </div>
+            <span class="progress-number">48</span>
+        </div>
+
+        <div class="delivery-progress-item">
+            <span class="progress-label">On the Way</span>
+            <div class="progress-track">
+                <div class="progress-fill" style="width: 38%;"></div>
+            </div>
+            <span class="progress-number">38</span>
+        </div>
+
+        <div class="delivery-progress-item">
+            <span class="progress-label">Unassigned</span>
+            <div class="progress-track">
+                <div class="progress-fill" style="width: 12%;"></div>
+            </div>
+            <span class="progress-number">12</span>
+        </div>
+    </div>
+
+    <div class="delivery-panel">
+        <h3>Delivery Riders</h3>
+        <p>Quick overview of rider availability.</p>
+
+        <div class="rider-list">
+            <div class="rider-row">
+                <div class="rider-row-left">
+                    <div class="rider-avatar">MK</div>
+                    <div>
+                        <strong>Michael Kamau</strong>
+                        <small>Rider #R-001</small>
+                    </div>
+                </div>
+                <span class="status rider-available">Available</span>
+            </div>
+
+            <div class="rider-row">
+                <div class="rider-row-left">
+                    <div class="rider-avatar">JO</div>
+                    <div>
+                        <strong>James Otieno</strong>
+                        <small>Rider #R-002</small>
+                    </div>
+                </div>
+                <span class="status rider-busy">On Delivery</span>
+            </div>
+
+            <div class="rider-row">
+                <div class="rider-row-left">
+                    <div class="rider-avatar">WN</div>
+                    <div>
+                        <strong>William Njoroge</strong>
+                        <small>Rider #R-003</small>
+                    </div>
+                </div>
+                <span class="status rider-available">Available</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="content-card">
+    <div class="card-heading">
+        <div>
+            <h3>All Deliveries</h3>
+            <p>View delivery assignments and monitor their progress.</p>
+        </div>
+        <span class="status approved">3,842 Deliveries</span>
+    </div>
+
+    <div class="filters">
+        <input type="text" class="search"
+               placeholder="Search delivery ID, order or rider...">
+
+        <select>
+            <option value="">All Delivery Statuses</option>
+            <option>Unassigned</option>
+            <option>Assigned</option>
+            <option>Picked Up</option>
+            <option>On the Way</option>
+            <option>Delivered</option>
+            <option>Failed</option>
+        </select>
+
+        <select>
+            <option value="">All Riders</option>
+            <option>Michael Kamau</option>
+            <option>James Otieno</option>
+            <option>William Njoroge</option>
+        </select>
+
+        <button class="filter-btn" type="button">Filter</button>
+    </div>
+
+    <div class="table-wrap">
+        <table class="delivery-table">
+            <thead>
+                <tr>
+                    <th>Delivery ID</th>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Delivery Rider</th>
+                    <th>Pickup Location</th>
+                    <th>Destination</th>
+                    <th>Delivery Fee</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td><span class="delivery-id">#DEL-00421</span></td>
+                    <td>#SAV-10241</td>
+                    <td>John Mwangi</td>
+                    <td>
+                        <div class="rider-info">
+                            <div class="rider-avatar">MK</div>
+                            <div>
+                                <strong>Michael Kamau</strong>
+                                <small>0711 222 333</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>Urban Taste</td>
+                    <td class="delivery-location">
+                        Westlands
+                        <small>Nairobi</small>
+                    </td>
+                    <td>KSh 150</td>
+                    <td><span class="status on-the-way">On the Way</span></td>
+                    <td>
+                        <div class="delivery-actions">
+                            <button class="action-btn track-action">Track</button>
+                            <button class="action-btn view-action">View</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><span class="delivery-id">#DEL-00420</span></td>
+                    <td>#SAV-10240</td>
+                    <td>Mary Wanjiku</td>
+                    <td>
+                        <div class="rider-info">
+                            <div class="rider-avatar">JO</div>
+                            <div>
+                                <strong>James Otieno</strong>
+                                <small>0722 333 444</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>Food Palace</td>
+                    <td class="delivery-location">
+                        Kilimani
+                        <small>Nairobi</small>
+                    </td>
+                    <td>KSh 200</td>
+                    <td><span class="status picked-up">Picked Up</span></td>
+                    <td>
+                        <div class="delivery-actions">
+                            <button class="action-btn track-action">Track</button>
+                            <button class="action-btn view-action">View</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><span class="delivery-id">#DEL-00419</span></td>
+                    <td>#SAV-10239</td>
+                    <td>Peter Kamau</td>
+                    <td>
+                        <div class="rider-info">
+                            <div class="rider-avatar">WN</div>
+                            <div>
+                                <strong>William Njoroge</strong>
+                                <small>0700 444 555</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>Urban Grill</td>
+                    <td class="delivery-location">
+                        Parklands
+                        <small>Nairobi</small>
+                    </td>
+                    <td>KSh 120</td>
+                    <td><span class="status delivered-status">Delivered</span></td>
+                    <td>
+                        <div class="delivery-actions">
+                            <button class="action-btn track-action">Details</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><span class="delivery-id">#DEL-00418</span></td>
+                    <td>#SAV-10238</td>
+                    <td>Grace Njeri</td>
+                    <td>
+                        <div class="rider-info">
+                            <div class="rider-avatar">--</div>
+                            <div>
+                                <strong>Not Assigned</strong>
+                                <small>Awaiting rider</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>Urban Taste</td>
+                    <td class="delivery-location">
+                        Lavington
+                        <small>Nairobi</small>
+                    </td>
+                    <td>KSh 180</td>
+                    <td><span class="status unassigned-status">Unassigned</span></td>
+                    <td>
+                        <div class="delivery-actions">
+                            <button class="action-btn assign-action">Assign Rider</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><span class="delivery-id">#DEL-00417</span></td>
+                    <td>#SAV-10237</td>
+                    <td>David Otieno</td>
+                    <td>
+                        <div class="rider-info">
+                            <div class="rider-avatar">JO</div>
+                            <div>
+                                <strong>James Otieno</strong>
+                                <small>0722 333 444</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>Food Palace</td>
+                    <td class="delivery-location">
+                        Embakasi
+                        <small>Nairobi</small>
+                    </td>
+                    <td>KSh 250</td>
+                    <td><span class="status failed-status">Failed</span></td>
+                    <td>
+                        <div class="delivery-actions">
+                            <button class="action-btn view-action">View</button>
+                            <button class="action-btn assign-action">Reassign</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-footer">
+        <p>Showing 1–5 of 3,842 deliveries</p>
+        <div class="pagination">
+            <button type="button">Previous</button>
+            <button type="button" class="current">1</button>
+            <button type="button">2</button>
+            <button type="button">3</button>
+            <button type="button">Next</button>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
