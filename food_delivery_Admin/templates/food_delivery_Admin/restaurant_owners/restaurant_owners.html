@@ -1,0 +1,308 @@
+
+{% extends 'food_delivery_Admin/base.html' %}
+
+{% block title %}Restaurant Owners | Savora Admin{% endblock %}
+{% block restaurant_owners_active %}active{% endblock %}
+{% block breadcrumb %}Restaurant Owners{% endblock %}
+
+{% block extra_css %}
+<style>
+    .owner-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 25px;
+    }
+
+    .owner-stat {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 19px;
+    }
+
+    .owner-stat small {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .owner-stat h2 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 26px;
+        margin-top: 10px;
+    }
+
+    .owner-stat p {
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 5px;
+    }
+
+    .owner-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .owner-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #fff0e9;
+        color: var(--orange);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+
+    .owner-info strong {
+        display: block;
+        font-size: 11px;
+    }
+
+    .owner-info small {
+        display: block;
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 4px;
+    }
+
+    .owner-action {
+        border: 1px solid var(--border);
+        background: white;
+        border-radius: 6px;
+        padding: 7px 10px;
+        color: #555d69;
+        font-size: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .owner-action:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+    }
+
+    .owner-status {
+        display: inline-block;
+        padding: 6px 9px;
+        border-radius: 20px;
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+    .owner-active {
+        background: #e8f7f0;
+        color: #159b68;
+    }
+
+    .owner-inactive {
+        background: #ffeded;
+        color: #d64a4a;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 45px 20px;
+        color: var(--muted);
+    }
+
+    .empty-state h3 {
+        color: var(--dark);
+        font-size: 15px;
+        margin-bottom: 7px;
+    }
+
+    .empty-state p {
+        font-size: 12px;
+    }
+
+    @media(max-width: 900px) {
+        .owner-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media(max-width: 500px) {
+        .owner-stats {
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>Restaurant Owners</h1>
+        <p>Manage restaurant owners and monitor their accounts across Savora.</p>
+    </div>
+</div>
+
+
+<!-- SUMMARY CARDS -->
+<div class="owner-stats">
+
+    <div class="owner-stat">
+        <small>Total Restaurant Owners</small>
+        <h2>{{ total_owners|default:0 }}</h2>
+        <p>Registered owners on Savora</p>
+    </div>
+
+    <div class="owner-stat">
+        <small>Active Owners</small>
+        <h2>{{ active_owners|default:0 }}</h2>
+        <p>Owners with active accounts</p>
+    </div>
+
+    <div class="owner-stat">
+        <small>Pending Owners</small>
+        <h2>{{ pending_owners|default:0 }}</h2>
+        <p>Awaiting approval</p>
+    </div>
+
+    <div class="owner-stat">
+        <small>Suspended Owners</small>
+        <h2>{{ suspended_owners|default:0 }}</h2>
+        <p>Currently suspended</p>
+    </div>
+
+</div>
+
+
+<!-- RESTAURANT OWNERS TABLE -->
+<div class="content-card">
+
+    <div class="card-heading">
+        <div>
+            <h3>All Restaurant Owners</h3>
+            <p>View and manage people registered as restaurant owners.</p>
+        </div>
+
+        <button type="button" class="export-btn">
+            Export Owners
+        </button>
+    </div>
+
+
+    <!-- SEARCH AND FILTERS -->
+    <form method="GET" class="filters">
+
+        <div class="search">
+            <span>⌕</span>
+            <input
+                type="text"
+                name="q"
+                placeholder="Search by owner name or email..."
+                value="{{ search_query|default:'' }}"
+            >
+        </div>
+
+        <select name="status" onchange="this.form.submit()">
+            <option value="">All Statuses</option>
+            <option value="active" {% if selected_status == 'active' %}selected{% endif %}>
+                Active
+            </option>
+            <option value="inactive" {% if selected_status == 'inactive' %}selected{% endif %}>
+                Inactive
+            </option>
+        </select>
+
+        <button type="submit" class="export-btn">Search</button>
+
+    </form>
+
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>RESTAURANT OWNER</th>
+                    <th>EMAIL ADDRESS</th>
+                    <th>RESTAURANTS</th>
+                    <th>DATE JOINED</th>
+                    <th>ACCOUNT STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for owner in restaurant_owners %}
+
+                <tr>
+                    <td>
+                        <div class="owner-info">
+                            <div class="owner-avatar">
+                                {{ owner.first_name|first|upper }}{{ owner.last_name|first|upper }}
+                            </div>
+
+                            <div>
+                                <strong>
+                                    {{ owner.get_full_name|default:owner.username }}
+                                </strong>
+                                <small>@{{ owner.username }}</small>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>{{ owner.email }}</td>
+
+                    <td>
+                        <strong>{{ owner.restaurant_count|default:0 }}</strong>
+                    </td>
+
+                    <td>{{ owner.date_joined|date:"d M Y" }}</td>
+
+                    <td>
+                        {% if owner.is_active %}
+                            <span class="owner-status owner-active">ACTIVE</span>
+                        {% else %}
+                            <span class="owner-status owner-inactive">INACTIVE</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <div class="actions">
+                            <a href="#" class="owner-action">View</a>
+                            <a href="#" class="owner-action">Manage</a>
+                        </div>
+                    </td>
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <h3>No Restaurant Owners Found</h3>
+                            <p>Restaurant owner accounts will appear here once registered.</p>
+                        </div>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <div class="table-footer">
+        <span>
+            Showing {{ restaurant_owners|length }} restaurant owners
+        </span>
+    </div>
+
+</div>
+
+{% endblock %}

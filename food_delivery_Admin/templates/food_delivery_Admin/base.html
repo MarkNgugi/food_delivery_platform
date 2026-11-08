@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,6 +50,37 @@
             left: 0;
             height: 100vh;
             z-index: 100;
+
+            /* SCROLLABLE SIDEBAR */
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* CUSTOM SCROLLBAR */
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #20252d;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #454d59;
+            border-radius: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #68717e;
+        }
+
+        /* FIREFOX SCROLLBAR */
+        .sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: #454d59 #20252d;
         }
 
         .logo {
@@ -57,6 +88,7 @@
             font-size: 25px;
             font-weight: 800;
             padding: 0 12px 35px;
+            flex-shrink: 0;
         }
 
         .logo span {
@@ -101,13 +133,13 @@
             flex-shrink: 0;
         }
 
+        /* ADMIN PROFILE */
         .sidebar-bottom {
-            position: absolute;
-            bottom: 25px;
-            left: 17px;
-            right: 17px;
+            margin-top: auto;
+            flex-shrink: 0;
             border-top: 1px solid #383e48;
             padding-top: 18px;
+            padding-bottom: 5px;
         }
 
         .admin-profile {
@@ -125,6 +157,7 @@
             display: grid;
             place-items: center;
             font-weight: 700;
+            flex-shrink: 0;
         }
 
         .admin-profile strong {
@@ -550,27 +583,27 @@
                 Restaurants
             </a>
 
-            <a href="{%url 'food_delivery_Admin:orders'%}" 
-            class="{% block orders_active %}{% endblock %}">
-                <span class="icon">♨</span>
+            <a href="{% url 'food_delivery_Admin:orders' %}"
+               class="{% block orders_active %}{% endblock %}">
+                <span class="icon">📦</span>
                 Orders
             </a>
 
-            <a href="{% url 'food_delivery_Admin:menu_management'%}" 
-            class="{%block menu_management_active%}{% endblock %}">
-                <span class="icon">☷</span>
+            <a href="{% url 'food_delivery_Admin:menu_management' %}"
+               class="{% block menu_management_active %}{% endblock %}">
+                <span class="icon">🍽</span>
                 Menu Management
             </a>
 
-            <a href="{% url 'food_delivery_Admin:customers'%}" 
-            class="{%block customers_active%}{% endblock %}">
-                <span class="icon">♙</span>
+            <a href="{% url 'food_delivery_Admin:customers' %}"
+               class="{% block customers_active %}{% endblock %}">
+                <span class="icon">👥</span>
                 Customers
             </a>
 
-            <a href="{% url 'food_delivery_Admin:delivery_management'%}"
-            class="{%block delivery_management_active%}{% endblock %}">
-                <span class="icon">♧</span>
+            <a href="{% url 'food_delivery_Admin:delivery_management' %}"
+               class="{% block delivery_management_active %}{% endblock %}">
+                <span class="icon">🚚</span>
                 Delivery Management
             </a>
 
@@ -580,23 +613,37 @@
 
         <nav class="menu">
 
-            <a href="#">
-                <span class="icon">♧</span>
+            <!-- RESTAURANT OWNERS -->
+            <a href=""
+               class="{% block restaurant_owners_active %}{% endblock %}">
+                <span class="icon">👨‍🍳</span>
                 Restaurant Owners
             </a>
 
-            <a href="#">
-                <span class="icon">▤</span>
+            <!-- CUISINE CATEGORIES -->
+            <a href=""
+               class="{% block cuisines_active %}{% endblock %}">
+                <span class="icon">🥘</span>
+                Cuisine Categories
+            </a>
+
+            <!-- REPORTS & ANALYTICS -->
+            <a href=""
+               class="{% block reports_active %}{% endblock %}">
+                <span class="icon">📊</span>
                 Reports & Analytics
             </a>
 
-            <a href="#">
-                <span class="icon">⚙</span>
+            <!-- SETTINGS -->
+            <a href=""
+               class="{% block settings_active %}{% endblock %}">
+                <span class="icon">⚙️</span>
                 Settings
             </a>
 
         </nav>
 
+        <!-- ADMIN PROFILE -->
         <div class="sidebar-bottom">
             <div class="admin-profile">
                 <div class="avatar">SA</div>
@@ -638,3 +685,4 @@
 
 </body>
 </html>
+```

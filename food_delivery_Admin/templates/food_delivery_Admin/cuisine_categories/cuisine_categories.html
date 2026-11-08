@@ -1,0 +1,414 @@
+
+{% extends 'food_delivery_Admin/base.html' %}
+
+{% block title %}Cuisine Categories | Savora Admin{% endblock %}
+{% block cuisines_active %}active{% endblock %}
+{% block breadcrumb %}Cuisine Categories{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cuisine-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 25px;
+    }
+
+    .cuisine-stat {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 19px;
+    }
+
+    .cuisine-stat small {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .cuisine-stat h2 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 26px;
+        margin-top: 10px;
+    }
+
+    .cuisine-layout {
+        display: grid;
+        grid-template-columns: 320px minmax(0, 1fr);
+        gap: 20px;
+        align-items: start;
+    }
+
+    .cuisine-form-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 22px;
+    }
+
+    .cuisine-form-card h3 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 15px;
+    }
+
+    .cuisine-form-card > p {
+        color: var(--muted);
+        font-size: 11px;
+        margin-top: 6px;
+        margin-bottom: 22px;
+        line-height: 1.6;
+    }
+
+    .form-group {
+        margin-bottom: 17px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 11px 12px;
+        outline: none;
+        font-family: inherit;
+        font-size: 11px;
+        color: var(--dark);
+    }
+
+    .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: var(--orange);
+    }
+
+    .form-hint {
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 6px;
+        line-height: 1.5;
+    }
+
+    .form-submit {
+        width: 100%;
+        background: var(--orange);
+        color: white;
+        border: none;
+        border-radius: 7px;
+        padding: 12px;
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .form-submit:hover {
+        background: #dc4c20;
+    }
+
+    .cuisine-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .cuisine-icon {
+        width: 37px;
+        height: 37px;
+        border-radius: 9px;
+        background: #fff0e9;
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .cuisine-name strong {
+        display: block;
+        font-size: 11px;
+    }
+
+    .cuisine-name small {
+        display: block;
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 4px;
+    }
+
+    .category-status {
+        display: inline-block;
+        padding: 6px 9px;
+        border-radius: 20px;
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+    .category-active {
+        background: #e8f7f0;
+        color: #159b68;
+    }
+
+    .category-inactive {
+        background: #ffeded;
+        color: #d64a4a;
+    }
+
+    .cuisine-action {
+        border: 1px solid var(--border);
+        background: white;
+        border-radius: 6px;
+        padding: 7px 9px;
+        font-size: 10px;
+        color: #555d69;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .cuisine-action:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+    }
+
+    .cuisine-table-card {
+        min-width: 0;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px 15px;
+        color: var(--muted);
+    }
+
+    .empty-state h3 {
+        color: var(--dark);
+        font-size: 14px;
+        margin-bottom: 7px;
+    }
+
+    .empty-state p {
+        font-size: 11px;
+    }
+
+    @media(max-width: 1100px) {
+        .cuisine-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media(max-width: 650px) {
+        .cuisine-stats {
+            grid-template-columns: 1fr;
+            gap: 9px;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>Cuisine Categories</h1>
+        <p>Create and manage the cuisine categories available to restaurants on Savora.</p>
+    </div>
+</div>
+
+
+<!-- SUMMARY CARDS -->
+<div class="cuisine-stats">
+
+    <div class="cuisine-stat">
+        <small>Total Categories</small>
+        <h2>{{ total_cuisines|default:0 }}</h2>
+    </div>
+
+    <div class="cuisine-stat">
+        <small>Active Categories</small>
+        <h2>{{ active_cuisines|default:0 }}</h2>
+    </div>
+
+    <div class="cuisine-stat">
+        <small>Inactive Categories</small>
+        <h2>{{ inactive_cuisines|default:0 }}</h2>
+    </div>
+
+</div>
+
+
+<div class="cuisine-layout">
+
+    <!-- ADD CUISINE CATEGORY FORM -->
+    <div class="cuisine-form-card">
+
+        <h3>Add New Category</h3>
+        <p>
+            Create a cuisine category that restaurant owners can select
+            when registering or updating their restaurants.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="cuisine-name">Cuisine Name</label>
+                <input
+                    type="text"
+                    id="cuisine-name"
+                    name="name"
+                    placeholder="e.g. Kenyan Cuisine"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="cuisine-description">Description</label>
+                <textarea
+                    id="cuisine-description"
+                    name="description"
+                    placeholder="Briefly describe this cuisine category..."
+                ></textarea>
+
+                <div class="form-hint">
+                    A short description to help customers understand the category.
+                </div>
+            </div>
+
+            <button type="submit" class="form-submit">
+                + Create Cuisine Category
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- EXISTING CUISINE CATEGORIES -->
+    <div class="content-card cuisine-table-card">
+
+        <div class="card-heading">
+            <div>
+                <h3>All Cuisine Categories</h3>
+                <p>Manage the categories currently available on the platform.</p>
+            </div>
+        </div>
+
+
+        <!-- SEARCH -->
+        <form method="GET" class="filters">
+
+            <div class="search">
+                <span>⌕</span>
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Search cuisine categories..."
+                    value="{{ search_query|default:'' }}"
+                >
+            </div>
+
+            <button type="submit" class="export-btn">
+                Search
+            </button>
+
+        </form>
+
+
+        <div class="table-wrap">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>CUISINE CATEGORY</th>
+                        <th>RESTAURANTS</th>
+                        <th>STATUS</th>
+                        <th>DATE CREATED</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for cuisine in cuisines %}
+
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🥘</div>
+
+                                <div>
+                                    <strong>{{ cuisine.name }}</strong>
+                                    <small>{{ cuisine.description|default:"No description added" }}</small>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <strong>{{ cuisine.restaurant_count|default:0 }}</strong>
+                        </td>
+
+                        <td>
+                            {% if cuisine.is_active %}
+                                <span class="category-status category-active">
+                                    ACTIVE
+                                </span>
+                            {% else %}
+                                <span class="category-status category-inactive">
+                                    INACTIVE
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ cuisine.created_at|date:"d M Y" }}</td>
+
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <h3>No Cuisine Categories Yet</h3>
+                                <p>
+                                    Use the form to create your first cuisine category.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+
+
+        <div class="table-footer">
+            <span>
+                Showing {{ cuisines|length }} cuisine categories
+            </span>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
