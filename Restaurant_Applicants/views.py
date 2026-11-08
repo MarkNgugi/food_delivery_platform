@@ -477,3 +477,110 @@ def orders(request):
         'Restaurant_Applicants/orders/orders.html',
         context
     )
+
+
+from django.contrib import messages
+from django.contrib.auth import get_user_model, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.shortcuts import render, redirect
+from django.utils import timezone
+
+
+User = get_user_model()
+
+
+@login_required
+def my_profile(request):
+    user = request.user
+
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+
+        errors = []
+
+        if not first_name:
+            errors.append('First name is required.')
+
+        if not last_name:
+            errors.append('Last name is required.')
+
+        if not username:
+            errors.append('Username is required.')
+
+        if not email:
+            errors.append('Email address is required.')
+
+        if username and User._default_manager.filter(
+            username__iexact=username
+        ).exclude(pk=user.pk).exists():
+            errors.append('That username is already taken.')
+
+        if email and User._default_manager.filter(
+            email__iexact=email
+        ).exclude(pk=user.pk).exists():
+            errors.append('That email address is already in use.')
+
+        if errors:
+            for error in errors:
+                messages.error(request, error)
+        else:
+            user.first_name = first_name
+            user.last_name = last_name
+            user.username = username
+            user.email = email
+            user.save()
+
+            messages.success(request, 'Your profile has been updated successfully.')
+            return redirect('restaurant_applicants:my_profile')
+
+    context = {
+        'profile_user': user,
+    }
+
+    return render(
+        request,
+        'Restaurant_Applicants/profile/profile.html',
+        context
+    )
+
+
+@login_required
+def account_settings(request):
+    password_form = PasswordChangeForm(
+        user=request.user,
+        data=request.POST if request.method == 'POST' else None
+    )
+
+    if request.method == 'POST':
+        if password_form.is_valid():
+            updated_user = password_form.save()
+
+            # Keep the user logged in after changing their password.
+            update_session_auth_hash(request, updated_user)
+
+            messages.success(
+                request,
+                'Your password has been changed successfully.'
+            )
+
+            return redirect('restaurant_applicants:account_settings')
+
+        messages.error(
+            request,
+            'Please correct the errors below and try again.'
+        )
+
+    context = {
+        'password_form': password_form,
+        'profile_user': request.user,
+    }
+
+    return render(
+        request,
+        'Restaurant_Applicants/account_settings/account_settings.html',
+        context
+    )
