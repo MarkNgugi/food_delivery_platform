@@ -1,0 +1,666 @@
+
+{% extends 'food_delivery_Admin/base.html' %}
+
+{% block title %}Settings | Savora Admin{% endblock %}
+{% block settings_active %}active{% endblock %}
+{% block breadcrumb %}Settings{% endblock %}
+
+{% block extra_css %}
+<style>
+    .settings-layout {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 20px;
+        align-items: start;
+    }
+
+    .settings-nav {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        position: sticky;
+        top: 20px;
+    }
+
+    .settings-nav a {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 12px;
+        margin-bottom: 4px;
+        text-decoration: none;
+        color: #68717e;
+        font-size: 11px;
+        font-weight: 600;
+        border-radius: 7px;
+    }
+
+    .settings-nav a:hover,
+    .settings-nav a.active {
+        background: #fff0e9;
+        color: var(--orange);
+    }
+
+    .settings-content {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        min-width: 0;
+    }
+
+    .settings-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        scroll-margin-top: 20px;
+    }
+
+    .settings-card-heading {
+        padding: 20px 22px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .settings-card-heading h3 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 14px;
+    }
+
+    .settings-card-heading p {
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 5px;
+    }
+
+    .settings-card-body {
+        padding: 22px;
+    }
+
+    .settings-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 19px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-group.full {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #4d5562;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 11px 12px;
+        outline: none;
+        font-family: inherit;
+        font-size: 11px;
+        color: var(--dark);
+        background: white;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: var(--orange);
+    }
+
+    .form-group small {
+        font-size: 10px;
+        color: var(--muted);
+    }
+
+    .setting-option {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f1f4;
+    }
+
+    .setting-option:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .setting-option:first-child {
+        padding-top: 0;
+    }
+
+    .setting-option strong {
+        display: block;
+        font-size: 11px;
+    }
+
+    .setting-option p {
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 5px;
+    }
+
+    .toggle {
+        position: relative;
+        width: 39px;
+        height: 21px;
+        flex-shrink: 0;
+    }
+
+    .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        inset: 0;
+        cursor: pointer;
+        background: #d8dce3;
+        border-radius: 20px;
+        transition: .2s;
+    }
+
+    .toggle-slider:before {
+        content: "";
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        left: 3px;
+        top: 3px;
+        background: white;
+        border-radius: 50%;
+        transition: .2s;
+    }
+
+    .toggle input:checked + .toggle-slider {
+        background: var(--orange);
+    }
+
+    .toggle input:checked + .toggle-slider:before {
+        transform: translateX(18px);
+    }
+
+    .payment-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 0;
+        border-bottom: 1px solid #f0f1f4;
+    }
+
+    .payment-option:last-child {
+        border-bottom: none;
+    }
+
+    .payment-icon {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 9px;
+        background: #fff0e9;
+        font-size: 17px;
+    }
+
+    .payment-info {
+        flex: 1;
+    }
+
+    .payment-info strong {
+        font-size: 11px;
+        display: block;
+    }
+
+    .payment-info small {
+        color: var(--muted);
+        font-size: 10px;
+    }
+
+    .settings-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 18px 22px;
+        background: #fafbfc;
+        border-top: 1px solid var(--border);
+    }
+
+    .cancel-btn {
+        background: white;
+        border: 1px solid var(--border);
+        padding: 10px 15px;
+        border-radius: 7px;
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .save-btn {
+        background: var(--orange);
+        color: white;
+        border: none;
+        padding: 10px 17px;
+        border-radius: 7px;
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .security-note {
+        background: #fff6e4;
+        border: 1px solid #f4e5c4;
+        border-radius: 8px;
+        padding: 13px;
+        color: #8a641b;
+        font-size: 10px;
+        line-height: 1.6;
+        margin-top: 17px;
+    }
+
+    @media(max-width: 900px) {
+        .settings-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .settings-nav {
+            position: static;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .settings-nav a {
+            margin: 0;
+        }
+    }
+
+    @media(max-width: 600px) {
+        .settings-form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full {
+            grid-column: auto;
+        }
+
+        .settings-card-body {
+            padding: 16px;
+        }
+
+        .settings-card-heading {
+            padding: 17px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>Platform Settings</h1>
+        <p>Manage your Savora platform preferences and configurations.</p>
+    </div>
+</div>
+
+<div class="settings-layout">
+
+    <!-- SETTINGS NAVIGATION -->
+    <aside class="settings-nav">
+
+        <a href="#general" class="active">
+            <span>⚙️</span>
+            General Settings
+        </a>
+
+        <a href="#business">
+            <span>🏢</span>
+            Business Settings
+        </a>
+
+        <a href="#orders">
+            <span>📦</span>
+            Order Settings
+        </a>
+
+        <a href="#payments">
+            <span>💳</span>
+            Payment Settings
+        </a>
+
+        <a href="#notifications">
+            <span>🔔</span>
+            Notifications
+        </a>
+
+        <a href="#security">
+            <span>🔐</span>
+            Security
+        </a>
+
+    </aside>
+
+    <!-- SETTINGS CONTENT -->
+    <div class="settings-content">
+
+        <!-- GENERAL SETTINGS -->
+        <section class="settings-card" id="general">
+
+            <div class="settings-card-heading">
+                <h3>General Settings</h3>
+                <p>Basic information about your food delivery platform.</p>
+            </div>
+
+            <div class="settings-card-body">
+
+                <div class="settings-form-grid">
+
+                    <div class="form-group">
+                        <label>Platform Name</label>
+                        <input type="text" value="Savora">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Platform Email</label>
+                        <input type="email" value="support@savora.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact Phone</label>
+                        <input type="text" value="+254 700 000 000">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Website URL</label>
+                        <input type="url" value="https://www.savora.com">
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Platform Description</label>
+                        <textarea rows="3">Savora is a food ordering and delivery platform connecting customers with restaurants.</textarea>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- BUSINESS SETTINGS -->
+        <section class="settings-card" id="business">
+
+            <div class="settings-card-heading">
+                <h3>Business Settings</h3>
+                <p>Configure the platform's location, currency and delivery charges.</p>
+            </div>
+
+            <div class="settings-card-body">
+
+                <div class="settings-form-grid">
+
+                    <div class="form-group">
+                        <label>Default Currency</label>
+                        <select>
+                            <option selected>KES - Kenyan Shilling</option>
+                            <option>USD - US Dollar</option>
+                            <option>EUR - Euro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Timezone</label>
+                        <select>
+                            <option selected>Africa/Nairobi (EAT)</option>
+                            <option>UTC</option>
+                            <option>Africa/Kampala</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Default Delivery Fee (KSh)</label>
+                        <input type="number" value="150">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Minimum Delivery Fee (KSh)</label>
+                        <input type="number" value="100">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ORDER SETTINGS -->
+        <section class="settings-card" id="orders">
+
+            <div class="settings-card-heading">
+                <h3>Order Settings</h3>
+                <p>Control how customers place and manage their orders.</p>
+            </div>
+
+            <div class="settings-card-body">
+
+                <div class="settings-form-grid">
+
+                    <div class="form-group">
+                        <label>Minimum Order Amount (KSh)</label>
+                        <input type="number" value="300">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Order Cancellation Period (Minutes)</label>
+                        <input type="number" value="5">
+                    </div>
+
+                </div>
+
+                <div class="setting-option">
+                    <div>
+                        <strong>Allow Customer Order Cancellation</strong>
+                        <p>Allow customers to cancel orders before preparation begins.</p>
+                    </div>
+
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-option">
+                    <div>
+                        <strong>Require Restaurant Confirmation</strong>
+                        <p>Restaurants must accept orders before preparation starts.</p>
+                    </div>
+
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- PAYMENT SETTINGS -->
+        <section class="settings-card" id="payments">
+
+            <div class="settings-card-heading">
+                <h3>Payment Settings</h3>
+                <p>Manage the payment methods available to customers.</p>
+            </div>
+
+            <div class="settings-card-body">
+
+                <div class="payment-option">
+                    <div class="payment-icon">📱</div>
+                    <div class="payment-info">
+                        <strong>M-Pesa</strong>
+                        <small>Mobile money payments</small>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="payment-option">
+                    <div class="payment-icon">💳</div>
+                    <div class="payment-info">
+                        <strong>Card Payments</strong>
+                        <small>Visa, Mastercard and supported cards</small>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="payment-option">
+                    <div class="payment-icon">💵</div>
+                    <div class="payment-info">
+                        <strong>Cash on Delivery</strong>
+                        <small>Customers pay when their order arrives</small>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- NOTIFICATIONS -->
+        <section class="settings-card" id="notifications">
+
+            <div class="settings-card-heading">
+                <h3>Notification Settings</h3>
+                <p>Choose which platform events should generate notifications.</p>
+            </div>
+
+            <div class="settings-card-body">
+
+                <div class="setting-option">
+                    <div>
+                        <strong>New Order Notifications</strong>
+                        <p>Notify administrators when a new order is placed.</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-option">
+                    <div>
+                        <strong>New Restaurant Applications</strong>
+                        <p>Notify administrators when a restaurant applies to join Savora.</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-option">
+                    <div>
+                        <strong>Delivery Notifications</strong>
+                        <p>Receive updates about delivery assignments and completed deliveries.</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-option">
+                    <div>
+                        <strong>Email Notifications</strong>
+                        <p>Receive important platform updates through email.</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- SECURITY -->
+        <section class="settings-card" id="security">
+
+            <div class="settings-card-heading">
+                <h3>Security Settings</h3>
+                <p>Manage administrator account security and access.</p>
+            </div>
+
+            <div class="settings-card-body">
+
+                <div class="setting-option">
+                    <div>
+                        <strong>Two-Factor Authentication</strong>
+                        <p>Add an extra verification step when administrators log in.</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-option">
+                    <div>
+                        <strong>Login Alerts</strong>
+                        <p>Receive alerts when a new device accesses your account.</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="security-note">
+                    <strong>Security reminder:</strong>
+                    Never share administrator passwords or payment gateway credentials.
+                    Use secure authentication and restrict access to authorized administrators.
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- SAVE BUTTONS -->
+        <div class="settings-card">
+            <div class="settings-actions">
+                <button type="button" class="cancel-btn">Cancel</button>
+                <button type="button" class="save-btn">Save Changes</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
