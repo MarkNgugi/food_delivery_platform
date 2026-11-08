@@ -1,0 +1,473 @@
+
+{% extends 'Restaurant_Applicants/base.html' %}
+
+{% block title %}Account Settings | Savora{% endblock %}
+{% block breadcrumb %}Account Settings{% endblock %}
+
+{% block content %}
+
+<style>
+    .settings-page {
+        max-width: 1050px;
+        margin: 0 auto;
+    }
+
+    .settings-heading {
+        margin-bottom: 25px;
+    }
+
+    .settings-heading h1 {
+        font: 800 25px 'Plus Jakarta Sans', sans-serif;
+        color: #20252d;
+        margin-bottom: 7px;
+    }
+
+    .settings-heading p {
+        color: #858b94;
+        font-size: 13px;
+    }
+
+    .settings-layout {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+    }
+
+    .settings-nav,
+    .settings-card {
+        background: #fff;
+        border: 1px solid #eceef1;
+        border-radius: 12px;
+        box-shadow: 0 5px 25px rgba(32,37,45,.045);
+    }
+
+    .settings-nav {
+        padding: 10px;
+    }
+
+    .settings-nav a {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 12px;
+        color: #626a75;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .settings-nav a.active {
+        background: #fff0e9;
+        color: #f15a29;
+    }
+
+    .settings-nav a i {
+        width: 17px;
+        text-align: center;
+    }
+
+    .settings-card {
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .settings-card-header {
+        padding: 21px 23px;
+        border-bottom: 1px solid #eceef1;
+    }
+
+    .settings-card-header h2 {
+        color: #20252d;
+        font: 800 15px 'Plus Jakarta Sans', sans-serif;
+        margin-bottom: 5px;
+    }
+
+    .settings-card-header p {
+        color: #9298a2;
+        font-size: 11px;
+        line-height: 1.6;
+    }
+
+    .settings-card-body {
+        padding: 23px;
+    }
+
+    .security-notice {
+        display: flex;
+        gap: 12px;
+        padding: 14px;
+        background: #edf5ff;
+        border: 1px solid #d8e8fa;
+        border-radius: 9px;
+        margin-bottom: 22px;
+    }
+
+    .security-notice i {
+        color: #4285e8;
+        margin-top: 2px;
+    }
+
+    .security-notice strong {
+        display: block;
+        color: #285b91;
+        font-size: 11px;
+        margin-bottom: 4px;
+    }
+
+    .security-notice p {
+        color: #55799d;
+        font-size: 10px;
+        line-height: 1.6;
+    }
+
+    .password-fields {
+        display: grid;
+        gap: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #555d69;
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .password-input {
+        position: relative;
+    }
+
+    .password-input input {
+        width: 100%;
+        height: 43px;
+        padding: 0 43px 0 13px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        outline: none;
+        color: #343a40;
+        font-size: 12px;
+        background: #fff;
+    }
+
+    .password-input input:focus {
+        border-color: #f15a29;
+        box-shadow: 0 0 0 3px rgba(241,90,41,.08);
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        color: #9298a2;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    .field-errors {
+        color: #dc4c4c;
+        font-size: 10px;
+        margin-top: 6px;
+        line-height: 1.5;
+    }
+
+    .help-text {
+        color: #9298a2;
+        font-size: 10px;
+        line-height: 1.6;
+        margin-top: 7px;
+    }
+
+    .settings-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 20px;
+        margin-top: 22px;
+        border-top: 1px solid #eef0f3;
+    }
+
+    .save-btn {
+        border: none;
+        background: #f15a29;
+        color: white;
+        padding: 12px 18px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .save-btn:hover {
+        background: #dc4c1e;
+    }
+
+    .account-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .account-info label {
+        display: block;
+        color: #9298a2;
+        font-size: 10px;
+        margin-bottom: 6px;
+    }
+
+    .account-info strong {
+        color: #343a40;
+        font-size: 12px;
+        overflow-wrap: anywhere;
+    }
+
+    @media(max-width: 750px) {
+        .settings-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .settings-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .settings-nav a {
+            flex: 1;
+            justify-content: center;
+        }
+    }
+
+    @media(max-width: 500px) {
+        .settings-card-body {
+            padding: 17px;
+        }
+
+        .account-info {
+            grid-template-columns: 1fr;
+        }
+
+        .settings-nav a {
+            flex-basis: 100%;
+            justify-content: flex-start;
+        }
+    }
+</style>
+
+<div class="settings-page">
+
+    <div class="settings-heading">
+        <h1>Account Settings</h1>
+        <p>Manage your account security and login information.</p>
+    </div>
+
+    <div class="settings-layout">
+
+        <!-- Settings navigation -->
+        <div class="settings-nav">
+            <a href="#security" class="active">
+                <i class="fa-solid fa-shield-halved"></i>
+                Security
+            </a>
+
+            <a href="#account-information">
+                <i class="fa-regular fa-user"></i>
+                Account Information
+            </a>
+        </div>
+
+        <div>
+
+            <!-- Password settings -->
+            <div class="settings-card" id="security">
+
+                <div class="settings-card-header">
+                    <h2>Password & Security</h2>
+                    <p>Change your password to help keep your Savora account secure.</p>
+                </div>
+
+                <div class="settings-card-body">
+
+                    <div class="security-notice">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <div>
+                            <strong>Keep your account secure</strong>
+                            <p>
+                                Use a strong password that you do not use on other websites.
+                                Your new password must meet Django's password validation rules.
+                            </p>
+                        </div>
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="password-fields">
+
+                            <div class="form-group">
+                                <label for="{{ password_form.old_password.id_for_label }}">
+                                    Current Password
+                                </label>
+
+                                <div class="password-input">
+                                    {{ password_form.old_password }}
+
+                                    <button type="button"
+                                            class="toggle-password"
+                                            onclick="togglePassword('{{ password_form.old_password.id_for_label }}', this)">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+
+                                {% for error in password_form.old_password.errors %}
+                                    <div class="field-errors">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ password_form.new_password1.id_for_label }}">
+                                    New Password
+                                </label>
+
+                                <div class="password-input">
+                                    {{ password_form.new_password1 }}
+
+                                    <button type="button"
+                                            class="toggle-password"
+                                            onclick="togglePassword('{{ password_form.new_password1.id_for_label }}', this)">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+
+                                {% for error in password_form.new_password1.errors %}
+                                    <div class="field-errors">{{ error }}</div>
+                                {% endfor %}
+
+                                {% if password_form.new_password1.help_text %}
+                                    <div class="help-text">
+                                        {{ password_form.new_password1.help_text|safe }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ password_form.new_password2.id_for_label }}">
+                                    Confirm New Password
+                                </label>
+
+                                <div class="password-input">
+                                    {{ password_form.new_password2 }}
+
+                                    <button type="button"
+                                            class="toggle-password"
+                                            onclick="togglePassword('{{ password_form.new_password2.id_for_label }}', this)">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+
+                                {% for error in password_form.new_password2.errors %}
+                                    <div class="field-errors">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            {% for error in password_form.non_field_errors %}
+                                <div class="field-errors">{{ error }}</div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="settings-actions">
+                            <button type="submit" class="save-btn">
+                                <i class="fa-solid fa-lock"></i>
+                                Update Password
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- Account information -->
+            <div class="settings-card" id="account-information">
+
+                <div class="settings-card-header">
+                    <h2>Account Information</h2>
+                    <p>Basic information associated with your Savora login account.</p>
+                </div>
+
+                <div class="settings-card-body">
+
+                    <div class="account-info">
+
+                        <div>
+                            <label>Username</label>
+                            <strong>{{ profile_user.username }}</strong>
+                        </div>
+
+                        <div>
+                            <label>Email Address</label>
+                            <strong>{{ profile_user.email|default:"Not provided" }}</strong>
+                        </div>
+
+                        <div>
+                            <label>Account Status</label>
+                            <strong>
+                                {% if profile_user.is_active %}
+                                    Active
+                                {% else %}
+                                    Inactive
+                                {% endif %}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <label>Last Login</label>
+                            <strong>
+                                {% if profile_user.last_login %}
+                                    {{ profile_user.last_login|date:"M d, Y · H:i" }}
+                                {% else %}
+                                    No previous login recorded
+                                {% endif %}
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+function togglePassword(fieldId, button) {
+    const input = document.getElementById(fieldId);
+    const icon = button.querySelector('i');
+
+    if (!input) return;
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+// Add consistent styling to Django-generated password inputs.
+document.querySelectorAll('.password-input input').forEach(input => {
+    input.classList.add('password-field');
+});
+</script>
+
+{% endblock %}
