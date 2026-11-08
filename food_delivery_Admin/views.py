@@ -137,3 +137,9 @@ def orders(request):
 
 def menu_management(request):
     return render(request,'food_delivery_Admin/menu_management/menu_management.html')
+
+def customers(request):
+    return render(request,'food_delivery_Admin/customers/customers.html')
+
+def delivery_management(request):
+    return render(request,'food_delivery_Admin/delivery_management/delivery_management.html')

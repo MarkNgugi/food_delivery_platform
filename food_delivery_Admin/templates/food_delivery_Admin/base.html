@@ -562,12 +562,14 @@
                 Menu Management
             </a>
 
-            <a href="#">
+            <a href="{% url 'food_delivery_Admin:customers'%}" 
+            class="{%block customers_active%}{% endblock %}">
                 <span class="icon">♙</span>
                 Customers
             </a>
 
-            <a href="#">
+            <a href="{% url 'food_delivery_Admin:delivery_management'%}"
+            class="{%block delivery_management_active%}{% endblock %}">
                 <span class="icon">♧</span>
                 Delivery Management
             </a>
