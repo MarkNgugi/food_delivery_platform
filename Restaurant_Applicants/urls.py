@@ -58,4 +58,16 @@ urlpatterns = [
         views.orders,
         name='orders'
     ),
+
+    path(
+    'profile/',
+    views.my_profile,
+    name='my_profile'
+),
+
+     path(
+     'account-settings/',
+     views.account_settings,
+     name='account_settings'
+     ),
 ]
