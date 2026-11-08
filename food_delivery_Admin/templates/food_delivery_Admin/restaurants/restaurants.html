@@ -1,0 +1,639 @@
+{% extends 'food_delivery_Admin/base.html' %}
+
+{% block title %}Savora | Restaurant Management{% endblock %}
+{% block breadcrumb %}<strong>Restaurants</strong>{% endblock %}
+{% block restaurants_active %}active{% endblock %}
+
+{% block content %}
+
+<style>
+    .restaurant-logo {
+        width: 43px;
+        height: 43px;
+        border-radius: 10px;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    .restaurant-img {
+        width: 43px;
+        height: 43px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff0e9;
+        font-size: 21px;
+        flex-shrink: 0;
+    }
+
+    .restaurant {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    .restaurant div:last-child {
+        min-width: 0;
+    }
+
+    .restaurant strong {
+        display: block;
+    }
+
+    .restaurant small {
+        display: block;
+        color: #89909c;
+        margin-top: 3px;
+    }
+
+    .filters form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        width: 100%;
+        align-items: center;
+    }
+
+    .filters .search {
+        flex: 1;
+        min-width: 220px;
+        height: 44px;
+        min-height: 44px;
+        box-sizing: border-box;
+    }
+
+    .filters .search input {
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    .filters select {
+        min-width: 145px;
+        height: 44px;
+        min-height: 44px;
+        padding: 0 13px;
+        box-sizing: border-box;
+        line-height: normal;
+        font-size: 13px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 45px 20px;
+        color: #89909c;
+    }
+
+    .empty-state .empty-icon {
+        font-size: 35px;
+        margin-bottom: 12px;
+    }
+
+    .empty-state h3 {
+        color: #303744;
+        margin-bottom: 7px;
+    }
+
+    .table-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .pagination a,
+    .pagination span {
+        min-width: 34px;
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 10px;
+        border: 1px solid #e6e8ed;
+        border-radius: 7px;
+        text-decoration: none;
+        color: #555d6c;
+        font-size: 13px;
+    }
+
+    .pagination .current {
+        background: #f15a29;
+        color: white;
+        border-color: #f15a29;
+    }
+
+    .pagination .disabled {
+        opacity: .45;
+        pointer-events: none;
+    }
+
+    @media(max-width: 768px) {
+        .filters form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filters .search,
+        .filters select {
+            width: 100%;
+        }
+
+        .table-footer {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+</style>
+
+
+<div class="page-heading">
+    <div>
+        <h1>Restaurant Management</h1>
+        <p>Manage restaurant registrations, profiles, approvals and status.</p>
+    </div>
+
+    <button type="button" class="primary-btn">
+        ＋ Add Restaurant
+    </button>
+</div>
+
+
+<!-- SUMMARY CARDS -->
+
+<section class="stats">
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Total Restaurants</span>
+            <span class="stat-icon orange">▣</span>
+        </div>
+
+        <h2>{{ total_restaurants }}</h2>
+        <small>All registered restaurants</small>
+    </div>
+
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Approved</span>
+            <span class="stat-icon green">✓</span>
+        </div>
+
+        <h2>{{ approved_restaurants }}</h2>
+        <small>Active on Savora</small>
+    </div>
+
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Pending Approval</span>
+            <span class="stat-icon yellow">◷</span>
+        </div>
+
+        <h2>{{ pending_restaurants }}</h2>
+        <small>Waiting for review</small>
+    </div>
+
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Suspended</span>
+            <span class="stat-icon red">!</span>
+        </div>
+
+        <h2>{{ suspended_restaurants }}</h2>
+        <small>Currently unavailable</small>
+    </div>
+
+</section>
+
+
+<!-- RESTAURANTS TABLE -->
+
+<section class="content-card">
+
+    <div class="card-heading">
+        <div>
+            <h3>All Restaurants</h3>
+            <p>View and manage restaurants registered on the platform.</p>
+        </div>
+
+        <button type="button" class="export-btn">
+            ↓ Export
+        </button>
+    </div>
+
+
+    <!-- SEARCH AND FILTERS -->
+
+    <div class="filters">
+
+        <form method="GET" id="restaurantFilterForm">
+
+            <div class="search">
+                <span>⌕</span>
+
+                <input
+                    type="text"
+                    name="q"
+                    id="restaurantSearch"
+                    value="{{ search_query }}"
+                    placeholder="Search restaurant name, owner or location..."
+                    autocomplete="off"
+                >
+            </div>
+
+
+            <select name="status" id="statusFilter">
+
+                <option value="">All Statuses</option>
+
+                <option value="approved"
+                    {% if selected_status == 'approved' %}selected{% endif %}>
+                    Approved
+                </option>
+
+                <option value="pending"
+                    {% if selected_status == 'pending' %}selected{% endif %}>
+                    Pending
+                </option>
+
+                <option value="suspended"
+                    {% if selected_status == 'suspended' %}selected{% endif %}>
+                    Suspended
+                </option>
+
+                <option value="rejected"
+                    {% if selected_status == 'rejected' %}selected{% endif %}>
+                    Rejected
+                </option>
+
+            </select>
+
+
+            <select name="county" id="countyFilter">
+
+                <option value="">All Counties</option>
+
+                {% for county in counties %}
+
+                    <option value="{{ county }}"
+                        {% if selected_county == county %}selected{% endif %}>
+                        {{ county }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <select name="cuisine" id="cuisineFilter">
+
+                <option value="">All Cuisines</option>
+
+                {% for cuisine in cuisines %}
+
+                    <option value="{{ cuisine.cuisine_id }}"
+                        {% if selected_cuisine == cuisine.cuisine_id|stringformat:"s" %}selected{% endif %}>
+                        {{ cuisine.cuisine__name }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </form>
+
+    </div>
+
+
+    <!-- RESTAURANTS TABLE -->
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>RESTAURANT</th>
+                    <th>OWNER</th>
+                    <th>LOCATION</th>
+                    <th>CUISINE</th>
+                    <th>DATE REGISTERED</th>
+                    <th>STATUS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+
+                {% for restaurant in restaurants %}
+
+                    <tr>
+
+                        <!-- RESTAURANT INFORMATION -->
+
+                        <td>
+                            <div class="restaurant">
+
+                                {% if restaurant.logo %}
+
+                                    <img
+                                        src="{{ restaurant.logo.url }}"
+                                        alt="{{ restaurant.name }}"
+                                        class="restaurant-logo"
+                                    >
+
+                                {% else %}
+
+                                    <div class="restaurant-img">
+                                        🍽️
+                                    </div>
+
+                                {% endif %}
+
+                                <div>
+                                    <strong>{{ restaurant.name }}</strong>
+
+                                    <small>
+                                        {{ restaurant.email|default:restaurant.phone }}
+                                    </small>
+                                </div>
+
+                            </div>
+                        </td>
+
+
+                        <!-- OWNER -->
+
+                        <td>
+                            {% if restaurant.owner.get_full_name %}
+                                {{ restaurant.owner.get_full_name }}
+                            {% else %}
+                                {{ restaurant.owner.username }}
+                            {% endif %}
+                        </td>
+
+
+                        <!-- LOCATION -->
+
+                        <td>
+                            {{ restaurant.town }}, {{ restaurant.county }}
+                            <small>{{ restaurant.area }}</small>
+                        </td>
+
+
+                        <!-- CUISINE -->
+
+                        <td>
+                            {% if restaurant.cuisine %}
+                                {{ restaurant.cuisine.name }}
+                            {% else %}
+                                <span>Not specified</span>
+                            {% endif %}
+                        </td>
+
+
+                        <!-- REGISTRATION DATE -->
+
+                        <td>
+                            {{ restaurant.created_at|date:"d M Y" }}
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            {% if restaurant.status == 'approved' %}
+
+                                <span class="status approved">Approved</span>
+
+                            {% elif restaurant.status == 'pending' %}
+
+                                <span class="status pending">Pending</span>
+
+                            {% elif restaurant.status == 'suspended' %}
+
+                                <span class="status suspended">Suspended</span>
+
+                            {% elif restaurant.status == 'rejected' %}
+
+                                <span class="status rejected">Rejected</span>
+
+                            {% else %}
+
+                                <span class="status">
+                                    {{ restaurant.get_status_display }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- ACTIONS -->
+
+                        <td>
+                            <div class="actions">
+
+                                <button
+                                    type="button"
+                                    class="action-btn"
+                                    title="View restaurant"
+                                >
+                                    ◉
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="action-btn"
+                                    title="Edit restaurant"
+                                >
+                                    ✎
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="action-btn"
+                                    title="More actions"
+                                >
+                                    ⋮
+                                </button>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="7">
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">🍽️</div>
+
+                                <h3>No Restaurants Found</h3>
+
+                                <p>
+
+                                    {% if search_query or selected_status or selected_county or selected_cuisine %}
+
+                                        No restaurants match your search or selected filters.
+                                        Try changing your search or filters.
+
+                                    {% else %}
+
+                                        There are currently no restaurants registered on Savora.
+
+                                    {% endif %}
+
+                                </p>
+
+                            </div>
+
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- PAGINATION -->
+
+    <div class="table-footer">
+
+        <span>
+            Showing
+
+            {% if page_obj.paginator.count %}
+                {{ page_obj.start_index }}–{{ page_obj.end_index }}
+            {% else %}
+                0
+            {% endif %}
+
+            of {{ page_obj.paginator.count }} restaurants
+        </span>
+
+
+        {% if page_obj.has_other_pages %}
+
+            <div class="pagination">
+
+                {% if page_obj.has_previous %}
+
+                    <a href="?page={{ page_obj.previous_page_number }}&q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&county={{ selected_county|urlencode }}&cuisine={{ selected_cuisine|urlencode }}">
+                        Previous
+                    </a>
+
+                {% else %}
+
+                    <span class="disabled">Previous</span>
+
+                {% endif %}
+
+
+                {% for number in page_obj.paginator.page_range %}
+
+                    {% if page_obj.number == number %}
+
+                        <span class="current">{{ number }}</span>
+
+                    {% elif number >= page_obj.number|add:"-2" and number <= page_obj.number|add:"2" %}
+
+                        <a href="?page={{ number }}&q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&county={{ selected_county|urlencode }}&cuisine={{ selected_cuisine|urlencode }}">
+                            {{ number }}
+                        </a>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                {% if page_obj.has_next %}
+
+                    <a href="?page={{ page_obj.next_page_number }}&q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&county={{ selected_county|urlencode }}&cuisine={{ selected_cuisine|urlencode }}">
+                        Next
+                    </a>
+
+                {% else %}
+
+                    <span class="disabled">Next</span>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<!-- AUTOMATIC FILTERING -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const filterForm = document.getElementById('restaurantFilterForm');
+
+        const searchInput = document.getElementById('restaurantSearch');
+
+        const statusFilter = document.getElementById('statusFilter');
+
+        const countyFilter = document.getElementById('countyFilter');
+
+        const cuisineFilter = document.getElementById('cuisineFilter');
+
+
+        let searchTimeout;
+
+
+        // Automatically filter when a dropdown changes.
+        statusFilter.addEventListener('change', function () {
+            filterForm.submit();
+        });
+
+        countyFilter.addEventListener('change', function () {
+            filterForm.submit();
+        });
+
+        cuisineFilter.addEventListener('change', function () {
+            filterForm.submit();
+        });
+
+
+        // Automatically search after the user pauses typing.
+        searchInput.addEventListener('input', function () {
+
+            clearTimeout(searchTimeout);
+
+            searchTimeout = setTimeout(function () {
+                filterForm.submit();
+            }, 500);
+
+        });
+
+    });
+</script>
+
+{% endblock content %}

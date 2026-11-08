@@ -1,0 +1,1109 @@
+
+{% extends 'food_delivery_Admin/base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard | Savora{% endblock %}
+
+{% block dashboard_active %}active{% endblock %}
+
+{% block breadcrumb %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-content {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        padding: 0;
+        margin: 0;
+        color: #252a34;
+        font-family: "DM Sans", sans-serif;
+    }
+
+    .dashboard-content * {
+        box-sizing: border-box;
+    }
+
+    /* WELCOME */
+    .welcome-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .welcome-row h2,
+    .stat-value,
+    .panel-header h3,
+    .sales-summary strong,
+    .section-title {
+        font-family: "Plus Jakarta Sans", sans-serif;
+    }
+
+    .welcome-row h2 {
+        font-size: 23px;
+        font-weight: 800;
+        letter-spacing: -.7px;
+    }
+
+    .welcome-row p {
+        color: #858b98;
+        font-size: 12px;
+        margin-top: 6px;
+    }
+
+    .primary-button {
+        border: 0;
+        border-radius: 10px;
+        background: #f15a29;
+        color: white;
+        padding: 12px 16px;
+        font-size: 11px;
+        font-weight: 800;
+        cursor: pointer;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .primary-button:hover {
+        background: #d94719;
+    }
+
+    /* STATISTICS */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 17px;
+        margin-bottom: 22px;
+    }
+
+    .stat-card {
+        background: white;
+        border: 1px solid #eceef2;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 8px 25px rgba(32,37,45,.04);
+        min-width: 0;
+    }
+
+    .stat-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .stat-label {
+        color: #858b98;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .stat-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        font-size: 17px;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.orange {
+        background: #fff0e9;
+        color: #f15a29;
+    }
+
+    .stat-icon.green {
+        background: #e8f7ef;
+        color: #16a36a;
+    }
+
+    .stat-icon.blue {
+        background: #edf2ff;
+        color: #4778e8;
+    }
+
+    .stat-icon.yellow {
+        background: #fff5df;
+        color: #d99516;
+    }
+
+    .stat-value {
+        font-size: 27px;
+        font-weight: 800;
+        letter-spacing: -1px;
+        margin: 12px 0 8px;
+    }
+
+    .stat-footer {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 10px;
+        color: #858b98;
+        flex-wrap: wrap;
+    }
+
+    .trend {
+        color: #16a36a;
+        font-weight: 800;
+    }
+
+    /* DASHBOARD PANELS */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(280px, 1fr);
+        gap: 20px;
+        margin-bottom: 22px;
+    }
+
+    .panel {
+        background: white;
+        border: 1px solid #eceef2;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(32,37,45,.04);
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .panel-header {
+        padding: 20px 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        border-bottom: 1px solid #eceef2;
+    }
+
+    .panel-header h3 {
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    .panel-header p {
+        color: #858b98;
+        font-size: 10px;
+        margin-top: 4px;
+    }
+
+    .panel-link {
+        color: #f15a29;
+        font-size: 10px;
+        font-weight: 800;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .panel-link:hover {
+        text-decoration: underline;
+    }
+
+    .panel-body {
+        padding: 20px 22px;
+    }
+
+    .select {
+        border: 1px solid #eceef2;
+        background: white;
+        border-radius: 8px;
+        padding: 8px 10px;
+        color: #858b98;
+        font-size: 10px;
+        outline: 0;
+    }
+
+    /* SALES CHART */
+    .sales-summary {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .sales-summary strong {
+        font-size: 26px;
+        font-weight: 800;
+    }
+
+    .sales-summary span {
+        color: #16a36a;
+        font-size: 10px;
+        font-weight: 800;
+    }
+
+    .chart {
+        height: 220px;
+        display: flex;
+        align-items: end;
+        gap: 15px;
+        padding: 15px 5px 0;
+        border-bottom: 1px solid #eceef2;
+        background: repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent 53px,
+            #f0f1f4 54px
+        );
+    }
+
+    .chart-column {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        align-items: center;
+        gap: 9px;
+        min-width: 0;
+    }
+
+    .bar {
+        width: 100%;
+        max-width: 36px;
+        min-height: 8px;
+        background: #fbd5c7;
+        border-radius: 7px 7px 2px 2px;
+        transition: .2s;
+    }
+
+    .bar:hover,
+    .bar.current {
+        background: #f15a29;
+    }
+
+    .chart-column small {
+        color: #858b98;
+        font-size: 9px;
+        padding-bottom: 10px;
+    }
+
+    /* RESTAURANT STATUS */
+    .status-list {
+        display: grid;
+        gap: 19px;
+    }
+
+    .status-item {
+        display: grid;
+        gap: 8px;
+    }
+
+    .status-label {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 11px;
+    }
+
+    .status-label span {
+        color: #656c78;
+    }
+
+    .progress {
+        height: 8px;
+        background: #f0f1f4;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .progress span {
+        display: block;
+        height: 100%;
+        border-radius: 20px;
+    }
+
+    .progress .approved {
+        background: #16a36a;
+        width: 87.1%;
+    }
+
+    .progress .pending {
+        background: #e9ad39;
+        width: 4.8%;
+    }
+
+    .progress .rejected {
+        background: #df4b59;
+        width: 5.6%;
+    }
+
+    .progress .suspended {
+        background: #8b93a1;
+        width: 2.4%;
+    }
+
+    .status-note {
+        background: #fff0e9;
+        color: #a94827;
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 23px;
+        font-size: 10px;
+        line-height: 1.6;
+    }
+
+    /* TABLES */
+    .table-panel {
+        margin-bottom: 22px;
+    }
+
+    .table-wrap {
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    .dashboard-content table {
+        width: 100%;
+        border-collapse: collapse;
+        white-space: nowrap;
+        min-width: 700px;
+    }
+
+    .dashboard-content th {
+        background: #fafbfc;
+        color: #8b919c;
+        text-align: left;
+        padding: 13px 20px;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+    }
+
+    .dashboard-content td {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f0f1f4;
+        font-size: 11px;
+    }
+
+    .dashboard-content tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .dashboard-content tbody tr:hover {
+        background: #fcfcfd;
+    }
+
+    .restaurant-cell {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    .restaurant-logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        background: #fff0e9;
+        display: grid;
+        place-items: center;
+        font-size: 17px;
+        flex-shrink: 0;
+    }
+
+    .restaurant-cell strong {
+        display: block;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    .restaurant-cell small {
+        display: block;
+        color: #858b98;
+        font-size: 9px;
+        margin-top: 4px;
+    }
+
+    .status-pill {
+        display: inline-block;
+        border-radius: 20px;
+        padding: 5px 9px;
+        font-size: 9px;
+        font-weight: 800;
+    }
+
+    .status-pill.pending {
+        color: #a66b00;
+        background: #fff5df;
+    }
+
+    .status-pill.approved,
+    .status-pill.delivered {
+        color: #16a36a;
+        background: #e8f7ef;
+    }
+
+    .status-pill.rejected,
+    .status-pill.cancelled {
+        color: #df4b59;
+        background: #fff0f1;
+    }
+
+    .status-pill.processing {
+        color: #4778e8;
+        background: #edf2ff;
+    }
+
+    .action-buttons {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .small-button {
+        border: 1px solid #eceef2;
+        background: white;
+        color: #656c78;
+        border-radius: 7px;
+        padding: 7px 9px;
+        font-size: 9px;
+        font-weight: 800;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .small-button.approve {
+        border-color: #ccebd9;
+        background: #e8f7ef;
+        color: #16a36a;
+    }
+
+    .small-button.reject {
+        border-color: #f6d5d8;
+        background: #fff0f1;
+        color: #df4b59;
+    }
+
+    .customer-cell {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .customer-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #edf0f6;
+        display: grid;
+        place-items: center;
+        color: #687184;
+        font-size: 9px;
+        font-weight: 800;
+    }
+
+    /* QUICK MANAGEMENT */
+    .quick-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 15px;
+    }
+
+    .quick-card {
+        background: white;
+        border: 1px solid #eceef2;
+        border-radius: 13px;
+        padding: 18px;
+        transition: .2s;
+        text-decoration: none;
+        color: inherit;
+        min-width: 0;
+    }
+
+    .quick-card:hover {
+        border-color: #f6b39c;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(32,37,45,.04);
+    }
+
+    .quick-card .stat-icon {
+        margin-bottom: 13px;
+    }
+
+    .quick-card strong {
+        display: block;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .quick-card p {
+        color: #858b98;
+        font-size: 10px;
+        margin-top: 5px;
+        line-height: 1.5;
+    }
+
+    .section-title {
+        font-size: 15px;
+        font-weight: 800;
+        margin: 28px 0 15px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1200px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .quick-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 900px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .welcome-row {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .welcome-row h2 {
+            font-size: 20px;
+        }
+
+        .stats-grid {
+            gap: 10px;
+        }
+
+        .stat-card {
+            padding: 14px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+        }
+
+        .stat-icon {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+        }
+
+        .panel-header,
+        .panel-body {
+            padding: 16px;
+        }
+
+        .chart {
+            gap: 8px;
+        }
+
+        .quick-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .quick-card {
+            padding: 14px;
+        }
+    }
+
+    @media (max-width: 380px) {
+        .stats-grid,
+        .quick-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-content">
+
+    <!-- WELCOME -->
+    <div class="welcome-row">
+        <div>
+            <h2>Good afternoon, {{ request.user.first_name|default:"Admin" }} 👋</h2>
+            <p>Here's what's happening with Savora today.</p>
+        </div>
+
+        <a href="#" class="primary-button">＋ Add Restaurant</a>
+    </div>
+
+    <!-- OVERVIEW STATISTICS -->
+    <section class="stats-grid">
+
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Total Restaurants</span>
+                <span class="stat-icon orange">♨</span>
+            </div>
+            <div class="stat-value">{{ total_restaurants|default:"248" }}</div>
+            <div class="stat-footer">
+                <span class="trend">↑ 12.5%</span>
+                <span>from last month</span>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Approved Restaurants</span>
+                <span class="stat-icon green">✓</span>
+            </div>
+            <div class="stat-value">{{ approved_restaurants|default:"216" }}</div>
+            <div class="stat-footer">
+                <span class="trend">87.1%</span>
+                <span>of all restaurants</span>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Pending Approvals</span>
+                <span class="stat-icon yellow">◷</span>
+            </div>
+            <div class="stat-value">{{ pending_restaurants|default:"12" }}</div>
+            <div class="stat-footer">
+                <span style="color:#d99516;font-weight:800;">Needs review</span>
+                <span>restaurant applications</span>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Total Customers</span>
+                <span class="stat-icon blue">♙</span>
+            </div>
+            <div class="stat-value">{{ total_customers|default:"8,492" }}</div>
+            <div class="stat-footer">
+                <span class="trend">↑ 8.2%</span>
+                <span>from last month</span>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Total Orders</span>
+                <span class="stat-icon blue">▤</span>
+            </div>
+            <div class="stat-value">{{ total_orders|default:"14,628" }}</div>
+            <div class="stat-footer">
+                <span class="trend">↑ 14.6%</span>
+                <span>from last month</span>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Platform Sales</span>
+                <span class="stat-icon green">KSh</span>
+            </div>
+            <div class="stat-value">{{ platform_sales|default:"2.84M" }}</div>
+            <div class="stat-footer">
+                <span class="trend">↑ 10.4%</span>
+                <span>from last month</span>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Rejected Restaurants</span>
+                <span class="stat-icon orange">×</span>
+            </div>
+            <div class="stat-value">{{ rejected_restaurants|default:"14" }}</div>
+            <div class="stat-footer">
+                <span>Registration requests rejected</span>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Suspended Restaurants</span>
+                <span class="stat-icon yellow">Ⅱ</span>
+            </div>
+            <div class="stat-value">{{ suspended_restaurants|default:"6" }}</div>
+            <div class="stat-footer">
+                <span>Currently inactive</span>
+            </div>
+        </article>
+
+    </section>
+
+    <!-- SALES OVERVIEW AND RESTAURANT STATUS -->
+    <section class="dashboard-grid">
+
+        <article class="panel">
+            <div class="panel-header">
+                <div>
+                    <h3>Sales Overview</h3>
+                    <p>Platform sales performance</p>
+                </div>
+
+                <select class="select" name="period">
+                    <option>This Week</option>
+                    <option>This Month</option>
+                    <option>This Year</option>
+                </select>
+            </div>
+
+            <div class="panel-body">
+                <div class="sales-summary">
+                    <strong>KSh 284,650</strong>
+                    <span>↑ 10.4%</span>
+                </div>
+
+                <div class="chart">
+                    <div class="chart-column">
+                        <div class="bar" style="height:42%;"></div>
+                        <small>Mon</small>
+                    </div>
+
+                    <div class="chart-column">
+                        <div class="bar" style="height:63%;"></div>
+                        <small>Tue</small>
+                    </div>
+
+                    <div class="chart-column">
+                        <div class="bar" style="height:51%;"></div>
+                        <small>Wed</small>
+                    </div>
+
+                    <div class="chart-column">
+                        <div class="bar" style="height:78%;"></div>
+                        <small>Thu</small>
+                    </div>
+
+                    <div class="chart-column">
+                        <div class="bar" style="height:58%;"></div>
+                        <small>Fri</small>
+                    </div>
+
+                    <div class="chart-column">
+                        <div class="bar" style="height:91%;"></div>
+                        <small>Sat</small>
+                    </div>
+
+                    <div class="chart-column">
+                        <div class="bar current" style="height:72%;"></div>
+                        <small>Sun</small>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- RESTAURANT STATUS -->
+        <article class="panel">
+            <div class="panel-header">
+                <div>
+                    <h3>Restaurant Status</h3>
+                    <p>Registration overview</p>
+                </div>
+
+                <a href="{% url 'food_delivery_Admin:restaurants' %}" class="panel-link">
+                    View all →
+                </a>
+            </div>
+
+            <div class="panel-body">
+                <div class="status-list">
+
+                    <div class="status-item">
+                        <div class="status-label">
+                            <span>Approved</span>
+                            <strong>216</strong>
+                        </div>
+                        <div class="progress">
+                            <span class="approved"></span>
+                        </div>
+                    </div>
+
+                    <div class="status-item">
+                        <div class="status-label">
+                            <span>Pending approval</span>
+                            <strong>12</strong>
+                        </div>
+                        <div class="progress">
+                            <span class="pending"></span>
+                        </div>
+                    </div>
+
+                    <div class="status-item">
+                        <div class="status-label">
+                            <span>Rejected</span>
+                            <strong>14</strong>
+                        </div>
+                        <div class="progress">
+                            <span class="rejected"></span>
+                        </div>
+                    </div>
+
+                    <div class="status-item">
+                        <div class="status-label">
+                            <span>Suspended</span>
+                            <strong>6</strong>
+                        </div>
+                        <div class="progress">
+                            <span class="suspended"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="status-note">
+                    <strong>12 restaurant applications</strong> are waiting for review.
+                    Review the submitted information before approving.
+                </div>
+            </div>
+        </article>
+
+    </section>
+
+    <!-- RECENT RESTAURANT REGISTRATIONS -->
+    <section class="panel table-panel">
+
+        <div class="panel-header">
+            <div>
+                <h3>Recent Restaurant Registrations</h3>
+                <p>Review and manage restaurant applications</p>
+            </div>
+
+            <a href="{% url 'food_delivery_Admin:restaurants' %}" class="panel-link">
+                View all restaurants →
+            </a>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Restaurant</th>
+                        <th>Owner</th>
+                        <th>Location</th>
+                        <th>Date Applied</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="restaurant-cell">
+                                <div class="restaurant-logo">🍕</div>
+                                <div>
+                                    <strong>Urban Pizza House</strong>
+                                    <small>Italian · Pizza</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>James Mwangi</td>
+                        <td>Nairobi, Westlands</td>
+                        <td>03 Nov 2026</td>
+                        <td><span class="status-pill pending">Pending</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button type="button" class="small-button approve">Approve</button>
+                                <button type="button" class="small-button reject">Reject</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="restaurant-cell">
+                                <div class="restaurant-logo">🍗</div>
+                                <div>
+                                    <strong>Chicken Corner</strong>
+                                    <small>Fast Food · Chicken</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Mary Wanjiku</td>
+                        <td>Nairobi, Kasarani</td>
+                        <td>02 Nov 2026</td>
+                        <td><span class="status-pill pending">Pending</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button type="button" class="small-button approve">Approve</button>
+                                <button type="button" class="small-button reject">Reject</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="restaurant-cell">
+                                <div class="restaurant-logo">🥗</div>
+                                <div>
+                                    <strong>Green Kitchen</strong>
+                                    <small>Healthy · African</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Peter Otieno</td>
+                        <td>Kiambu, Ruiru</td>
+                        <td>01 Nov 2026</td>
+                        <td><span class="status-pill pending">Pending</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button type="button" class="small-button approve">Approve</button>
+                                <button type="button" class="small-button reject">Reject</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- RECENT ORDERS -->
+    <section class="panel table-panel">
+
+        <div class="panel-header">
+            <div>
+                <h3>Recent Orders</h3>
+                <p>Monitor orders across all restaurants</p>
+            </div>
+
+            <a href="#" class="panel-link">View all orders →</a>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Restaurant</th>
+                        <th>Order Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td><strong>#SV-10248</strong></td>
+                        <td>
+                            <div class="customer-cell">
+                                <div class="customer-avatar">JM</div>
+                                James M.
+                            </div>
+                        </td>
+                        <td>Urban Pizza House</td>
+                        <td>Today, 12:42 PM</td>
+                        <td><strong>KSh 1,850</strong></td>
+                        <td><span class="status-pill processing">Preparing</span></td>
+                        <td><button type="button" class="small-button">Details</button></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>#SV-10247</strong></td>
+                        <td>
+                            <div class="customer-cell">
+                                <div class="customer-avatar">AW</div>
+                                Anne W.
+                            </div>
+                        </td>
+                        <td>Green Kitchen</td>
+                        <td>Today, 12:30 PM</td>
+                        <td><strong>KSh 950</strong></td>
+                        <td><span class="status-pill delivered">Delivered</span></td>
+                        <td><button type="button" class="small-button">Details</button></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>#SV-10246</strong></td>
+                        <td>
+                            <div class="customer-cell">
+                                <div class="customer-avatar">PK</div>
+                                Peter K.
+                            </div>
+                        </td>
+                        <td>Chicken Corner</td>
+                        <td>Today, 12:18 PM</td>
+                        <td><strong>KSh 1,250</strong></td>
+                        <td><span class="status-pill cancelled">Cancelled</span></td>
+                        <td><button type="button" class="small-button">Details</button></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>#SV-10245</strong></td>
+                        <td>
+                            <div class="customer-cell">
+                                <div class="customer-avatar">MN</div>
+                                Mary N.
+                            </div>
+                        </td>
+                        <td>Urban Pizza House</td>
+                        <td>Today, 11:55 AM</td>
+                        <td><strong>KSh 2,100</strong></td>
+                        <td><span class="status-pill processing">Out for delivery</span></td>
+                        <td><button type="button" class="small-button">Details</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- QUICK MANAGEMENT -->
+    <h3 class="section-title">Quick Management</h3>
+
+    <section class="quick-grid">
+
+        <a href="{% url 'food_delivery_Admin:restaurants' %}" class="quick-card">
+            <div class="stat-icon orange">♨</div>
+            <strong>Restaurant Management</strong>
+            <p>Review applications, edit restaurant details and manage status.</p>
+        </a>
+
+        <a href="#" class="quick-card">
+            <div class="stat-icon blue">♙</div>
+            <strong>Customer Management</strong>
+            <p>View customer accounts, profiles and order history.</p>
+        </a>
+
+        <a href="#" class="quick-card">
+            <div class="stat-icon green">♧</div>
+            <strong>Cuisine Categories</strong>
+            <p>Add, update or remove cuisine categories.</p>
+        </a>
+
+        <a href="#" class="quick-card">
+            <div class="stat-icon yellow">◷</div>
+            <strong>Operating Hours</strong>
+            <p>Manage opening hours and restaurant availability.</p>
+        </a>
+
+        <a href="#" class="quick-card">
+            <div class="stat-icon blue">▤</div>
+            <strong>Order Management</strong>
+            <p>Track orders, cancellations and restaurant processing.</p>
+        </a>
+
+        <a href="#" class="quick-card">
+            <div class="stat-icon green">↗</div>
+            <strong>Sales & Reports</strong>
+            <p>Review sales by restaurant and generate reports.</p>
+        </a>
+
+        <a href="#" class="quick-card">
+            <div class="stat-icon orange">⚙</div>
+            <strong>Platform Settings</strong>
+            <p>Configure platform information, payments and delivery.</p>
+        </a>
+
+        <a href="#" class="quick-card">
+            <div class="stat-icon yellow">♧</div>
+            <strong>Complaints & Support</strong>
+            <p>Review customer complaints and support requests.</p>
+        </a>
+
+    </section>
+
+</div>
+
+{% endblock content %}
