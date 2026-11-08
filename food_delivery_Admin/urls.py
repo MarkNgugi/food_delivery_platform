@@ -19,4 +19,8 @@ urlpatterns = [
     path('restaurant-owners',views.restaurant_owners,name='restaurant_owners'),
 
     path('cuisine-categories',views.cuisine_categories,name='cuisine_categories'),
+
+    path('reports-analytics/', views.reports_analytics, name='reports_analytics'),
+    
+    path('settings/', views.admin_settings, name='settings'),
 ]

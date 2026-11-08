@@ -152,3 +152,17 @@ def restaurant_owners(request):
 def cuisine_categories(request):
     return render(request,'food_delivery_Admin/cuisine_categories/cuisine_categories.html')
 
+
+def reports_analytics(request):
+    return render(
+        request,
+        'food_delivery_Admin/reports_analytics/reports_analytics.html'
+    )
+
+
+def admin_settings(request):
+    return render(
+        request,
+        'food_delivery_Admin/settings/settings.html'
+    )
+

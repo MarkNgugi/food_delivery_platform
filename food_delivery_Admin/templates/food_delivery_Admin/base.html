@@ -628,15 +628,15 @@
             </a>
 
             <!-- REPORTS & ANALYTICS -->
-            <a href=""
-               class="{% block reports_active %}{% endblock %}">
+            <a href="{% url 'food_delivery_Admin:reports_analytics' %}"
+            class="{% block reports_active %}{% endblock %}">
                 <span class="icon">📊</span>
                 Reports & Analytics
             </a>
 
             <!-- SETTINGS -->
-            <a href=""
-               class="{% block settings_active %}{% endblock %}">
+            <a href="{% url 'food_delivery_Admin:settings' %}"
+            class="{% block settings_active %}{% endblock %}">
                 <span class="icon">⚙️</span>
                 Settings
             </a>
