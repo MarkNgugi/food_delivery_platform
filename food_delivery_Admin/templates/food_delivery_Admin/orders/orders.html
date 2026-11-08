@@ -1,0 +1,440 @@
+
+{% extends 'food_delivery_Admin/base.html' %}
+
+{% block title %}Orders Management | Savora{% endblock %}
+
+{% block breadcrumb %}Orders Management{% endblock %}
+
+{% block orders_active %}active{% endblock %}
+
+{% block extra_css %}
+
+<style>
+    /* ORDERS PAGE SPECIFIC STYLES */
+
+    .orders-table {
+        min-width: 950px;
+    }
+
+    .order-id {
+        color: var(--orange);
+        font-weight: 700;
+    }
+
+    .customer strong {
+        display: block;
+        font-size: 11px;
+    }
+
+    .customer small {
+        display: block;
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 4px;
+    }
+
+    .preparing {
+        background: #fff0e9;
+        color: var(--orange);
+    }
+
+    .completed {
+        background: #e8f7f0;
+        color: var(--green);
+    }
+
+    .cancelled {
+        background: #ffeded;
+        color: var(--red);
+    }
+
+    .delivered {
+        background: #e8f7f0;
+        color: var(--green);
+    }
+
+    .payment {
+        color: var(--green);
+        font-weight: 700;
+    }
+
+    .unpaid {
+        color: var(--red);
+        font-weight: 700;
+    }
+
+    .refunded {
+        color: var(--yellow);
+        font-weight: 700;
+    }
+
+    .export-btn {
+        white-space: nowrap;
+    }
+
+    @media(max-width: 650px) {
+        .page-heading {
+            flex-wrap: wrap;
+        }
+
+        .filters input {
+            flex-basis: 100%;
+        }
+
+        .filters select {
+            flex: 1;
+        }
+
+        .table-footer {
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+    }
+</style>
+
+{% endblock extra_css %}
+
+
+{% block content %}
+
+<!-- PAGE HEADING -->
+
+<div class="page-heading">
+
+    <div>
+        <h1>Orders Management</h1>
+        <p>Monitor and manage orders across all Savora restaurants.</p>
+    </div>
+
+    <button class="export-btn">
+        ↓ Export Orders
+    </button>
+
+</div>
+
+
+<!-- STATISTICS -->
+
+<section class="stats">
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">Total Orders</span>
+            <span class="stat-icon orange">♨</span>
+        </div>
+
+        <h2>2,486</h2>
+        <small>All platform orders</small>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">Pending Orders</span>
+            <span class="stat-icon yellow">◷</span>
+        </div>
+
+        <h2>48</h2>
+        <small>Awaiting processing</small>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">Preparing</span>
+            <span class="stat-icon orange">♨</span>
+        </div>
+
+        <h2>126</h2>
+        <small>Currently being prepared</small>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">Completed Orders</span>
+            <span class="stat-icon green">✓</span>
+        </div>
+
+        <h2>2,184</h2>
+        <small>Successfully delivered</small>
+
+    </div>
+
+</section>
+
+
+<!-- ORDERS TABLE -->
+
+<section class="content-card">
+
+    <div class="card-heading">
+
+        <div>
+            <h3>All Orders</h3>
+            <p>View and monitor orders from every restaurant.</p>
+        </div>
+
+        <button class="export-btn">
+            View All
+        </button>
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+        <div class="search">
+            <span>⌕</span>
+            <input type="search"
+                   placeholder="Search order ID, customer or restaurant...">
+        </div>
+
+        <select>
+            <option>All Restaurants</option>
+            <option>Urban Taste</option>
+            <option>Food Palace</option>
+            <option>Urban Grill</option>
+        </select>
+
+        <select>
+            <option>All Statuses</option>
+            <option>Pending</option>
+            <option>Preparing</option>
+            <option>Completed</option>
+            <option>Delivered</option>
+            <option>Cancelled</option>
+        </select>
+
+        <select>
+            <option>All Payments</option>
+            <option>Paid</option>
+            <option>Unpaid</option>
+            <option>Refunded</option>
+        </select>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="table-wrap">
+
+        <table class="orders-table">
+
+            <thead>
+                <tr>
+                    <th>ORDER ID</th>
+                    <th>CUSTOMER</th>
+                    <th>RESTAURANT</th>
+                    <th>ORDER DATE</th>
+                    <th>AMOUNT</th>
+                    <th>PAYMENT</th>
+                    <th>STATUS</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+
+                    <td class="order-id">#SAV-10241</td>
+
+                    <td class="customer">
+                        <strong>John Mwangi</strong>
+                        <small>john@email.com</small>
+                    </td>
+
+                    <td class="restaurant">
+                        <strong>Urban Taste</strong>
+                        <small>Westlands</small>
+                    </td>
+
+                    <td>08 Nov 2026</td>
+
+                    <td>KSh 1,850</td>
+
+                    <td class="payment">Paid</td>
+
+                    <td>
+                        <span class="status preparing">
+                            Preparing
+                        </span>
+                    </td>
+
+                    <td>
+                        <button class="action-btn">View</button>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td class="order-id">#SAV-10240</td>
+
+                    <td class="customer">
+                        <strong>Mary Wanjiku</strong>
+                        <small>mary@email.com</small>
+                    </td>
+
+                    <td class="restaurant">
+                        <strong>Food Palace</strong>
+                        <small>Kilimani</small>
+                    </td>
+
+                    <td>08 Nov 2026</td>
+
+                    <td>KSh 2,400</td>
+
+                    <td class="payment">Paid</td>
+
+                    <td>
+                        <span class="status pending">
+                            Pending
+                        </span>
+                    </td>
+
+                    <td>
+                        <button class="action-btn">View</button>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td class="order-id">#SAV-10239</td>
+
+                    <td class="customer">
+                        <strong>Peter Kamau</strong>
+                        <small>peter@email.com</small>
+                    </td>
+
+                    <td class="restaurant">
+                        <strong>Urban Grill</strong>
+                        <small>Parklands</small>
+                    </td>
+
+                    <td>08 Nov 2026</td>
+
+                    <td>KSh 1,200</td>
+
+                    <td class="payment">Paid</td>
+
+                    <td>
+                        <span class="status delivered">
+                            Delivered
+                        </span>
+                    </td>
+
+                    <td>
+                        <button class="action-btn">View</button>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td class="order-id">#SAV-10238</td>
+
+                    <td class="customer">
+                        <strong>Grace Njeri</strong>
+                        <small>grace@email.com</small>
+                    </td>
+
+                    <td class="restaurant">
+                        <strong>Urban Taste</strong>
+                        <small>Westlands</small>
+                    </td>
+
+                    <td>08 Nov 2026</td>
+
+                    <td>KSh 950</td>
+
+                    <td class="payment">Paid</td>
+
+                    <td>
+                        <span class="status completed">
+                            Completed
+                        </span>
+                    </td>
+
+                    <td>
+                        <button class="action-btn">View</button>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td class="order-id">#SAV-10237</td>
+
+                    <td class="customer">
+                        <strong>David Otieno</strong>
+                        <small>david@email.com</small>
+                    </td>
+
+                    <td class="restaurant">
+                        <strong>Food Palace</strong>
+                        <small>Kilimani</small>
+                    </td>
+
+                    <td>07 Nov 2026</td>
+
+                    <td>KSh 1,600</td>
+
+                    <td class="refunded">Refunded</td>
+
+                    <td>
+                        <span class="status cancelled">
+                            Cancelled
+                        </span>
+                    </td>
+
+                    <td>
+                        <button class="action-btn">View</button>
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- TABLE FOOTER -->
+
+    <div class="table-footer">
+
+        <span>Showing 1–5 of 2,486 orders</span>
+
+        <div class="pagination">
+
+            <button>Previous</button>
+            <button class="current">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>Next</button>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock content %}

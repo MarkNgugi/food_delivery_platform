@@ -130,3 +130,10 @@ def restaurants(request):
         'food_delivery_Admin/restaurants/restaurants.html',
         context
     )
+
+
+def orders(request):
+    return render(request,'food_delivery_Admin/orders/orders.html')
+
+def menu_management(request):
+    return render(request,'food_delivery_Admin/menu_management/menu_management.html')

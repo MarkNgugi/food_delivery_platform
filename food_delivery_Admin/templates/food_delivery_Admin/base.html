@@ -550,12 +550,14 @@
                 Restaurants
             </a>
 
-            <a href="#">
+            <a href="{%url 'food_delivery_Admin:orders'%}" 
+            class="{% block orders_active %}{% endblock %}">
                 <span class="icon">♨</span>
                 Orders
             </a>
 
-            <a href="#">
+            <a href="{% url 'food_delivery_Admin:menu_management'%}" 
+            class="{%block menu_management_active%}{% endblock %}">
                 <span class="icon">☷</span>
                 Menu Management
             </a>

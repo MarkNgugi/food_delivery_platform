@@ -1,0 +1,459 @@
+
+{% extends 'food_delivery_Admin/base.html' %}
+
+{% block title %}Menu Management | Savora{% endblock %}
+
+{% block breadcrumb %}Menu Management{% endblock %}
+
+{% block menu_management_active %}active{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+    /* MENU MANAGEMENT PAGE SPECIFIC STYLES */
+
+    .menu-table {
+        min-width: 950px;
+    }
+
+    .item {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    .item-img {
+        width: 43px;
+        height: 43px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        background: #fff0e9;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .item strong {
+        display: block;
+        font-size: 11px;
+    }
+
+    .item small {
+        display: block;
+        color: var(--muted);
+        margin-top: 4px;
+        font-size: 10px;
+    }
+
+    .available {
+        background: #e8f7f0;
+        color: var(--green);
+    }
+
+    .unavailable {
+        background: #ffeded;
+        color: var(--red);
+    }
+
+    .review {
+        background: #fff6e4;
+        color: #bd8111;
+    }
+
+    .menu-price {
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    @media(max-width: 650px) {
+        .page-heading {
+            flex-wrap: wrap;
+        }
+
+        .filters input {
+            flex-basis: 100%;
+        }
+
+        .filters select {
+            flex: 1;
+        }
+
+        .table-footer {
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+    }
+</style>
+
+{% endblock extra_css %}
+
+
+{% block content %}
+
+<!-- PAGE HEADING -->
+
+<div class="page-heading">
+
+    <div>
+        <h1>Menu Management</h1>
+        <p>Monitor menu items and availability across all restaurants.</p>
+    </div>
+
+</div>
+
+
+<!-- STATISTICS -->
+
+<section class="stats">
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">Total Menu Items</span>
+            <span class="stat-icon orange">☷</span>
+        </div>
+
+        <h2>1,284</h2>
+        <small>Across all restaurants</small>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">Available Items</span>
+            <span class="stat-icon green">✓</span>
+        </div>
+
+        <h2>1,106</h2>
+        <small>Currently available for orders</small>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">Unavailable Items</span>
+            <span class="stat-icon red">×</span>
+        </div>
+
+        <h2>142</h2>
+        <small>Currently unavailable</small>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+            <span class="stat-label">Pending Review</span>
+            <span class="stat-icon yellow">◷</span>
+        </div>
+
+        <h2>36</h2>
+        <small>Awaiting admin review</small>
+
+    </div>
+
+</section>
+
+
+<!-- MENU ITEMS TABLE -->
+
+<section class="content-card">
+
+    <div class="card-heading">
+
+        <div>
+            <h3>All Menu Items</h3>
+            <p>View menu items submitted by registered restaurants.</p>
+        </div>
+
+        <button class="export-btn">
+            View All Items
+        </button>
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+        <div class="search">
+            <span>⌕</span>
+            <input type="search"
+                   placeholder="Search menu item...">
+        </div>
+
+        <select>
+            <option>All Restaurants</option>
+            <option>Urban Taste</option>
+            <option>Food Palace</option>
+            <option>Urban Grill</option>
+        </select>
+
+        <select>
+            <option>All Categories</option>
+            <option>Main Dishes</option>
+            <option>Fast Food</option>
+            <option>Drinks</option>
+            <option>Desserts</option>
+        </select>
+
+        <select>
+            <option>All Availability</option>
+            <option>Available</option>
+            <option>Unavailable</option>
+            <option>Pending Review</option>
+        </select>
+
+    </div>
+
+
+    <!-- MENU TABLE -->
+
+    <div class="table-wrap">
+
+        <table class="menu-table">
+
+            <thead>
+                <tr>
+                    <th>MENU ITEM</th>
+                    <th>RESTAURANT</th>
+                    <th>CATEGORY</th>
+                    <th>PRICE</th>
+                    <th>AVAILABILITY</th>
+                    <th>DATE ADDED</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    <td>
+                        <div class="item">
+
+                            <div class="item-img">🍔</div>
+
+                            <div>
+                                <strong>Classic Beef Burger</strong>
+                                <small>Fresh beef burger with cheese</small>
+                            </div>
+
+                        </div>
+                    </td>
+
+                    <td class="restaurant">
+                        <strong>Urban Taste</strong>
+                        <small>Westlands</small>
+                    </td>
+
+                    <td>Main Dishes</td>
+
+                    <td class="menu-price">KSh 650</td>
+
+                    <td>
+                        <span class="status available">
+                            Available
+                        </span>
+                    </td>
+
+                    <td>05 Nov 2026</td>
+
+                    <td>
+                        <button class="action-btn">View</button>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        <div class="item">
+
+                            <div class="item-img">🍕</div>
+
+                            <div>
+                                <strong>Chicken Pizza</strong>
+                                <small>Chicken, cheese and vegetables</small>
+                            </div>
+
+                        </div>
+                    </td>
+
+                    <td class="restaurant">
+                        <strong>Food Palace</strong>
+                        <small>Kilimani</small>
+                    </td>
+
+                    <td>Fast Food</td>
+
+                    <td class="menu-price">KSh 1,200</td>
+
+                    <td>
+                        <span class="status available">
+                            Available
+                        </span>
+                    </td>
+
+                    <td>04 Nov 2026</td>
+
+                    <td>
+                        <button class="action-btn">View</button>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        <div class="item">
+
+                            <div class="item-img">🍗</div>
+
+                            <div>
+                                <strong>Grilled Chicken</strong>
+                                <small>Served with fries</small>
+                            </div>
+
+                        </div>
+                    </td>
+
+                    <td class="restaurant">
+                        <strong>Urban Grill</strong>
+                        <small>Parklands</small>
+                    </td>
+
+                    <td>Main Dishes</td>
+
+                    <td class="menu-price">KSh 850</td>
+
+                    <td>
+                        <span class="status unavailable">
+                            Unavailable
+                        </span>
+                    </td>
+
+                    <td>03 Nov 2026</td>
+
+                    <td>
+                        <button class="action-btn">View</button>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        <div class="item">
+
+                            <div class="item-img">🥤</div>
+
+                            <div>
+                                <strong>Fresh Mango Juice</strong>
+                                <small>Freshly prepared mango juice</small>
+                            </div>
+
+                        </div>
+                    </td>
+
+                    <td class="restaurant">
+                        <strong>Urban Taste</strong>
+                        <small>Westlands</small>
+                    </td>
+
+                    <td>Drinks</td>
+
+                    <td class="menu-price">KSh 250</td>
+
+                    <td>
+                        <span class="status review">
+                            Pending Review
+                        </span>
+                    </td>
+
+                    <td>08 Nov 2026</td>
+
+                    <td>
+                        <button class="action-btn">Review</button>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        <div class="item">
+
+                            <div class="item-img">🍰</div>
+
+                            <div>
+                                <strong>Chocolate Cake</strong>
+                                <small>Chocolate cream cake slice</small>
+                            </div>
+
+                        </div>
+                    </td>
+
+                    <td class="restaurant">
+                        <strong>Food Palace</strong>
+                        <small>Kilimani</small>
+                    </td>
+
+                    <td>Desserts</td>
+
+                    <td class="menu-price">KSh 400</td>
+
+                    <td>
+                        <span class="status available">
+                            Available
+                        </span>
+                    </td>
+
+                    <td>02 Nov 2026</td>
+
+                    <td>
+                        <button class="action-btn">View</button>
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- TABLE FOOTER -->
+
+    <div class="table-footer">
+
+        <span>Showing 1–5 of 1,284 menu items</span>
+
+        <div class="pagination">
+
+            <button>Previous</button>
+            <button class="current">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>Next</button>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock content %}
