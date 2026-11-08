@@ -614,14 +614,14 @@
         <nav class="menu">
 
             <!-- RESTAURANT OWNERS -->
-            <a href=""
+            <a href="{% url 'food_delivery_Admin:restaurant_owners'%}"
                class="{% block restaurant_owners_active %}{% endblock %}">
                 <span class="icon">👨‍🍳</span>
                 Restaurant Owners
             </a>
 
             <!-- CUISINE CATEGORIES -->
-            <a href=""
+            <a href="{% url 'food_delivery_Admin:cuisine_categories'%}"
                class="{% block cuisines_active %}{% endblock %}">
                 <span class="icon">🥘</span>
                 Cuisine Categories

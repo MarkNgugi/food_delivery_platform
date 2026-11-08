@@ -143,3 +143,12 @@ def customers(request):
 
 def delivery_management(request):
     return render(request,'food_delivery_Admin/delivery_management/delivery_management.html')
+
+
+def restaurant_owners(request):
+    return render(request,'food_delivery_Admin/restaurant_owners/restaurant_owners.html')
+
+
+def cuisine_categories(request):
+    return render(request,'food_delivery_Admin/cuisine_categories/cuisine_categories.html')
+

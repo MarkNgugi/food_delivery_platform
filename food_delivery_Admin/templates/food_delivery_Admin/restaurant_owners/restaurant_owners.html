@@ -105,6 +105,28 @@
         color: #d64a4a;
     }
 
+    .owner-pending {
+        background: #fff6e4;
+        color: #bd8111;
+    }
+
+    .owner-suspended {
+        background: #f0f1f4;
+        color: #737b87;
+    }
+
+    .owner-count {
+        font-weight: 700;
+        font-size: 12px;
+    }
+
+    .owner-location {
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 4px;
+        display: block;
+    }
+
     .empty-state {
         text-align: center;
         padding: 45px 20px;
@@ -139,6 +161,7 @@
 
 {% block content %}
 
+<!-- PAGE HEADING -->
 <div class="page-heading">
     <div>
         <h1>Restaurant Owners</h1>
@@ -152,25 +175,25 @@
 
     <div class="owner-stat">
         <small>Total Restaurant Owners</small>
-        <h2>{{ total_owners|default:0 }}</h2>
+        <h2>248</h2>
         <p>Registered owners on Savora</p>
     </div>
 
     <div class="owner-stat">
         <small>Active Owners</small>
-        <h2>{{ active_owners|default:0 }}</h2>
-        <p>Owners with active accounts</p>
+        <h2>196</h2>
+        <p>Currently active accounts</p>
     </div>
 
     <div class="owner-stat">
         <small>Pending Owners</small>
-        <h2>{{ pending_owners|default:0 }}</h2>
+        <h2>32</h2>
         <p>Awaiting approval</p>
     </div>
 
     <div class="owner-stat">
         <small>Suspended Owners</small>
-        <h2>{{ suspended_owners|default:0 }}</h2>
+        <h2>20</h2>
         <p>Currently suspended</p>
     </div>
 
@@ -187,7 +210,7 @@
         </div>
 
         <button type="button" class="export-btn">
-            Export Owners
+            ↓ Export Owners
         </button>
     </div>
 
@@ -201,25 +224,22 @@
                 type="text"
                 name="q"
                 placeholder="Search by owner name or email..."
-                value="{{ search_query|default:'' }}"
             >
         </div>
 
-        <select name="status" onchange="this.form.submit()">
+        <select name="status">
             <option value="">All Statuses</option>
-            <option value="active" {% if selected_status == 'active' %}selected{% endif %}>
-                Active
-            </option>
-            <option value="inactive" {% if selected_status == 'inactive' %}selected{% endif %}>
-                Inactive
-            </option>
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+            <option value="suspended">Suspended</option>
         </select>
 
-        <button type="submit" class="export-btn">Search</button>
+        <button type="button" class="export-btn">Filter</button>
 
     </form>
 
 
+    <!-- OWNERS TABLE -->
     <div class="table-wrap">
 
         <table>
@@ -236,40 +256,23 @@
 
             <tbody>
 
-                {% for owner in restaurant_owners %}
-
+                <!-- OWNER 1 -->
                 <tr>
                     <td>
                         <div class="owner-info">
-                            <div class="owner-avatar">
-                                {{ owner.first_name|first|upper }}{{ owner.last_name|first|upper }}
-                            </div>
-
+                            <div class="owner-avatar">JM</div>
                             <div>
-                                <strong>
-                                    {{ owner.get_full_name|default:owner.username }}
-                                </strong>
-                                <small>@{{ owner.username }}</small>
+                                <strong>James Mwangi</strong>
+                                <small>@jamesmwangi</small>
                             </div>
                         </div>
                     </td>
-
-                    <td>{{ owner.email }}</td>
-
+                    <td>james.mwangi@gmail.com</td>
+                    <td><span class="owner-count">2</span></td>
+                    <td>12 Jan 2026</td>
                     <td>
-                        <strong>{{ owner.restaurant_count|default:0 }}</strong>
+                        <span class="owner-status owner-active">ACTIVE</span>
                     </td>
-
-                    <td>{{ owner.date_joined|date:"d M Y" }}</td>
-
-                    <td>
-                        {% if owner.is_active %}
-                            <span class="owner-status owner-active">ACTIVE</span>
-                        {% else %}
-                            <span class="owner-status owner-inactive">INACTIVE</span>
-                        {% endif %}
-                    </td>
-
                     <td>
                         <div class="actions">
                             <a href="#" class="owner-action">View</a>
@@ -278,18 +281,161 @@
                     </td>
                 </tr>
 
-                {% empty %}
 
+                <!-- OWNER 2 -->
                 <tr>
-                    <td colspan="6">
-                        <div class="empty-state">
-                            <h3>No Restaurant Owners Found</h3>
-                            <p>Restaurant owner accounts will appear here once registered.</p>
+                    <td>
+                        <div class="owner-info">
+                            <div class="owner-avatar">GW</div>
+                            <div>
+                                <strong>Grace Wanjiku</strong>
+                                <small>@gracewanjiku</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>grace.wanjiku@gmail.com</td>
+                    <td><span class="owner-count">1</span></td>
+                    <td>18 Feb 2026</td>
+                    <td>
+                        <span class="owner-status owner-active">ACTIVE</span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href="#" class="owner-action">View</a>
+                            <a href="#" class="owner-action">Manage</a>
                         </div>
                     </td>
                 </tr>
 
-                {% endfor %}
+
+                <!-- OWNER 3 -->
+                <tr>
+                    <td>
+                        <div class="owner-info">
+                            <div class="owner-avatar">DO</div>
+                            <div>
+                                <strong>David Otieno</strong>
+                                <small>@davidotieno</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>david.otieno@gmail.com</td>
+                    <td><span class="owner-count">3</span></td>
+                    <td>05 Mar 2026</td>
+                    <td>
+                        <span class="owner-status owner-pending">PENDING</span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href="#" class="owner-action">View</a>
+                            <a href="#" class="owner-action">Manage</a>
+                        </div>
+                    </td>
+                </tr>
+
+
+                <!-- OWNER 4 -->
+                <tr>
+                    <td>
+                        <div class="owner-info">
+                            <div class="owner-avatar">AN</div>
+                            <div>
+                                <strong>Anne Njeri</strong>
+                                <small>@annenjeri</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>anne.njeri@gmail.com</td>
+                    <td><span class="owner-count">1</span></td>
+                    <td>21 Mar 2026</td>
+                    <td>
+                        <span class="owner-status owner-active">ACTIVE</span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href="#" class="owner-action">View</a>
+                            <a href="#" class="owner-action">Manage</a>
+                        </div>
+                    </td>
+                </tr>
+
+
+                <!-- OWNER 5 -->
+                <tr>
+                    <td>
+                        <div class="owner-info">
+                            <div class="owner-avatar">PK</div>
+                            <div>
+                                <strong>Peter Kamau</strong>
+                                <small>@peterkamau</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>peter.kamau@gmail.com</td>
+                    <td><span class="owner-count">0</span></td>
+                    <td>02 Apr 2026</td>
+                    <td>
+                        <span class="owner-status owner-pending">PENDING</span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href="#" class="owner-action">View</a>
+                            <a href="#" class="owner-action">Manage</a>
+                        </div>
+                    </td>
+                </tr>
+
+
+                <!-- OWNER 6 -->
+                <tr>
+                    <td>
+                        <div class="owner-info">
+                            <div class="owner-avatar">SK</div>
+                            <div>
+                                <strong>Sarah Kiplagat</strong>
+                                <small>@sarahkiplagat</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>sarah.kiplagat@gmail.com</td>
+                    <td><span class="owner-count">2</span></td>
+                    <td>15 Apr 2026</td>
+                    <td>
+                        <span class="owner-status owner-suspended">SUSPENDED</span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href="#" class="owner-action">View</a>
+                            <a href="#" class="owner-action">Manage</a>
+                        </div>
+                    </td>
+                </tr>
+
+
+                <!-- OWNER 7 -->
+                <tr>
+                    <td>
+                        <div class="owner-info">
+                            <div class="owner-avatar">MN</div>
+                            <div>
+                                <strong>Michael Njoroge</strong>
+                                <small>@michaelnjoroge</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>michael.njoroge@gmail.com</td>
+                    <td><span class="owner-count">1</span></td>
+                    <td>28 Apr 2026</td>
+                    <td>
+                        <span class="owner-status owner-active">ACTIVE</span>
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href="#" class="owner-action">View</a>
+                            <a href="#" class="owner-action">Manage</a>
+                        </div>
+                    </td>
+                </tr>
 
             </tbody>
         </table>
@@ -297,10 +443,17 @@
     </div>
 
 
+    <!-- TABLE FOOTER -->
     <div class="table-footer">
-        <span>
-            Showing {{ restaurant_owners|length }} restaurant owners
-        </span>
+        <span>Showing 7 of 248 restaurant owners</span>
+
+        <div class="pagination">
+            <button type="button">←</button>
+            <button type="button" class="current">1</button>
+            <button type="button">2</button>
+            <button type="button">3</button>
+            <button type="button">→</button>
+        </div>
     </div>
 
 </div>

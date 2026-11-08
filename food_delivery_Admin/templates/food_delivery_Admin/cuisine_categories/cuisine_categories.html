@@ -218,6 +218,7 @@
 
 {% block content %}
 
+<!-- PAGE HEADING -->
 <div class="page-heading">
     <div>
         <h1>Cuisine Categories</h1>
@@ -231,17 +232,17 @@
 
     <div class="cuisine-stat">
         <small>Total Categories</small>
-        <h2>{{ total_cuisines|default:0 }}</h2>
+        <h2>18</h2>
     </div>
 
     <div class="cuisine-stat">
         <small>Active Categories</small>
-        <h2>{{ active_cuisines|default:0 }}</h2>
+        <h2>15</h2>
     </div>
 
     <div class="cuisine-stat">
         <small>Inactive Categories</small>
-        <h2>{{ inactive_cuisines|default:0 }}</h2>
+        <h2>3</h2>
     </div>
 
 </div>
@@ -253,6 +254,7 @@
     <div class="cuisine-form-card">
 
         <h3>Add New Category</h3>
+
         <p>
             Create a cuisine category that restaurant owners can select
             when registering or updating their restaurants.
@@ -263,6 +265,7 @@
 
             <div class="form-group">
                 <label for="cuisine-name">Cuisine Name</label>
+
                 <input
                     type="text"
                     id="cuisine-name"
@@ -274,6 +277,7 @@
 
             <div class="form-group">
                 <label for="cuisine-description">Description</label>
+
                 <textarea
                     id="cuisine-description"
                     name="description"
@@ -285,7 +289,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="form-submit">
+            <button type="button" class="form-submit">
                 + Create Cuisine Category
             </button>
 
@@ -310,15 +314,15 @@
 
             <div class="search">
                 <span>⌕</span>
+
                 <input
                     type="text"
                     name="q"
                     placeholder="Search cuisine categories..."
-                    value="{{ search_query|default:'' }}"
                 >
             </div>
 
-            <button type="submit" class="export-btn">
+            <button type="button" class="export-btn">
                 Search
             </button>
 
@@ -340,38 +344,20 @@
 
                 <tbody>
 
-                    {% for cuisine in cuisines %}
-
+                    <!-- KENYAN -->
                     <tr>
                         <td>
                             <div class="cuisine-name">
-                                <div class="cuisine-icon">🥘</div>
-
+                                <div class="cuisine-icon">🍲</div>
                                 <div>
-                                    <strong>{{ cuisine.name }}</strong>
-                                    <small>{{ cuisine.description|default:"No description added" }}</small>
+                                    <strong>Kenyan Cuisine</strong>
+                                    <small>Traditional Kenyan meals and local dishes</small>
                                 </div>
                             </div>
                         </td>
-
-                        <td>
-                            <strong>{{ cuisine.restaurant_count|default:0 }}</strong>
-                        </td>
-
-                        <td>
-                            {% if cuisine.is_active %}
-                                <span class="category-status category-active">
-                                    ACTIVE
-                                </span>
-                            {% else %}
-                                <span class="category-status category-inactive">
-                                    INACTIVE
-                                </span>
-                            {% endif %}
-                        </td>
-
-                        <td>{{ cuisine.created_at|date:"d M Y" }}</td>
-
+                        <td><strong>42</strong></td>
+                        <td><span class="category-status category-active">ACTIVE</span></td>
+                        <td>10 Jan 2026</td>
                         <td>
                             <div class="actions">
                                 <a href="#" class="cuisine-action">Edit</a>
@@ -380,20 +366,281 @@
                         </td>
                     </tr>
 
-                    {% empty %}
 
+                    <!-- FAST FOOD -->
                     <tr>
-                        <td colspan="5">
-                            <div class="empty-state">
-                                <h3>No Cuisine Categories Yet</h3>
-                                <p>
-                                    Use the form to create your first cuisine category.
-                                </p>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🍔</div>
+                                <div>
+                                    <strong>Fast Food</strong>
+                                    <small>Burgers, fries, snacks and quick meals</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>38</strong></td>
+                        <td><span class="category-status category-active">ACTIVE</span></td>
+                        <td>12 Jan 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
                             </div>
                         </td>
                     </tr>
 
-                    {% endfor %}
+
+                    <!-- ITALIAN -->
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🍕</div>
+                                <div>
+                                    <strong>Italian Cuisine</strong>
+                                    <small>Pizza, pasta and Italian specialties</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>21</strong></td>
+                        <td><span class="category-status category-active">ACTIVE</span></td>
+                        <td>15 Jan 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <!-- INDIAN -->
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🍛</div>
+                                <div>
+                                    <strong>Indian Cuisine</strong>
+                                    <small>Curries, biryani and Indian dishes</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>17</strong></td>
+                        <td><span class="category-status category-active">ACTIVE</span></td>
+                        <td>20 Jan 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <!-- CHINESE -->
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🥡</div>
+                                <div>
+                                    <strong>Chinese Cuisine</strong>
+                                    <small>Noodles, rice dishes and Chinese meals</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>14</strong></td>
+                        <td><span class="category-status category-active">ACTIVE</span></td>
+                        <td>22 Jan 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <!-- ETHIOPIAN -->
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🥘</div>
+                                <div>
+                                    <strong>Ethiopian Cuisine</strong>
+                                    <small>Injera, stews and Ethiopian specialties</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>9</strong></td>
+                        <td><span class="category-status category-active">ACTIVE</span></td>
+                        <td>02 Feb 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <!-- MEXICAN -->
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🌮</div>
+                                <div>
+                                    <strong>Mexican Cuisine</strong>
+                                    <small>Tacos, burritos and Mexican meals</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>7</strong></td>
+                        <td><span class="category-status category-active">ACTIVE</span></td>
+                        <td>05 Feb 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <!-- SEAFOOD -->
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🐟</div>
+                                <div>
+                                    <strong>Seafood</strong>
+                                    <small>Fish, prawns and other seafood dishes</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>12</strong></td>
+                        <td><span class="category-status category-active">ACTIVE</span></td>
+                        <td>08 Feb 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <!-- VEGETARIAN -->
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🥗</div>
+                                <div>
+                                    <strong>Vegetarian</strong>
+                                    <small>Plant-based and vegetable meals</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>11</strong></td>
+                        <td><span class="category-status category-active">ACTIVE</span></td>
+                        <td>11 Feb 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <!-- JAPANESE -->
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🍣</div>
+                                <div>
+                                    <strong>Japanese Cuisine</strong>
+                                    <small>Sushi, ramen and Japanese specialties</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>6</strong></td>
+                        <td><span class="category-status category-inactive">INACTIVE</span></td>
+                        <td>15 Feb 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <!-- DESSERTS -->
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🍰</div>
+                                <div>
+                                    <strong>Desserts & Bakery</strong>
+                                    <small>Cakes, pastries and sweet treats</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>19</strong></td>
+                        <td><span class="category-status category-active">ACTIVE</span></td>
+                        <td>18 Feb 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <!-- MEDITERRANEAN -->
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🥙</div>
+                                <div>
+                                    <strong>Mediterranean Cuisine</strong>
+                                    <small>Grilled meals, salads and Mediterranean dishes</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>5</strong></td>
+                        <td><span class="category-status category-inactive">INACTIVE</span></td>
+                        <td>20 Feb 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <!-- OTHER -->
+                    <tr>
+                        <td>
+                            <div class="cuisine-name">
+                                <div class="cuisine-icon">🍽️</div>
+                                <div>
+                                    <strong>Other Cuisines</strong>
+                                    <small>Other international and specialty dishes</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>3</strong></td>
+                        <td><span class="category-status category-inactive">INACTIVE</span></td>
+                        <td>25 Feb 2026</td>
+                        <td>
+                            <div class="actions">
+                                <a href="#" class="cuisine-action">Edit</a>
+                                <a href="#" class="cuisine-action">Manage</a>
+                            </div>
+                        </td>
+                    </tr>
 
                 </tbody>
             </table>
@@ -402,9 +649,14 @@
 
 
         <div class="table-footer">
-            <span>
-                Showing {{ cuisines|length }} cuisine categories
-            </span>
+            <span>Showing 13 of 18 cuisine categories</span>
+
+            <div class="pagination">
+                <button type="button">←</button>
+                <button type="button" class="current">1</button>
+                <button type="button">2</button>
+                <button type="button">→</button>
+            </div>
         </div>
 
     </div>
