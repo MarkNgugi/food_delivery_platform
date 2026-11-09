@@ -158,3 +158,45 @@ RestaurantOperatingHourFormSet = inlineformset_factory(
     extra=0,
     can_delete=False,
 )
+
+
+from django import forms
+from food_delivery.models import Cuisine
+
+
+class CuisineForm(forms.ModelForm):
+
+    class Meta:
+        model = Cuisine
+        fields = ['name', 'description']
+
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'e.g. Kenyan Cuisine',
+            }),
+
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Briefly describe this cuisine category...',
+                'rows': 4,
+            }),
+        }
+
+    def clean_name(self):
+        name = self.cleaned_data['name'].strip()
+
+        # Case-insensitive duplicate protection.
+        existing = Cuisine.objects.filter(
+            name__iexact=name
+        )
+
+        if self.instance.pk:
+            existing = existing.exclude(pk=self.instance.pk)
+
+        if existing.exists():
+            raise forms.ValidationError(
+                'A cuisine category with this name already exists.'
+            )
+
+        return name

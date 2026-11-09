@@ -1,5 +1,15 @@
 from django.shortcuts import render
 from . import views
+from . import forms
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.paginator import Paginator
+from django.db.models import Q, Count
+
+from food_delivery.models import Cuisine
+from .forms import CuisineForm
 
 from django.shortcuts import render
 from django.db.models import Q
@@ -672,8 +682,109 @@ def restaurant_owners(request):
     return render(request,'food_delivery_Admin/restaurant_owners/restaurant_owners.html')
 
 
+@staff_member_required
 def cuisine_categories(request):
-    return render(request,'food_delivery_Admin/cuisine_categories/cuisine_categories.html')
+
+    # -----------------------------------------
+    # ADD CUISINE CATEGORY
+    # -----------------------------------------
+
+    if request.method == 'POST':
+
+        form = CuisineForm(request.POST)
+
+        if form.is_valid():
+            cuisine = form.save()
+
+            messages.success(
+                request,
+                f'"{cuisine.name}" was successfully added.'
+            )
+
+            return redirect('food_delivery_Admin:cuisine_categories')
+
+        else:
+            messages.error(
+                request,
+                'Please correct the errors in the cuisine form.'
+            )
+
+    else:
+        form = CuisineForm()
+
+    # -----------------------------------------
+    # CUISINE CATEGORIES QUERYSET
+    # -----------------------------------------
+
+    cuisines = Cuisine.objects.annotate(
+        restaurant_count=Count('restaurants', distinct=True)
+    ).order_by('name')
+
+    # -----------------------------------------
+    # SEARCH
+    # -----------------------------------------
+
+    search_query = request.GET.get('q', '').strip()
+
+    if search_query:
+        cuisines = cuisines.filter(
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+
+    # -----------------------------------------
+    # STATISTICS
+    # -----------------------------------------
+
+    total_categories = Cuisine.objects.count()
+
+    categories_in_use = Cuisine.objects.annotate(
+        restaurant_count=Count('restaurants', distinct=True)
+    ).filter(
+        restaurant_count__gt=0
+    ).count()
+
+    unused_categories = total_categories - categories_in_use
+
+    # -----------------------------------------
+    # PAGINATION
+    # -----------------------------------------
+
+    paginator = Paginator(cuisines, 10)
+
+    page_number = request.GET.get('page')
+
+    page_obj = paginator.get_page(page_number)
+
+    # Preserve search when navigating pages.
+    query_params = request.GET.copy()
+    query_params.pop('page', None)
+
+    filter_querystring = query_params.urlencode()
+
+    # -----------------------------------------
+    # CONTEXT
+    # -----------------------------------------
+
+    context = {
+        'form': form,
+
+        'cuisines': page_obj.object_list,
+        'page_obj': page_obj,
+
+        'search_query': search_query,
+        'filter_querystring': filter_querystring,
+
+        'total_categories': total_categories,
+        'categories_in_use': categories_in_use,
+        'unused_categories': unused_categories,
+    }
+
+    return render(
+        request,
+        'food_delivery_Admin/cuisine_categories/cuisine_categories.html',
+        context
+    )
 
 
 def reports_analytics(request):

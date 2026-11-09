@@ -1,17 +1,32 @@
-
 {% extends 'food_delivery_Admin/base.html' %}
 
 {% block title %}Cuisine Categories | Savora Admin{% endblock %}
 {% block cuisines_active %}active{% endblock %}
 {% block breadcrumb %}Cuisine Categories{% endblock %}
 
+
 {% block extra_css %}
+
 <style>
+
+    .cuisine-page {
+        width: 100%;
+    }
+
+    /* PAGE HEADING */
+
+    .page-heading {
+        margin-bottom: 22px;
+    }
+
+
+    /* STATISTICS */
+
     .cuisine-stats {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-        margin-bottom: 25px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
+        margin-bottom: 22px;
     }
 
     .cuisine-stat {
@@ -19,6 +34,12 @@
         border: 1px solid var(--border);
         border-radius: 12px;
         padding: 19px;
+    }
+
+    .cuisine-stat-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .cuisine-stat small {
@@ -29,50 +50,99 @@
 
     .cuisine-stat h2 {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 26px;
+        font-size: 27px;
         margin-top: 10px;
+        color: var(--dark);
     }
 
-    .cuisine-layout {
+    .cuisine-stat-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
         display: grid;
-        grid-template-columns: 320px minmax(0, 1fr);
-        gap: 20px;
-        align-items: start;
+        place-items: center;
+        font-size: 16px;
     }
 
-    .cuisine-form-card {
+    .icon-orange {
+        background: #fff0e9;
+        color: var(--orange);
+    }
+
+    .icon-green {
+        background: #e8f7f0;
+        color: #159b68;
+    }
+
+    .icon-yellow {
+        background: #fff6e4;
+        color: #bd8111;
+    }
+
+    .cuisine-stat p {
+        color: var(--muted);
+        font-size: 10px;
+        margin-top: 5px;
+    }
+
+
+    /* GENERAL CARD */
+
+    .cuisine-section {
         background: white;
         border: 1px solid var(--border);
         border-radius: 12px;
         padding: 22px;
+        margin-bottom: 20px;
+        min-width: 0;
     }
 
-    .cuisine-form-card h3 {
+    .section-heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .section-heading h3 {
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 15px;
+        color: var(--dark);
     }
 
-    .cuisine-form-card > p {
+    .section-heading p {
         color: var(--muted);
         font-size: 11px;
         margin-top: 6px;
-        margin-bottom: 22px;
-        line-height: 1.6;
+        line-height: 1.5;
+    }
+
+
+    /* ADD CUISINE FORM */
+
+    .cuisine-form-grid {
+        display: grid;
+        grid-template-columns: minmax(220px, .8fr) minmax(300px, 1.5fr);
+        gap: 18px;
+        align-items: start;
     }
 
     .form-group {
-        margin-bottom: 17px;
+        margin-bottom: 15px;
     }
 
     .form-group label {
         display: block;
         font-size: 11px;
         font-weight: 700;
+        color: var(--dark);
         margin-bottom: 8px;
     }
 
     .form-group input,
     .form-group textarea {
+        display: block;
         width: 100%;
         border: 1px solid var(--border);
         border-radius: 7px;
@@ -81,10 +151,13 @@
         font-family: inherit;
         font-size: 11px;
         color: var(--dark);
+        background: white;
+        transition: border-color .2s;
+        box-sizing: border-box;
     }
 
     .form-group textarea {
-        min-height: 100px;
+        min-height: 90px;
         resize: vertical;
     }
 
@@ -100,32 +173,157 @@
         line-height: 1.5;
     }
 
+    .field-error {
+        color: #d64a4a;
+        font-size: 10px;
+        margin-top: 6px;
+        display: block;
+    }
+
+    .form-error {
+        background: #ffeded;
+        color: #c03939;
+        border-radius: 7px;
+        padding: 11px 13px;
+        font-size: 11px;
+        margin-bottom: 15px;
+    }
+
+    .form-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 5px;
+    }
+
+    .form-note {
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.5;
+    }
+
     .form-submit {
-        width: 100%;
         background: var(--orange);
         color: white;
         border: none;
         border-radius: 7px;
-        padding: 12px;
+        padding: 11px 18px;
         font-family: inherit;
         font-size: 11px;
         font-weight: 700;
         cursor: pointer;
+        white-space: nowrap;
     }
 
     .form-submit:hover {
         background: #dc4c20;
     }
 
-    .cuisine-name {
+
+    /* TABLE SECTION */
+
+    .cuisine-table-section {
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .table-section-header {
+        padding: 21px 22px 15px;
+    }
+
+    .table-section-header h3 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 15px;
+        color: var(--dark);
+    }
+
+    .table-section-header p {
+        color: var(--muted);
+        font-size: 11px;
+        margin-top: 6px;
+    }
+
+
+    /* SEARCH */
+
+    .cuisine-search-form {
         display: flex;
         align-items: center;
         gap: 10px;
+        padding: 0 22px 17px;
+    }
+
+    .cuisine-search {
+        flex: 1;
+        min-width: 0;
+        position: relative;
+    }
+
+    .cuisine-search input {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 11px 13px 11px 35px;
+        font-family: inherit;
+        font-size: 11px;
+        outline: none;
+        box-sizing: border-box;
+    }
+
+    .cuisine-search input:focus {
+        border-color: var(--orange);
+    }
+
+    .cuisine-search span {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 16px;
+    }
+
+    .search-btn,
+    .reset-btn {
+        border: none;
+        border-radius: 7px;
+        padding: 11px 16px;
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .search-btn {
+        background: var(--orange);
+        color: white;
+    }
+
+    .reset-btn {
+        background: #f1f2f4;
+        color: #555d69;
+    }
+
+
+    /* CUISINE TABLE */
+
+    .cuisine-table {
+        min-width: 750px;
+    }
+
+    .cuisine-name {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 220px;
     }
 
     .cuisine-icon {
-        width: 37px;
-        height: 37px;
+        width: 39px;
+        height: 39px;
         border-radius: 9px;
         background: #fff0e9;
         display: grid;
@@ -137,6 +335,7 @@
     .cuisine-name strong {
         display: block;
         font-size: 11px;
+        color: var(--dark);
     }
 
     .cuisine-name small {
@@ -144,9 +343,26 @@
         color: var(--muted);
         font-size: 10px;
         margin-top: 4px;
+        max-width: 270px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-    .category-status {
+    .restaurant-count {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .usage-label {
+        display: block;
+        color: var(--muted);
+        font-size: 9px;
+        margin-top: 3px;
+    }
+
+    .usage-badge {
         display: inline-block;
         padding: 6px 9px;
         border-radius: 20px;
@@ -154,40 +370,34 @@
         font-weight: 700;
     }
 
-    .category-active {
+    .usage-in-use {
         background: #e8f7f0;
         color: #159b68;
     }
 
-    .category-inactive {
-        background: #ffeded;
-        color: #d64a4a;
+    .usage-unused {
+        background: #fff6e4;
+        color: #bd8111;
     }
 
-    .cuisine-action {
-        border: 1px solid var(--border);
-        background: white;
-        border-radius: 6px;
-        padding: 7px 9px;
-        font-size: 10px;
-        color: #555d69;
-        text-decoration: none;
-        cursor: pointer;
+    .cuisine-description {
+        font-size: 11px;
+        color: var(--muted);
+        max-width: 300px;
     }
 
-    .cuisine-action:hover {
-        border-color: var(--orange);
-        color: var(--orange);
-    }
 
-    .cuisine-table-card {
-        min-width: 0;
-    }
+    /* EMPTY STATE */
 
     .empty-state {
         text-align: center;
-        padding: 40px 15px;
+        padding: 45px 20px;
         color: var(--muted);
+    }
+
+    .empty-icon {
+        font-size: 30px;
+        margin-bottom: 12px;
     }
 
     .empty-state h3 {
@@ -198,11 +408,67 @@
 
     .empty-state p {
         font-size: 11px;
+        line-height: 1.6;
     }
 
-    @media(max-width: 1100px) {
-        .cuisine-layout {
+
+    /* PAGINATION */
+
+    .table-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding: 17px 22px;
+        border-top: 1px solid var(--border);
+    }
+
+    .table-footer > span {
+        color: var(--muted);
+        font-size: 11px;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .pagination a,
+    .pagination span {
+        min-width: 30px;
+        height: 30px;
+        padding: 0 9px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--dark);
+        background: white;
+        text-decoration: none;
+        font-size: 11px;
+        box-sizing: border-box;
+    }
+
+    .pagination .current {
+        background: var(--orange);
+        color: white;
+        border-color: var(--orange);
+    }
+
+    .pagination .disabled {
+        opacity: .4;
+        pointer-events: none;
+    }
+
+
+    /* RESPONSIVE */
+
+    @media(max-width: 850px) {
+        .cuisine-form-grid {
             grid-template-columns: 1fr;
+            gap: 0;
         }
     }
 
@@ -211,456 +477,478 @@
             grid-template-columns: 1fr;
             gap: 9px;
         }
+
+        .cuisine-section {
+            padding: 16px;
+        }
+
+        .table-section-header {
+            padding: 17px 16px;
+        }
+
+        .cuisine-search-form {
+            padding: 0 16px 15px;
+            flex-wrap: wrap;
+        }
+
+        .cuisine-search {
+            flex-basis: 100%;
+        }
+
+        .search-btn,
+        .reset-btn {
+            flex: 1;
+            text-align: center;
+        }
+
+        .form-bottom {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .form-submit {
+            width: 100%;
+        }
+
+        .table-footer {
+            align-items: flex-start;
+            flex-direction: column;
+            padding: 15px 16px;
+        }
+
+        .pagination {
+            flex-wrap: wrap;
+        }
     }
+
 </style>
-{% endblock %}
+
+{% endblock extra_css %}
 
 
 {% block content %}
 
-<!-- PAGE HEADING -->
-<div class="page-heading">
-    <div>
-        <h1>Cuisine Categories</h1>
-        <p>Create and manage the cuisine categories available to restaurants on Savora.</p>
-    </div>
-</div>
+<div class="cuisine-page">
 
+    <!-- PAGE HEADING -->
 
-<!-- SUMMARY CARDS -->
-<div class="cuisine-stats">
-
-    <div class="cuisine-stat">
-        <small>Total Categories</small>
-        <h2>18</h2>
+    <div class="page-heading">
+        <div>
+            <h1>Cuisine Categories</h1>
+            <p>
+                Create and manage the cuisine categories available
+                to restaurants on Savora.
+            </p>
+        </div>
     </div>
 
-    <div class="cuisine-stat">
-        <small>Active Categories</small>
-        <h2>15</h2>
-    </div>
 
-    <div class="cuisine-stat">
-        <small>Inactive Categories</small>
-        <h2>3</h2>
-    </div>
+    <!-- STATISTICS -->
 
-</div>
+    <section class="cuisine-stats">
+
+        <div class="cuisine-stat">
+
+            <div class="cuisine-stat-top">
+                <small>Total Cuisine Categories</small>
+                <span class="cuisine-stat-icon icon-orange">☷</span>
+            </div>
+
+            <h2>{{ total_categories }}</h2>
+
+            <p>All categories registered on Savora</p>
+
+        </div>
 
 
-<div class="cuisine-layout">
+        <div class="cuisine-stat">
 
-    <!-- ADD CUISINE CATEGORY FORM -->
-    <div class="cuisine-form-card">
+            <div class="cuisine-stat-top">
+                <small>Categories In Use</small>
+                <span class="cuisine-stat-icon icon-green">✓</span>
+            </div>
 
-        <h3>Add New Category</h3>
+            <h2>{{ categories_in_use }}</h2>
 
-        <p>
-            Create a cuisine category that restaurant owners can select
-            when registering or updating their restaurants.
-        </p>
+            <p>Categories assigned to restaurants</p>
 
-        <form method="POST">
+        </div>
+
+
+        <div class="cuisine-stat">
+
+            <div class="cuisine-stat-top">
+                <small>Unused Categories</small>
+                <span class="cuisine-stat-icon icon-yellow">◷</span>
+            </div>
+
+            <h2>{{ unused_categories }}</h2>
+
+            <p>Categories not yet assigned to restaurants</p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ADD CUISINE CATEGORY -->
+
+    <section class="cuisine-section">
+
+        <div class="section-heading">
+
+            <div>
+                <h3>Add New Cuisine Category</h3>
+
+                <p>
+                    Create a category that restaurant owners can select
+                    when registering or updating their restaurants.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form method="POST"
+              action="{% url 'food_delivery_Admin:cuisine_categories' %}">
+
             {% csrf_token %}
 
-            <div class="form-group">
-                <label for="cuisine-name">Cuisine Name</label>
-
-                <input
-                    type="text"
-                    id="cuisine-name"
-                    name="name"
-                    placeholder="e.g. Kenyan Cuisine"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="cuisine-description">Description</label>
-
-                <textarea
-                    id="cuisine-description"
-                    name="description"
-                    placeholder="Briefly describe this cuisine category..."
-                ></textarea>
-
-                <div class="form-hint">
-                    A short description to help customers understand the category.
+            {% if form.non_field_errors %}
+                <div class="form-error">
+                    {{ form.non_field_errors }}
                 </div>
+            {% endif %}
+
+
+            <div class="cuisine-form-grid">
+
+                <!-- CUISINE NAME -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.name.id_for_label }}">
+                        Cuisine Name
+                    </label>
+
+                    {{ form.name }}
+
+                    {% for error in form.name.errors %}
+                        <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+
+                    <div class="form-hint">
+                        Enter a unique category name, for example Kenyan Cuisine.
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.description.id_for_label }}">
+                        Description
+                    </label>
+
+                    {{ form.description }}
+
+                    {% for error in form.description.errors %}
+                        <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+
+                    <div class="form-hint">
+                        Briefly explain the type of food or cuisine represented.
+                    </div>
+
+                </div>
+
             </div>
 
-            <button type="button" class="form-submit">
-                + Create Cuisine Category
-            </button>
+
+            <div class="form-bottom">
+
+                <span class="form-note">
+                    Cuisine names must be unique.
+                </span>
+
+                <button type="submit" class="form-submit">
+                    + Create Cuisine Category
+                </button>
+
+            </div>
 
         </form>
 
-    </div>
+    </section>
 
 
-    <!-- EXISTING CUISINE CATEGORIES -->
-    <div class="content-card cuisine-table-card">
+    <!-- ALL CUISINE CATEGORIES -->
 
-        <div class="card-heading">
-            <div>
-                <h3>All Cuisine Categories</h3>
-                <p>Manage the categories currently available on the platform.</p>
-            </div>
+    <section class="cuisine-section cuisine-table-section">
+
+        <div class="table-section-header">
+
+            <h3>All Cuisine Categories</h3>
+
+            <p>
+                View cuisine categories and the restaurants currently using them.
+            </p>
+
         </div>
 
 
         <!-- SEARCH -->
-        <form method="GET" class="filters">
 
-            <div class="search">
+        <form method="GET"
+              action="{% url 'food_delivery_Admin:cuisine_categories' %}"
+              class="cuisine-search-form">
+
+            <div class="cuisine-search">
+
                 <span>⌕</span>
 
                 <input
-                    type="text"
+                    type="search"
                     name="q"
+                    value="{{ search_query }}"
                     placeholder="Search cuisine categories..."
                 >
+
             </div>
 
-            <button type="button" class="export-btn">
+            <button type="submit" class="search-btn">
                 Search
             </button>
+
+            <a href="{% url 'food_delivery_Admin:cuisine_categories' %}"
+               class="reset-btn">
+                Reset
+            </a>
 
         </form>
 
 
+        <!-- RESULTS -->
+
         <div class="table-wrap">
 
-            <table>
+            <table class="cuisine-table">
+
                 <thead>
+
                     <tr>
                         <th>CUISINE CATEGORY</th>
+                        <th>DESCRIPTION</th>
                         <th>RESTAURANTS</th>
-                        <th>STATUS</th>
-                        <th>DATE CREATED</th>
-                        <th>ACTIONS</th>
+                        <th>USAGE</th>
                     </tr>
+
                 </thead>
+
 
                 <tbody>
 
-                    <!-- KENYAN -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🍲</div>
-                                <div>
-                                    <strong>Kenyan Cuisine</strong>
-                                    <small>Traditional Kenyan meals and local dishes</small>
+                    {% for cuisine in cuisines %}
+
+                        <tr>
+
+                            <!-- CATEGORY NAME -->
+
+                            <td>
+
+                                <div class="cuisine-name">
+
+                                    <div class="cuisine-icon">
+                                        🍽️
+                                    </div>
+
+                                    <div>
+
+                                        <strong>{{ cuisine.name }}</strong>
+
+                                        <small>
+                                            Category #{{ cuisine.id }}
+                                        </small>
+
+                                    </div>
+
                                 </div>
-                            </div>
-                        </td>
-                        <td><strong>42</strong></td>
-                        <td><span class="category-status category-active">ACTIVE</span></td>
-                        <td>10 Jan 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
+
+                            </td>
 
 
-                    <!-- FAST FOOD -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🍔</div>
-                                <div>
-                                    <strong>Fast Food</strong>
-                                    <small>Burgers, fries, snacks and quick meals</small>
+                            <!-- DESCRIPTION -->
+
+                            <td>
+
+                                <div class="cuisine-description">
+
+                                    {% if cuisine.description %}
+                                        {{ cuisine.description|truncatechars:90 }}
+                                    {% else %}
+                                        No description provided
+                                    {% endif %}
+
                                 </div>
-                            </div>
-                        </td>
-                        <td><strong>38</strong></td>
-                        <td><span class="category-status category-active">ACTIVE</span></td>
-                        <td>12 Jan 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
+
+                            </td>
 
 
-                    <!-- ITALIAN -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🍕</div>
-                                <div>
-                                    <strong>Italian Cuisine</strong>
-                                    <small>Pizza, pasta and Italian specialties</small>
+                            <!-- RESTAURANT COUNT -->
+
+                            <td>
+
+                                <span class="restaurant-count">
+                                    {{ cuisine.restaurant_count }}
+                                </span>
+
+                                <span class="usage-label">
+                                    Restaurant{{ cuisine.restaurant_count|pluralize }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- USAGE -->
+
+                            <td>
+
+                                {% if cuisine.restaurant_count > 0 %}
+
+                                    <span class="usage-badge usage-in-use">
+                                        IN USE
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="usage-badge usage-unused">
+                                        NOT IN USE
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td colspan="4">
+
+                                <div class="empty-state">
+
+                                    <div class="empty-icon">
+                                        🍽️
+                                    </div>
+
+                                    <h3>No cuisine categories found</h3>
+
+                                    <p>
+
+                                        {% if search_query %}
+                                            No categories match "{{ search_query }}".
+                                            Try a different search term.
+                                        {% else %}
+                                            You have not created any cuisine categories yet.
+                                            Use the form above to add your first category.
+                                        {% endif %}
+
+                                    </p>
+
                                 </div>
-                            </div>
-                        </td>
-                        <td><strong>21</strong></td>
-                        <td><span class="category-status category-active">ACTIVE</span></td>
-                        <td>15 Jan 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
 
+                            </td>
 
-                    <!-- INDIAN -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🍛</div>
-                                <div>
-                                    <strong>Indian Cuisine</strong>
-                                    <small>Curries, biryani and Indian dishes</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><strong>17</strong></td>
-                        <td><span class="category-status category-active">ACTIVE</span></td>
-                        <td>20 Jan 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
+                        </tr>
 
-
-                    <!-- CHINESE -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🥡</div>
-                                <div>
-                                    <strong>Chinese Cuisine</strong>
-                                    <small>Noodles, rice dishes and Chinese meals</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><strong>14</strong></td>
-                        <td><span class="category-status category-active">ACTIVE</span></td>
-                        <td>22 Jan 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <!-- ETHIOPIAN -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🥘</div>
-                                <div>
-                                    <strong>Ethiopian Cuisine</strong>
-                                    <small>Injera, stews and Ethiopian specialties</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><strong>9</strong></td>
-                        <td><span class="category-status category-active">ACTIVE</span></td>
-                        <td>02 Feb 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <!-- MEXICAN -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🌮</div>
-                                <div>
-                                    <strong>Mexican Cuisine</strong>
-                                    <small>Tacos, burritos and Mexican meals</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><strong>7</strong></td>
-                        <td><span class="category-status category-active">ACTIVE</span></td>
-                        <td>05 Feb 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <!-- SEAFOOD -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🐟</div>
-                                <div>
-                                    <strong>Seafood</strong>
-                                    <small>Fish, prawns and other seafood dishes</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><strong>12</strong></td>
-                        <td><span class="category-status category-active">ACTIVE</span></td>
-                        <td>08 Feb 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <!-- VEGETARIAN -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🥗</div>
-                                <div>
-                                    <strong>Vegetarian</strong>
-                                    <small>Plant-based and vegetable meals</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><strong>11</strong></td>
-                        <td><span class="category-status category-active">ACTIVE</span></td>
-                        <td>11 Feb 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <!-- JAPANESE -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🍣</div>
-                                <div>
-                                    <strong>Japanese Cuisine</strong>
-                                    <small>Sushi, ramen and Japanese specialties</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><strong>6</strong></td>
-                        <td><span class="category-status category-inactive">INACTIVE</span></td>
-                        <td>15 Feb 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <!-- DESSERTS -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🍰</div>
-                                <div>
-                                    <strong>Desserts & Bakery</strong>
-                                    <small>Cakes, pastries and sweet treats</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><strong>19</strong></td>
-                        <td><span class="category-status category-active">ACTIVE</span></td>
-                        <td>18 Feb 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <!-- MEDITERRANEAN -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🥙</div>
-                                <div>
-                                    <strong>Mediterranean Cuisine</strong>
-                                    <small>Grilled meals, salads and Mediterranean dishes</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><strong>5</strong></td>
-                        <td><span class="category-status category-inactive">INACTIVE</span></td>
-                        <td>20 Feb 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <!-- OTHER -->
-                    <tr>
-                        <td>
-                            <div class="cuisine-name">
-                                <div class="cuisine-icon">🍽️</div>
-                                <div>
-                                    <strong>Other Cuisines</strong>
-                                    <small>Other international and specialty dishes</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><strong>3</strong></td>
-                        <td><span class="category-status category-inactive">INACTIVE</span></td>
-                        <td>25 Feb 2026</td>
-                        <td>
-                            <div class="actions">
-                                <a href="#" class="cuisine-action">Edit</a>
-                                <a href="#" class="cuisine-action">Manage</a>
-                            </div>
-                        </td>
-                    </tr>
+                    {% endfor %}
 
                 </tbody>
+
             </table>
 
         </div>
 
 
-        <div class="table-footer">
-            <span>Showing 13 of 18 cuisine categories</span>
+        <!-- TABLE FOOTER -->
 
-            <div class="pagination">
-                <button type="button">←</button>
-                <button type="button" class="current">1</button>
-                <button type="button">2</button>
-                <button type="button">→</button>
+        {% if page_obj.paginator.num_pages > 1 %}
+
+            <div class="table-footer">
+
+                <span>
+                    Showing {{ page_obj.start_index }}–{{ page_obj.end_index }}
+                    of {{ page_obj.paginator.count }} categories
+                </span>
+
+
+                <div class="pagination">
+
+                    {% if page_obj.has_previous %}
+
+                        <a href="?{% if filter_querystring %}{{ filter_querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                            Previous
+                        </a>
+
+                    {% else %}
+
+                        <span class="disabled">Previous</span>
+
+                    {% endif %}
+
+
+                    {% for number in page_obj.paginator.page_range %}
+
+                        {% if number == page_obj.number %}
+
+                            <span class="current">{{ number }}</span>
+
+                        {% elif number >= page_obj.number|add:"-2" and number <= page_obj.number|add:"2" %}
+
+                            <a href="?{% if filter_querystring %}{{ filter_querystring }}&{% endif %}page={{ number }}">
+                                {{ number }}
+                            </a>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                    {% if page_obj.has_next %}
+
+                        <a href="?{% if filter_querystring %}{{ filter_querystring }}&{% endif %}page={{ page_obj.next_page_number }}">
+                            Next
+                        </a>
+
+                    {% else %}
+
+                        <span class="disabled">Next</span>
+
+                    {% endif %}
+
+                </div>
+
             </div>
-        </div>
 
-    </div>
+        {% else %}
+
+            <div class="table-footer">
+
+                <span>
+                    Showing {{ page_obj.paginator.count }} cuisine categories
+                </span>
+
+            </div>
+
+        {% endif %}
+
+    </section>
 
 </div>
 
-{% endblock %}
+{% endblock content %}
