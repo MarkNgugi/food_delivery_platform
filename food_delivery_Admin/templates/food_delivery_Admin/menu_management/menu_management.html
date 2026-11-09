@@ -15,6 +15,8 @@
         min-width: 1050px;
     }
 
+    /* MENU ITEM */
+
     .menu-item-info {
         display: flex;
         align-items: center;
@@ -60,6 +62,8 @@
         white-space: nowrap;
     }
 
+    /* RESTAURANT */
+
     .restaurant-cell strong {
         display: block;
         font-size: 11px;
@@ -72,6 +76,8 @@
         color: var(--muted);
         margin-top: 4px;
     }
+
+    /* PRICE */
 
     .menu-price {
         font-weight: 700;
@@ -87,6 +93,8 @@
         font-weight: 400;
         margin-top: 3px;
     }
+
+    /* STATUS */
 
     .status.available {
         background: #e8f7f0;
@@ -113,70 +121,179 @@
         color: #bd8111;
     }
 
+    /* =====================================
+       FILTER SECTION
+    ===================================== */
+
+    .menu-filter-section {
+        padding: 17px;
+        margin-top: 15px;
+        margin-bottom: 12px;
+        background: #fafafa;
+        border: 1px solid var(--border, #e8e8e8);
+        border-radius: 10px;
+    }
+
+    .filter-section-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .filter-section-heading h4 {
+        font-size: 12px;
+        color: var(--dark);
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .filter-section-heading span {
+        color: var(--muted);
+        font-size: 10px;
+    }
+
     .menu-filters {
         display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        padding: 17px 0;
+        flex-direction: column;
+        gap: 12px;
     }
 
-    .menu-filters .search {
-        flex: 1 1 220px;
-        min-width: 190px;
-    }
+    /* SEARCH ROW */
 
-    .menu-filters .search input {
+    .filter-search-row {
         width: 100%;
     }
 
-    .menu-filters select {
-        min-width: 145px;
-        max-width: 190px;
-        flex: 1 1 145px;
+    .filter-search {
+        width: 100%;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 13px;
+        border: 1px solid var(--border, #e5e5e5);
+        border-radius: 7px;
+        background: #fff;
+        transition: border-color .2s, box-shadow .2s;
     }
+
+    .filter-search:focus-within {
+        border-color: #f15a29;
+        box-shadow: 0 0 0 3px rgba(241, 90, 41, .08);
+    }
+
+    .filter-search > span {
+        color: var(--muted);
+        font-size: 20px;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    .filter-search input {
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--dark);
+        font-family: inherit;
+        font-size: 11px;
+        box-shadow: none;
+    }
+
+    .filter-search input::placeholder {
+        color: #a0a0a0;
+    }
+
+    /* DROPDOWN ROW */
+
+    .filter-controls-row {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(120px, 1fr)) auto;
+        gap: 9px;
+        align-items: center;
+    }
+
+    .filter-select {
+        width: 100%;
+        height: 39px;
+        min-width: 0;
+        padding: 0 29px 0 11px;
+        border: 1px solid var(--border, #e5e5e5);
+        border-radius: 7px;
+        background-color: #fff;
+        color: var(--dark);
+        font-family: inherit;
+        font-size: 10px;
+        outline: none;
+        cursor: pointer;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+    .filter-select:focus {
+        border-color: #f15a29;
+        box-shadow: 0 0 0 3px rgba(241, 90, 41, .08);
+    }
+
+    /* FILTER BUTTONS */
 
     .filter-actions {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 7px;
+        flex-shrink: 0;
     }
 
     .filter-btn,
     .reset-btn {
+        height: 39px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         border: none;
         border-radius: 7px;
-        padding: 10px 15px;
-        font-size: 11px;
+        padding: 0 14px;
+        font-family: inherit;
+        font-size: 10px;
         font-weight: 700;
         cursor: pointer;
         text-decoration: none;
         white-space: nowrap;
+        transition: all .2s ease;
     }
 
     .filter-btn {
-        background: var(--primary, #f15a29);
-        color: white;
-    }
-
-    .reset-btn {
-        background: #f1f2f4;
-        color: #555;
+        background: #f15a29;
+        color: #fff;
     }
 
     .filter-btn:hover {
-        opacity: .9;
+        background: #dc4c1f;
+        transform: translateY(-1px);
+    }
+
+    .reset-btn {
+        background: #fff;
+        color: #555;
+        border: 1px solid var(--border, #e5e5e5);
     }
 
     .reset-btn:hover {
-        background: #e7e8eb;
+        background: #f1f2f4;
+        border-color: #d5d5d5;
     }
+
+    /* RESULTS INFORMATION */
 
     .results-info {
         color: var(--muted);
         font-size: 11px;
         margin-bottom: 12px;
     }
+
+    /* EMPTY STATE */
 
     .empty-state {
         text-align: center;
@@ -203,13 +320,15 @@
     .empty-state a {
         display: inline-block;
         text-decoration: none;
-        background: var(--primary, #f15a29);
+        background: #f15a29;
         color: white;
         padding: 9px 15px;
         border-radius: 7px;
         font-size: 11px;
         font-weight: 700;
     }
+
+    /* PAGINATION */
 
     .table-footer {
         display: flex;
@@ -247,8 +366,8 @@
     }
 
     .pagination .current {
-        background: var(--primary, #f15a29);
-        border-color: var(--primary, #f15a29);
+        background: #f15a29;
+        border-color: #f15a29;
         color: white;
     }
 
@@ -269,27 +388,59 @@
         font-size: 11px;
     }
 
-    @media(max-width: 800px) {
-        .menu-filters {
-            align-items: stretch;
-        }
+    /* =====================================
+       RESPONSIVE DESIGN
+    ===================================== */
 
-        .menu-filters .search {
-            flex-basis: 100%;
-        }
-
-        .menu-filters select {
-            max-width: none;
+    @media(max-width: 1150px) {
+        .filter-controls-row {
+            grid-template-columns: repeat(3, minmax(130px, 1fr));
         }
 
         .filter-actions {
-            width: 100%;
+            grid-column: 1 / -1;
+            justify-content: flex-end;
+        }
+    }
+
+    @media(max-width: 750px) {
+        .filter-controls-row {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .filter-actions {
+            grid-column: 1 / -1;
         }
 
         .filter-actions button,
         .filter-actions a {
             flex: 1;
-            text-align: center;
+        }
+
+        .menu-filter-section {
+            padding: 13px;
+        }
+
+        .filter-section-heading {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 4px;
+        }
+    }
+
+    @media(max-width: 480px) {
+        .filter-controls-row {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .filter-actions button,
+        .filter-actions a {
+            width: 100%;
         }
 
         .table-footer {
@@ -370,100 +521,134 @@
         </div>
 
 
-        <!-- FILTERS -->
+        <!-- FILTER SECTION -->
 
-        <form method="GET" action="{% url 'food_delivery_Admin:menu_management' %}"
-              class="menu-filters">
+        <div class="menu-filter-section">
 
-            <div class="search">
-                <span>⌕</span>
-                <input
-                    type="search"
-                    name="q"
-                    value="{{ search_query }}"
-                    placeholder="Search menu item, restaurant..."
-                >
+            <div class="filter-section-heading">
+                <h4>Filter Menu Items</h4>
+                <span>Search and narrow down menu items using the options below.</span>
             </div>
 
-            <select name="restaurant">
-                <option value="">All Restaurants</option>
+            <form method="GET"
+                  action="{% url 'food_delivery_Admin:menu_management' %}"
+                  class="menu-filters">
 
-                {% for restaurant in restaurants %}
-                    <option value="{{ restaurant.id }}"
-                        {% if restaurant_filter == restaurant.id|stringformat:"s" %}
-                            selected
-                        {% endif %}>
-                        {{ restaurant.name }}
-                    </option>
-                {% endfor %}
-            </select>
+                <!-- SEARCH -->
 
+                <div class="filter-search-row">
 
-            <select name="category">
-                <option value="">All Categories</option>
+                    <div class="filter-search">
+                        <span>⌕</span>
 
-                {% for category in categories %}
-                    <option value="{{ category.id }}"
-                        {% if category_filter == category.id|stringformat:"s" %}
-                            selected
-                        {% endif %}>
-                        {{ category.name }}
-                    </option>
-                {% endfor %}
-            </select>
+                        <input
+                            type="search"
+                            name="q"
+                            value="{{ search_query }}"
+                            placeholder="Search menu item, restaurant, description..."
+                        >
+                    </div>
+
+                </div>
 
 
-            <select name="availability">
-                <option value="">All Availability</option>
-                <option value="available"
-                    {% if availability_filter == 'available' %}selected{% endif %}>
-                    Available
-                </option>
-                <option value="unavailable"
-                    {% if availability_filter == 'unavailable' %}selected{% endif %}>
-                    Unavailable
-                </option>
-            </select>
+                <!-- DROPDOWN FILTERS -->
+
+                <div class="filter-controls-row">
+
+                    <select name="restaurant" class="filter-select">
+                        <option value="">All Restaurants</option>
+
+                        {% for restaurant in restaurants %}
+                            <option value="{{ restaurant.id }}"
+                                {% if restaurant_filter == restaurant.id|stringformat:"s" %}
+                                    selected
+                                {% endif %}>
+                                {{ restaurant.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
 
 
-            <select name="status">
-                <option value="">All Item Status</option>
-                <option value="active"
-                    {% if status_filter == 'active' %}selected{% endif %}>
-                    Active
-                </option>
-                <option value="inactive"
-                    {% if status_filter == 'inactive' %}selected{% endif %}>
-                    Inactive
-                </option>
-            </select>
+                    <select name="category" class="filter-select">
+                        <option value="">All Categories</option>
+
+                        {% for category in categories %}
+                            <option value="{{ category.id }}"
+                                {% if category_filter == category.id|stringformat:"s" %}
+                                    selected
+                                {% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
 
 
-            <select name="featured">
-                <option value="">All Items</option>
-                <option value="featured"
-                    {% if featured_filter == 'featured' %}selected{% endif %}>
-                    Featured
-                </option>
-                <option value="not_featured"
-                    {% if featured_filter == 'not_featured' %}selected{% endif %}>
-                    Not Featured
-                </option>
-            </select>
+                    <select name="availability" class="filter-select">
+                        <option value="">All Availability</option>
+
+                        <option value="available"
+                            {% if availability_filter == 'available' %}selected{% endif %}>
+                            Available
+                        </option>
+
+                        <option value="unavailable"
+                            {% if availability_filter == 'unavailable' %}selected{% endif %}>
+                            Unavailable
+                        </option>
+                    </select>
 
 
-            <div class="filter-actions">
-                <button type="submit" class="filter-btn">
-                    Apply Filters
-                </button>
+                    <select name="status" class="filter-select">
+                        <option value="">All Item Status</option>
 
-                <a href="{% url 'food_delivery_Admin:menu_management' %}"
-                   class="reset-btn">
-                    Reset
-                </a>
-            </div>
+                        <option value="active"
+                            {% if status_filter == 'active' %}selected{% endif %}>
+                            Active
+                        </option>
 
-        </form>
+                        <option value="inactive"
+                            {% if status_filter == 'inactive' %}selected{% endif %}>
+                            Inactive
+                        </option>
+                    </select>
+
+
+                    <select name="featured" class="filter-select">
+                        <option value="">All Items</option>
+
+                        <option value="featured"
+                            {% if featured_filter == 'featured' %}selected{% endif %}>
+                            Featured
+                        </option>
+
+                        <option value="not_featured"
+                            {% if featured_filter == 'not_featured' %}selected{% endif %}>
+                            Not Featured
+                        </option>
+                    </select>
+
+
+                    <!-- ACTION BUTTONS -->
+
+                    <div class="filter-actions">
+
+                        <button type="submit" class="filter-btn">
+                            Apply Filters
+                        </button>
+
+                        <a href="{% url 'food_delivery_Admin:menu_management' %}"
+                           class="reset-btn">
+                            Reset
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
 
 
         <!-- RESULTS INFORMATION -->
