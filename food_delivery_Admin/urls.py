@@ -29,7 +29,11 @@ urlpatterns = [
 
     path('orders',views.orders,name='orders'),
 
-    path('menu-management',views.menu_management,name='menu_management'),
+    path(
+    'menu-management',
+    views.menu_management,
+    name='menu_management'
+),
 
     path('customers',views.customers,name='customers'),
 

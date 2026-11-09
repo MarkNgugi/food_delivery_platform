@@ -1,459 +1,710 @@
-
+```html
 {% extends 'food_delivery_Admin/base.html' %}
 
 {% block title %}Menu Management | Savora{% endblock %}
-
 {% block breadcrumb %}Menu Management{% endblock %}
-
 {% block menu_management_active %}active{% endblock %}
 
-
 {% block extra_css %}
-
 <style>
-    /* MENU MANAGEMENT PAGE SPECIFIC STYLES */
-
-    .menu-table {
-        min-width: 950px;
+    .menu-management-page {
+        width: 100%;
     }
 
-    .item {
+    .menu-table {
+        min-width: 1050px;
+    }
+
+    .menu-item-info {
         display: flex;
         align-items: center;
         gap: 11px;
+        min-width: 210px;
     }
 
-    .item-img {
-        width: 43px;
-        height: 43px;
+    .menu-item-image {
+        width: 45px;
+        height: 45px;
+        border-radius: 9px;
+        object-fit: cover;
+        flex-shrink: 0;
+        background: #fff0e9;
+    }
+
+    .menu-item-placeholder {
+        width: 45px;
+        height: 45px;
         border-radius: 9px;
         display: grid;
         place-items: center;
         background: #fff0e9;
-        font-size: 22px;
+        font-size: 21px;
         flex-shrink: 0;
     }
 
-    .item strong {
+    .menu-item-info strong {
         display: block;
-        font-size: 11px;
+        font-size: 12px;
+        color: var(--dark);
+        font-weight: 700;
     }
 
-    .item small {
+    .menu-item-info small {
         display: block;
         color: var(--muted);
         margin-top: 4px;
         font-size: 10px;
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-    .available {
-        background: #e8f7f0;
-        color: var(--green);
+    .restaurant-cell strong {
+        display: block;
+        font-size: 11px;
+        color: var(--dark);
     }
 
-    .unavailable {
-        background: #ffeded;
-        color: var(--red);
-    }
-
-    .review {
-        background: #fff6e4;
-        color: #bd8111;
+    .restaurant-cell small {
+        display: block;
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 4px;
     }
 
     .menu-price {
         font-weight: 700;
         color: var(--dark);
+        white-space: nowrap;
     }
 
-    @media(max-width: 650px) {
-        .page-heading {
-            flex-wrap: wrap;
+    .price-old {
+        display: block;
+        color: var(--muted);
+        text-decoration: line-through;
+        font-size: 10px;
+        font-weight: 400;
+        margin-top: 3px;
+    }
+
+    .status.available {
+        background: #e8f7f0;
+        color: var(--green);
+    }
+
+    .status.unavailable {
+        background: #ffeded;
+        color: var(--red);
+    }
+
+    .status.active-status {
+        background: #e8f7f0;
+        color: var(--green);
+    }
+
+    .status.inactive-status {
+        background: #ffeded;
+        color: var(--red);
+    }
+
+    .status.featured-status {
+        background: #fff6e4;
+        color: #bd8111;
+    }
+
+    .menu-filters {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 17px 0;
+    }
+
+    .menu-filters .search {
+        flex: 1 1 220px;
+        min-width: 190px;
+    }
+
+    .menu-filters .search input {
+        width: 100%;
+    }
+
+    .menu-filters select {
+        min-width: 145px;
+        max-width: 190px;
+        flex: 1 1 145px;
+    }
+
+    .filter-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .filter-btn,
+    .reset-btn {
+        border: none;
+        border-radius: 7px;
+        padding: 10px 15px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .filter-btn {
+        background: var(--primary, #f15a29);
+        color: white;
+    }
+
+    .reset-btn {
+        background: #f1f2f4;
+        color: #555;
+    }
+
+    .filter-btn:hover {
+        opacity: .9;
+    }
+
+    .reset-btn:hover {
+        background: #e7e8eb;
+    }
+
+    .results-info {
+        color: var(--muted);
+        font-size: 11px;
+        margin-bottom: 12px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 45px 20px;
+        color: var(--muted);
+    }
+
+    .empty-state .empty-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .empty-state h3 {
+        color: var(--dark);
+        font-size: 15px;
+        margin-bottom: 6px;
+    }
+
+    .empty-state p {
+        font-size: 11px;
+        margin-bottom: 15px;
+    }
+
+    .empty-state a {
+        display: inline-block;
+        text-decoration: none;
+        background: var(--primary, #f15a29);
+        color: white;
+        padding: 9px 15px;
+        border-radius: 7px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .table-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding-top: 17px;
+    }
+
+    .table-footer > span {
+        color: var(--muted);
+        font-size: 11px;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .pagination a,
+    .pagination span {
+        min-width: 30px;
+        height: 30px;
+        padding: 0 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border, #e8e8e8);
+        border-radius: 6px;
+        text-decoration: none;
+        color: var(--dark);
+        font-size: 11px;
+        background: white;
+    }
+
+    .pagination .current {
+        background: var(--primary, #f15a29);
+        border-color: var(--primary, #f15a29);
+        color: white;
+    }
+
+    .pagination .disabled {
+        opacity: .4;
+        pointer-events: none;
+    }
+
+    .featured-label {
+        display: inline-block;
+        margin-top: 4px;
+        font-size: 9px;
+        color: #bd8111;
+    }
+
+    .table-category {
+        color: var(--dark);
+        font-size: 11px;
+    }
+
+    @media(max-width: 800px) {
+        .menu-filters {
+            align-items: stretch;
         }
 
-        .filters input {
+        .menu-filters .search {
             flex-basis: 100%;
         }
 
-        .filters select {
+        .menu-filters select {
+            max-width: none;
+        }
+
+        .filter-actions {
+            width: 100%;
+        }
+
+        .filter-actions button,
+        .filter-actions a {
             flex: 1;
+            text-align: center;
         }
 
         .table-footer {
-            flex-wrap: wrap;
-            gap: 12px;
+            align-items: flex-start;
+            flex-direction: column;
         }
     }
 </style>
-
 {% endblock extra_css %}
 
 
 {% block content %}
 
-<!-- PAGE HEADING -->
+<div class="menu-management-page">
 
-<div class="page-heading">
+    <!-- PAGE HEADING -->
 
-    <div>
-        <h1>Menu Management</h1>
-        <p>Monitor menu items and availability across all restaurants.</p>
+    <div class="page-heading">
+        <div>
+            <h1>Menu Management</h1>
+            <p>Monitor menu items, prices and availability across all restaurants.</p>
+        </div>
     </div>
+
+
+    <!-- STATISTICS -->
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Total Menu Items</span>
+                <span class="stat-icon orange">☷</span>
+            </div>
+            <h2>{{ total_menu_items }}</h2>
+            <small>Across all restaurants</small>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Available Items</span>
+                <span class="stat-icon green">✓</span>
+            </div>
+            <h2>{{ available_items }}</h2>
+            <small>Currently available for orders</small>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Unavailable Items</span>
+                <span class="stat-icon red">×</span>
+            </div>
+            <h2>{{ unavailable_items }}</h2>
+            <small>Currently unavailable</small>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Inactive Items</span>
+                <span class="stat-icon yellow">◷</span>
+            </div>
+            <h2>{{ inactive_items }}</h2>
+            <small>Items disabled by the restaurant</small>
+        </div>
+
+    </section>
+
+
+    <!-- MENU ITEMS TABLE -->
+
+    <section class="content-card">
+
+        <div class="card-heading">
+            <div>
+                <h3>All Menu Items</h3>
+                <p>View menu items submitted by registered restaurants.</p>
+            </div>
+        </div>
+
+
+        <!-- FILTERS -->
+
+        <form method="GET" action="{% url 'food_delivery_Admin:menu_management' %}"
+              class="menu-filters">
+
+            <div class="search">
+                <span>⌕</span>
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ search_query }}"
+                    placeholder="Search menu item, restaurant..."
+                >
+            </div>
+
+            <select name="restaurant">
+                <option value="">All Restaurants</option>
+
+                {% for restaurant in restaurants %}
+                    <option value="{{ restaurant.id }}"
+                        {% if restaurant_filter == restaurant.id|stringformat:"s" %}
+                            selected
+                        {% endif %}>
+                        {{ restaurant.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+
+            <select name="category">
+                <option value="">All Categories</option>
+
+                {% for category in categories %}
+                    <option value="{{ category.id }}"
+                        {% if category_filter == category.id|stringformat:"s" %}
+                            selected
+                        {% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+
+            <select name="availability">
+                <option value="">All Availability</option>
+                <option value="available"
+                    {% if availability_filter == 'available' %}selected{% endif %}>
+                    Available
+                </option>
+                <option value="unavailable"
+                    {% if availability_filter == 'unavailable' %}selected{% endif %}>
+                    Unavailable
+                </option>
+            </select>
+
+
+            <select name="status">
+                <option value="">All Item Status</option>
+                <option value="active"
+                    {% if status_filter == 'active' %}selected{% endif %}>
+                    Active
+                </option>
+                <option value="inactive"
+                    {% if status_filter == 'inactive' %}selected{% endif %}>
+                    Inactive
+                </option>
+            </select>
+
+
+            <select name="featured">
+                <option value="">All Items</option>
+                <option value="featured"
+                    {% if featured_filter == 'featured' %}selected{% endif %}>
+                    Featured
+                </option>
+                <option value="not_featured"
+                    {% if featured_filter == 'not_featured' %}selected{% endif %}>
+                    Not Featured
+                </option>
+            </select>
+
+
+            <div class="filter-actions">
+                <button type="submit" class="filter-btn">
+                    Apply Filters
+                </button>
+
+                <a href="{% url 'food_delivery_Admin:menu_management' %}"
+                   class="reset-btn">
+                    Reset
+                </a>
+            </div>
+
+        </form>
+
+
+        <!-- RESULTS INFORMATION -->
+
+        <div class="results-info">
+            Showing {{ page_obj.start_index }}–{{ page_obj.end_index }}
+            of {{ page_obj.paginator.count }} matching menu items
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div class="table-wrap">
+
+            <table class="menu-table">
+
+                <thead>
+                    <tr>
+                        <th>MENU ITEM</th>
+                        <th>RESTAURANT</th>
+                        <th>CATEGORY</th>
+                        <th>PRICE</th>
+                        <th>AVAILABILITY</th>
+                        <th>ITEM STATUS</th>
+                        <th>DATE ADDED</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in menu_items %}
+
+                        <tr>
+
+                            <!-- MENU ITEM -->
+
+                            <td>
+                                <div class="menu-item-info">
+
+                                    {% if item.image %}
+                                        <img
+                                            src="{{ item.image.url }}"
+                                            alt="{{ item.name }}"
+                                            class="menu-item-image"
+                                        >
+                                    {% else %}
+                                        <div class="menu-item-placeholder">
+                                            🍽️
+                                        </div>
+                                    {% endif %}
+
+                                    <div>
+                                        <strong>{{ item.name }}</strong>
+
+                                        <small>
+                                            {{ item.description|default:"No description provided"|truncatechars:55 }}
+                                        </small>
+
+                                        {% if item.is_featured %}
+                                            <span class="featured-label">
+                                                ★ Featured
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </td>
+
+
+                            <!-- RESTAURANT -->
+
+                            <td>
+                                <div class="restaurant-cell">
+                                    <strong>{{ item.restaurant.name }}</strong>
+
+                                    <small>
+                                        {% if item.restaurant.area %}
+                                            {{ item.restaurant.area }}
+                                        {% elif item.restaurant.town %}
+                                            {{ item.restaurant.town }}
+                                        {% else %}
+                                            Location not provided
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </td>
+
+
+                            <!-- CATEGORY -->
+
+                            <td class="table-category">
+                                {{ item.category.name }}
+                            </td>
+
+
+                            <!-- PRICE -->
+
+                            <td>
+                                <div class="menu-price">
+                                    KSh {{ item.current_price|floatformat:2 }}
+                                </div>
+
+                                {% if item.discount_price %}
+                                    <span class="price-old">
+                                        KSh {{ item.price|floatformat:2 }}
+                                    </span>
+                                {% endif %}
+                            </td>
+
+
+                            <!-- AVAILABILITY -->
+
+                            <td>
+                                {% if item.is_available %}
+                                    <span class="status available">
+                                        Available
+                                    </span>
+                                {% else %}
+                                    <span class="status unavailable">
+                                        Unavailable
+                                    </span>
+                                {% endif %}
+                            </td>
+
+
+                            <!-- ACTIVE STATUS -->
+
+                            <td>
+                                {% if item.is_active %}
+                                    <span class="status active-status">
+                                        Active
+                                    </span>
+                                {% else %}
+                                    <span class="status inactive-status">
+                                        Inactive
+                                    </span>
+                                {% endif %}
+                            </td>
+
+
+                            <!-- DATE ADDED -->
+
+                            <td>
+                                {{ item.created_at|date:"d M Y" }}
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+
+                                    <div class="empty-icon">🍽️</div>
+
+                                    <h3>No menu items found</h3>
+
+                                    <p>
+                                        {% if search_query or restaurant_filter or category_filter or availability_filter or status_filter or featured_filter %}
+                                            No menu items match your selected filters.
+                                        {% else %}
+                                            There are currently no menu items in the system.
+                                        {% endif %}
+                                    </p>
+
+                                    <a href="{% url 'food_delivery_Admin:menu_management' %}">
+                                        Clear Filters
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- PAGINATION -->
+
+        {% if page_obj.paginator.num_pages > 1 %}
+
+            <div class="table-footer">
+
+                <span>
+                    Page {{ page_obj.number }} of
+                    {{ page_obj.paginator.num_pages }}
+                </span>
+
+
+                <div class="pagination">
+
+                    {% if page_obj.has_previous %}
+                        <a href="?{% if filter_querystring %}{{ filter_querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                            Previous
+                        </a>
+                    {% else %}
+                        <span class="disabled">Previous</span>
+                    {% endif %}
+
+
+                    {% for number in page_obj.paginator.page_range %}
+
+                        {% if number == page_obj.number %}
+
+                            <span class="current">{{ number }}</span>
+
+                        {% elif number >= page_obj.number|add:"-2" and number <= page_obj.number|add:"2" %}
+
+                            <a href="?{% if filter_querystring %}{{ filter_querystring }}&{% endif %}page={{ number }}">
+                                {{ number }}
+                            </a>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                    {% if page_obj.has_next %}
+                        <a href="?{% if filter_querystring %}{{ filter_querystring }}&{% endif %}page={{ page_obj.next_page_number }}">
+                            Next
+                        </a>
+                    {% else %}
+                        <span class="disabled">Next</span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </section>
 
 </div>
 
-
-<!-- STATISTICS -->
-
-<section class="stats">
-
-    <div class="stat-card">
-
-        <div class="stat-top">
-            <span class="stat-label">Total Menu Items</span>
-            <span class="stat-icon orange">☷</span>
-        </div>
-
-        <h2>1,284</h2>
-        <small>Across all restaurants</small>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <div class="stat-top">
-            <span class="stat-label">Available Items</span>
-            <span class="stat-icon green">✓</span>
-        </div>
-
-        <h2>1,106</h2>
-        <small>Currently available for orders</small>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <div class="stat-top">
-            <span class="stat-label">Unavailable Items</span>
-            <span class="stat-icon red">×</span>
-        </div>
-
-        <h2>142</h2>
-        <small>Currently unavailable</small>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <div class="stat-top">
-            <span class="stat-label">Pending Review</span>
-            <span class="stat-icon yellow">◷</span>
-        </div>
-
-        <h2>36</h2>
-        <small>Awaiting admin review</small>
-
-    </div>
-
-</section>
-
-
-<!-- MENU ITEMS TABLE -->
-
-<section class="content-card">
-
-    <div class="card-heading">
-
-        <div>
-            <h3>All Menu Items</h3>
-            <p>View menu items submitted by registered restaurants.</p>
-        </div>
-
-        <button class="export-btn">
-            View All Items
-        </button>
-
-    </div>
-
-
-    <!-- FILTERS -->
-
-    <div class="filters">
-
-        <div class="search">
-            <span>⌕</span>
-            <input type="search"
-                   placeholder="Search menu item...">
-        </div>
-
-        <select>
-            <option>All Restaurants</option>
-            <option>Urban Taste</option>
-            <option>Food Palace</option>
-            <option>Urban Grill</option>
-        </select>
-
-        <select>
-            <option>All Categories</option>
-            <option>Main Dishes</option>
-            <option>Fast Food</option>
-            <option>Drinks</option>
-            <option>Desserts</option>
-        </select>
-
-        <select>
-            <option>All Availability</option>
-            <option>Available</option>
-            <option>Unavailable</option>
-            <option>Pending Review</option>
-        </select>
-
-    </div>
-
-
-    <!-- MENU TABLE -->
-
-    <div class="table-wrap">
-
-        <table class="menu-table">
-
-            <thead>
-                <tr>
-                    <th>MENU ITEM</th>
-                    <th>RESTAURANT</th>
-                    <th>CATEGORY</th>
-                    <th>PRICE</th>
-                    <th>AVAILABILITY</th>
-                    <th>DATE ADDED</th>
-                    <th>ACTION</th>
-                </tr>
-            </thead>
-
-
-            <tbody>
-
-                <tr>
-
-                    <td>
-                        <div class="item">
-
-                            <div class="item-img">🍔</div>
-
-                            <div>
-                                <strong>Classic Beef Burger</strong>
-                                <small>Fresh beef burger with cheese</small>
-                            </div>
-
-                        </div>
-                    </td>
-
-                    <td class="restaurant">
-                        <strong>Urban Taste</strong>
-                        <small>Westlands</small>
-                    </td>
-
-                    <td>Main Dishes</td>
-
-                    <td class="menu-price">KSh 650</td>
-
-                    <td>
-                        <span class="status available">
-                            Available
-                        </span>
-                    </td>
-
-                    <td>05 Nov 2026</td>
-
-                    <td>
-                        <button class="action-btn">View</button>
-                    </td>
-
-                </tr>
-
-
-                <tr>
-
-                    <td>
-                        <div class="item">
-
-                            <div class="item-img">🍕</div>
-
-                            <div>
-                                <strong>Chicken Pizza</strong>
-                                <small>Chicken, cheese and vegetables</small>
-                            </div>
-
-                        </div>
-                    </td>
-
-                    <td class="restaurant">
-                        <strong>Food Palace</strong>
-                        <small>Kilimani</small>
-                    </td>
-
-                    <td>Fast Food</td>
-
-                    <td class="menu-price">KSh 1,200</td>
-
-                    <td>
-                        <span class="status available">
-                            Available
-                        </span>
-                    </td>
-
-                    <td>04 Nov 2026</td>
-
-                    <td>
-                        <button class="action-btn">View</button>
-                    </td>
-
-                </tr>
-
-
-                <tr>
-
-                    <td>
-                        <div class="item">
-
-                            <div class="item-img">🍗</div>
-
-                            <div>
-                                <strong>Grilled Chicken</strong>
-                                <small>Served with fries</small>
-                            </div>
-
-                        </div>
-                    </td>
-
-                    <td class="restaurant">
-                        <strong>Urban Grill</strong>
-                        <small>Parklands</small>
-                    </td>
-
-                    <td>Main Dishes</td>
-
-                    <td class="menu-price">KSh 850</td>
-
-                    <td>
-                        <span class="status unavailable">
-                            Unavailable
-                        </span>
-                    </td>
-
-                    <td>03 Nov 2026</td>
-
-                    <td>
-                        <button class="action-btn">View</button>
-                    </td>
-
-                </tr>
-
-
-                <tr>
-
-                    <td>
-                        <div class="item">
-
-                            <div class="item-img">🥤</div>
-
-                            <div>
-                                <strong>Fresh Mango Juice</strong>
-                                <small>Freshly prepared mango juice</small>
-                            </div>
-
-                        </div>
-                    </td>
-
-                    <td class="restaurant">
-                        <strong>Urban Taste</strong>
-                        <small>Westlands</small>
-                    </td>
-
-                    <td>Drinks</td>
-
-                    <td class="menu-price">KSh 250</td>
-
-                    <td>
-                        <span class="status review">
-                            Pending Review
-                        </span>
-                    </td>
-
-                    <td>08 Nov 2026</td>
-
-                    <td>
-                        <button class="action-btn">Review</button>
-                    </td>
-
-                </tr>
-
-
-                <tr>
-
-                    <td>
-                        <div class="item">
-
-                            <div class="item-img">🍰</div>
-
-                            <div>
-                                <strong>Chocolate Cake</strong>
-                                <small>Chocolate cream cake slice</small>
-                            </div>
-
-                        </div>
-                    </td>
-
-                    <td class="restaurant">
-                        <strong>Food Palace</strong>
-                        <small>Kilimani</small>
-                    </td>
-
-                    <td>Desserts</td>
-
-                    <td class="menu-price">KSh 400</td>
-
-                    <td>
-                        <span class="status available">
-                            Available
-                        </span>
-                    </td>
-
-                    <td>02 Nov 2026</td>
-
-                    <td>
-                        <button class="action-btn">View</button>
-                    </td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-
-    <!-- TABLE FOOTER -->
-
-    <div class="table-footer">
-
-        <span>Showing 1–5 of 1,284 menu items</span>
-
-        <div class="pagination">
-
-            <button>Previous</button>
-            <button class="current">1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>Next</button>
-
-        </div>
-
-    </div>
-
-</section>
-
 {% endblock content %}
+```

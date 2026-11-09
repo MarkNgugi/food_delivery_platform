@@ -1,15 +1,21 @@
 from django.shortcuts import render
 from . import views
 
-def dashboard(request):
-    return render(request,'food_delivery_Admin/dashboard.html')
-
-
 from django.shortcuts import render
 from django.db.models import Q
 from django.core.paginator import Paginator
 
 from food_delivery.models import Restaurant
+
+from django.shortcuts import render
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.paginator import Paginator
+from django.db.models import Q
+
+from food_delivery.models import MenuItem, MenuCategory, Restaurant
+
+def dashboard(request):
+    return render(request,'food_delivery_Admin/dashboard.html')
 
 
 def restaurants(request):
@@ -496,8 +502,164 @@ def restaurant_delete(request, restaurant_id):
 def orders(request):
     return render(request,'food_delivery_Admin/orders/orders.html')
 
+
+@staff_member_required
 def menu_management(request):
-    return render(request,'food_delivery_Admin/menu_management/menu_management.html')
+
+    # Retrieve all menu items across all restaurants.
+    menu_items = MenuItem.objects.select_related(
+        'restaurant',
+        'category'
+    ).order_by('-created_at')
+
+    # -----------------------------------------
+    # SEARCH
+    # -----------------------------------------
+
+    search_query = request.GET.get('q', '').strip()
+
+    if search_query:
+        menu_items = menu_items.filter(
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(restaurant__name__icontains=search_query) |
+            Q(category__name__icontains=search_query) |
+            Q(ingredients__icontains=search_query) |
+            Q(allergens__icontains=search_query)
+        )
+
+    # -----------------------------------------
+    # RESTAURANT FILTER
+    # -----------------------------------------
+
+    restaurant_filter = request.GET.get('restaurant', '').strip()
+
+    if restaurant_filter:
+        menu_items = menu_items.filter(
+            restaurant_id=restaurant_filter
+        )
+
+    # -----------------------------------------
+    # CATEGORY FILTER
+    # -----------------------------------------
+
+    category_filter = request.GET.get('category', '').strip()
+
+    if category_filter:
+        menu_items = menu_items.filter(
+            category_id=category_filter
+        )
+
+    # -----------------------------------------
+    # AVAILABILITY FILTER
+    # -----------------------------------------
+
+    availability_filter = request.GET.get('availability', '').strip()
+
+    if availability_filter == 'available':
+        menu_items = menu_items.filter(is_available=True)
+
+    elif availability_filter == 'unavailable':
+        menu_items = menu_items.filter(is_available=False)
+
+    # -----------------------------------------
+    # ACTIVE / INACTIVE FILTER
+    # -----------------------------------------
+
+    status_filter = request.GET.get('status', '').strip()
+
+    if status_filter == 'active':
+        menu_items = menu_items.filter(is_active=True)
+
+    elif status_filter == 'inactive':
+        menu_items = menu_items.filter(is_active=False)
+
+    # -----------------------------------------
+    # FEATURED FILTER
+    # -----------------------------------------
+
+    featured_filter = request.GET.get('featured', '').strip()
+
+    if featured_filter == 'featured':
+        menu_items = menu_items.filter(is_featured=True)
+
+    elif featured_filter == 'not_featured':
+        menu_items = menu_items.filter(is_featured=False)
+
+    # -----------------------------------------
+    # STATISTICS
+    # -----------------------------------------
+
+    total_menu_items = MenuItem.objects.count()
+
+    available_items = MenuItem.objects.filter(
+        is_available=True
+    ).count()
+
+    unavailable_items = MenuItem.objects.filter(
+        is_available=False
+    ).count()
+
+    inactive_items = MenuItem.objects.filter(
+        is_active=False
+    ).count()
+
+    featured_items = MenuItem.objects.filter(
+        is_featured=True
+    ).count()
+
+    # -----------------------------------------
+    # PAGINATION
+    # -----------------------------------------
+
+    paginator = Paginator(menu_items, 10)
+
+    page_number = request.GET.get('page')
+
+    page_obj = paginator.get_page(page_number)
+
+    # Preserve existing filters when navigating pages.
+    query_params = request.GET.copy()
+    query_params.pop('page', None)
+
+    filter_querystring = query_params.urlencode()
+
+    # -----------------------------------------
+    # FILTER OPTIONS
+    # -----------------------------------------
+
+    restaurants = Restaurant.objects.order_by('name')
+
+    categories = MenuCategory.objects.order_by('name')
+
+    context = {
+        'page_obj': page_obj,
+        'menu_items': page_obj.object_list,
+
+        'restaurants': restaurants,
+        'categories': categories,
+
+        'search_query': search_query,
+        'restaurant_filter': restaurant_filter,
+        'category_filter': category_filter,
+        'availability_filter': availability_filter,
+        'status_filter': status_filter,
+        'featured_filter': featured_filter,
+
+        'filter_querystring': filter_querystring,
+
+        'total_menu_items': total_menu_items,
+        'available_items': available_items,
+        'unavailable_items': unavailable_items,
+        'inactive_items': inactive_items,
+        'featured_items': featured_items,
+    }
+
+    return render(
+        request,
+        'food_delivery_Admin/menu_management/menu_management.html',
+        context
+    )
 
 def customers(request):
     return render(request,'food_delivery_Admin/customers/customers.html')
