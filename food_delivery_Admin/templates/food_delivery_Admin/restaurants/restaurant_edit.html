@@ -1,0 +1,568 @@
+
+{% extends 'food_delivery_Admin/base.html' %}
+
+{% block title %}Savora | Edit {{ restaurant.name }}{% endblock %}
+{% block breadcrumb %}Restaurants / Edit Restaurant{% endblock %}
+{% block restaurants_active %}active{% endblock %}
+
+{% block content %}
+
+<style>
+    .edit-page {
+        max-width: 1150px;
+        margin: 0 auto;
+    }
+
+    .edit-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .edit-heading h1 {
+        font-size: 25px;
+        margin-bottom: 5px;
+    }
+
+    .edit-heading p {
+        color: #89909c;
+        font-size: 13px;
+    }
+
+    .back-btn {
+        text-decoration: none;
+        color: #555d6c;
+        border: 1px solid #e5e7eb;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .edit-card {
+        background: white;
+        border: 1px solid #e9ebef;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+
+    .section-heading {
+        border-bottom: 1px solid #edf0f3;
+        padding-bottom: 15px;
+        margin-bottom: 22px;
+    }
+
+    .section-heading h3 {
+        font-size: 16px;
+        margin-bottom: 5px;
+        color: #303744;
+    }
+
+    .section-heading p {
+        font-size: 12px;
+        color: #89909c;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    .form-group.full {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #424957;
+    }
+
+    .form-control {
+        width: 100%;
+        min-height: 43px;
+        border: 1px solid #dfe3e9;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-family: inherit;
+        font-size: 13px;
+        box-sizing: border-box;
+        background: white;
+        color: #303744;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #f15a29;
+        box-shadow: 0 0 0 3px rgba(241,90,41,.09);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+    }
+
+    .field-error {
+        color: #dc3545;
+        font-size: 12px;
+    }
+
+    .help-text {
+        font-size: 11px;
+        color: #89909c;
+    }
+
+    .current-image {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 10px;
+    }
+
+    .current-image img {
+        width: 85px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 9px;
+        border: 1px solid #eee;
+    }
+
+    .current-image small {
+        color: #89909c;
+        font-size: 11px;
+    }
+
+    .hours-row {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr 1fr auto;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f1f3;
+    }
+
+    .hours-day {
+        font-size: 13px;
+        font-weight: 600;
+        color: #303744;
+    }
+
+    .hours-row .form-group label {
+        font-size: 11px;
+        color: #89909c;
+    }
+
+    .closed-control {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+        color: #626b79;
+        white-space: nowrap;
+    }
+
+    .closed-checkbox {
+        accent-color: #f15a29;
+        width: 16px;
+        height: 16px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin: 20px 0 30px;
+        flex-wrap: wrap;
+    }
+
+    .cancel-btn,
+    .save-btn {
+        text-decoration: none;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .cancel-btn {
+        background: #f1f3f5;
+        color: #555d6c;
+    }
+
+    .save-btn {
+        background: #f15a29;
+        color: white;
+    }
+
+    .save-btn:hover {
+        background: #dc481a;
+    }
+
+    .form-alert {
+        padding: 13px 15px;
+        border-radius: 8px;
+        margin-bottom: 18px;
+        font-size: 13px;
+    }
+
+    .form-alert.error {
+        background: #fff0f0;
+        color: #b42318;
+    }
+
+    .form-alert.success {
+        background: #e8f8ef;
+        color: #16834a;
+    }
+
+    .non-field-errors {
+        color: #dc3545;
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    @media(max-width: 700px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hours-row {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .edit-heading {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .edit-card {
+            padding: 17px;
+        }
+    }
+</style>
+
+
+<div class="edit-page">
+
+    <div class="edit-heading">
+
+        <div>
+            <h1>Edit Restaurant</h1>
+            <p>Update {{ restaurant.name }}'s information and operating hours.</p>
+        </div>
+
+        <a href="{% url 'food_delivery_Admin:restaurant_detail' restaurant.id %}"
+           class="back-btn">
+            ← Back to Details
+        </a>
+
+    </div>
+
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="form-alert {% if message.tags == 'success' %}success{% else %}error{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+    <form method="POST" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="form-alert error">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+
+        <!-- RESTAURANT INFORMATION -->
+
+        <div class="edit-card">
+
+            <div class="section-heading">
+                <h3>Restaurant Information</h3>
+                <p>Basic information about the restaurant.</p>
+            </div>
+
+            <div class="form-grid">
+
+                {% for field in form %}
+
+                    {% if field.name == 'name' or field.name == 'description' or field.name == 'cuisine' or field.name == 'status' %}
+
+                        <div class="form-group {% if field.name == 'description' %}full{% endif %}">
+
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+
+                            {{ field }}
+
+                            {% if field.help_text %}
+                                <small class="help-text">{{ field.help_text }}</small>
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <span class="field-error">{{ error }}</span>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTACT INFORMATION -->
+
+        <div class="edit-card">
+
+            <div class="section-heading">
+                <h3>Contact Information</h3>
+                <p>Restaurant communication details.</p>
+            </div>
+
+            <div class="form-grid">
+
+                {% for field in form %}
+
+                    {% if field.name == 'phone' or field.name == 'email' %}
+
+                        <div class="form-group">
+
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+
+                            {{ field }}
+
+                            {% for error in field.errors %}
+                                <span class="field-error">{{ error }}</span>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="edit-card">
+
+            <div class="section-heading">
+                <h3>Restaurant Location</h3>
+                <p>Update the physical location of the restaurant.</p>
+            </div>
+
+            <div class="form-grid">
+
+                {% for field in form %}
+
+                    {% if field.name == 'country' or field.name == 'county' or field.name == 'town' or field.name == 'area' or field.name == 'street' or field.name == 'building' or field.name == 'landmark' or field.name == 'additional_directions' %}
+
+                        <div class="form-group {% if field.name == 'additional_directions' %}full{% endif %}">
+
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+
+                            {{ field }}
+
+                            {% for error in field.errors %}
+                                <span class="field-error">{{ error }}</span>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- IMAGES -->
+
+        <div class="edit-card">
+
+            <div class="section-heading">
+                <h3>Restaurant Images</h3>
+                <p>Update the restaurant logo and cover image.</p>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="{{ form.logo.id_for_label }}">
+                        Restaurant Logo
+                    </label>
+
+                    {% if restaurant.logo %}
+                        <div class="current-image">
+                            <img src="{{ restaurant.logo.url }}" alt="Current logo">
+                            <small>Current restaurant logo</small>
+                        </div>
+                    {% endif %}
+
+                    {{ form.logo }}
+
+                    {% for error in form.logo.errors %}
+                        <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="{{ form.cover_image.id_for_label }}">
+                        Cover Image
+                    </label>
+
+                    {% if restaurant.cover_image %}
+                        <div class="current-image">
+                            <img src="{{ restaurant.cover_image.url }}" alt="Current cover">
+                            <small>Current cover image</small>
+                        </div>
+                    {% endif %}
+
+                    {{ form.cover_image }}
+
+                    {% for error in form.cover_image.errors %}
+                        <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- OPERATING HOURS -->
+
+        <div class="edit-card">
+
+            <div class="section-heading">
+                <h3>Operating Hours</h3>
+                <p>Manage the restaurant's opening and closing times.</p>
+            </div>
+
+            {{ operating_hours_formset.management_form }}
+
+            {% if operating_hours_formset.non_form_errors %}
+                <div class="form-alert error">
+                    {{ operating_hours_formset.non_form_errors }}
+                </div>
+            {% endif %}
+
+
+            {% for hour_form in operating_hours_formset %}
+
+                <div class="hours-row">
+
+                    <div class="form-group">
+
+                        <label>Day</label>
+
+                        {{ hour_form.day }}
+
+                        {{ hour_form.id }}
+
+                        {% for error in hour_form.day.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Opening Time</label>
+
+                        {{ hour_form.opening_time }}
+
+                        {% for error in hour_form.opening_time.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Closing Time</label>
+
+                        {{ hour_form.closing_time }}
+
+                        {% for error in hour_form.closing_time.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <label class="closed-control">
+
+                        {{ hour_form.is_closed }}
+
+                        Closed
+
+                    </label>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="form-actions">
+
+            <a href="{% url 'food_delivery_Admin:restaurant_detail' restaurant.id %}"
+               class="cancel-btn">
+                Cancel
+            </a>
+
+            <button type="submit" class="save-btn">
+                Save Changes
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock content %}

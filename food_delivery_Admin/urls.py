@@ -8,6 +8,25 @@ urlpatterns = [
 
     path('restaurants/',views.restaurants, name='restaurants'),
 
+
+    path(
+        'restaurants/<int:restaurant_id>/',
+        views.restaurant_detail,
+        name='restaurant_detail',
+    ),
+
+    path(
+        'restaurants/<int:restaurant_id>/edit/',
+        views.restaurant_edit,
+        name='restaurant_edit',
+    ),
+
+    path(
+        'restaurants/<int:restaurant_id>/delete/',
+        views.restaurant_delete,
+        name='restaurant_delete',
+    ),
+
     path('orders',views.orders,name='orders'),
 
     path('menu-management',views.menu_management,name='menu_management'),

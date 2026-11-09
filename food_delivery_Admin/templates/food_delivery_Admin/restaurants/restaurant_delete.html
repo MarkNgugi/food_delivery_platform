@@ -1,0 +1,242 @@
+
+{% extends 'food_delivery_Admin/base.html' %}
+
+{% block title %}Savora | Delete Restaurant{% endblock %}
+{% block breadcrumb %}Restaurants / Delete Restaurant{% endblock %}
+{% block restaurants_active %}active{% endblock %}
+
+{% block content %}
+
+<style>
+    .delete-container {
+        max-width: 650px;
+        margin: 55px auto;
+    }
+
+    .delete-card {
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 14px;
+        padding: 35px;
+        text-align: center;
+    }
+
+    .delete-icon {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        background: #fff0f0;
+        color: #dc3545;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 29px;
+    }
+
+    .delete-card h2 {
+        font-size: 22px;
+        margin-bottom: 12px;
+        color: #303744;
+    }
+
+    .delete-card p {
+        font-size: 13px;
+        line-height: 1.8;
+        color: #89909c;
+    }
+
+    .restaurant-name {
+        color: #303744;
+        font-weight: 700;
+    }
+
+    .restaurant-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 15px;
+        margin: 20px 0;
+        background: #f8f9fb;
+        border-radius: 9px;
+        text-align: left;
+    }
+
+    .restaurant-info img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .restaurant-info .placeholder {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff0e9;
+        border-radius: 8px;
+        font-size: 22px;
+    }
+
+    .restaurant-info strong {
+        display: block;
+        font-size: 13px;
+        color: #303744;
+    }
+
+    .restaurant-info small {
+        display: block;
+        font-size: 11px;
+        color: #89909c;
+        margin-top: 4px;
+    }
+
+    .warning {
+        background: #fff5f0;
+        border: 1px solid #ffe0d1;
+        border-radius: 9px;
+        padding: 14px;
+        color: #a34b2d;
+        font-size: 12px;
+        text-align: left;
+        margin: 22px 0;
+        line-height: 1.7;
+    }
+
+    .delete-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+    .cancel-btn,
+    .delete-btn {
+        padding: 12px 22px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .cancel-btn {
+        background: #f1f3f5;
+        color: #555d6c;
+    }
+
+    .delete-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    .delete-btn:hover {
+        background: #bb2635;
+    }
+
+    @media(max-width: 600px) {
+        .delete-card {
+            padding: 22px;
+        }
+    }
+</style>
+
+
+<div class="delete-container">
+
+    <div class="delete-card">
+
+        <div class="delete-icon">
+            ⚠
+        </div>
+
+        <h2>Delete Restaurant?</h2>
+
+        <p>
+            You are about to permanently delete this restaurant
+            from the Savora platform.
+        </p>
+
+
+        <!-- RESTAURANT INFORMATION -->
+
+        <div class="restaurant-info">
+
+            {% if restaurant.logo %}
+
+                <img
+                    src="{{ restaurant.logo.url }}"
+                    alt="{{ restaurant.name }}"
+                >
+
+            {% else %}
+
+                <div class="placeholder">
+                    🍽️
+                </div>
+
+            {% endif %}
+
+            <div>
+
+                <strong>{{ restaurant.name }}</strong>
+
+                <small>
+                    {{ restaurant.town }}, {{ restaurant.county }}
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- WARNING -->
+
+        <div class="warning">
+
+            <strong>Important:</strong>
+
+            This action cannot be undone. Related records configured
+            with CASCADE deletion may also be permanently deleted,
+            including operating hours and potentially menu or order
+            records.
+
+            Make sure you have checked the restaurant's related
+            records before proceeding.
+
+        </div>
+
+
+        <!-- CONFIRMATION -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="delete-actions">
+
+                <a
+                    href="{% url 'food_delivery_Admin:restaurant_detail' restaurant.id %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+                <button type="submit" class="delete-btn">
+                    Yes, Delete Restaurant
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock content %}
